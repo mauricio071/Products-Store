@@ -21,7 +21,6 @@
 
 <script setup>
 import { productsStore } from '../store/productsStore'
-import { storeToRefs } from 'pinia';
 
 const store = productsStore()
 

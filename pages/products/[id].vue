@@ -1,7 +1,7 @@
 <template>
     <div class="content">
-        <div class="card mb-16">
-            <div class="sm:grid sm:grid-cols-2 items-center">
+        <div class="card">
+            <div class="md:grid md:grid-cols-2 items-center">
                 <div class="sm:p-7">
                     <img :src="product.image" :alt="product.description"
                         class="max-h-[30rem] mx-auto mb-4 2xl:max-w-[30rem]">
@@ -35,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <h2 class="text-3xl font-bold">Similar itens</h2>
+        <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
         <client-only>
             <carousel :items-to-show="1" :breakpoints="breakpoints">
                 <slide v-for="product in products" :key="product.id">
@@ -52,12 +52,10 @@
 
 <script setup>
 import { productsStore } from '../store/productsStore'
-import { storeToRefs } from 'pinia';
 
 const breakpoints = {
     768: {
         itemsToShow: 2,
-        snapAlign: 'center-[odd|even]',
     },
     1280: {
         itemsToShow: 3,
@@ -121,26 +119,7 @@ const addInCart = () => {
 }
 
 .similar.card {
-    @apply w-full m-8 max-w-[20rem] max-h-[25rem];
-}
-
-:deep(.similar.card) img {
-    @apply max-h-[9rem];
-}
-
-.carousel {
-    @screen 2xl {
-        @apply max-w-[73rem] p-6;
-    }
-}
-
-
-:deep(.carousel) .carousel__track {
-    @apply gap-12;
-
-    @screen lg {
-        @apply gap-0;
-    }
+    @apply w-full my-8 mx-4 max-h-[25rem] max-w-[19rem] 2xl:min-w-[23rem];
 }
 
 :deep(.carousel) .carousel__icon {

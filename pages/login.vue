@@ -26,6 +26,8 @@ definePageMeta({
 });
 const router = useRouter();
 
+const loginToken = useCookie("loginToken");
+
 const username = ref("mor_2314");
 const password = ref("83r5^_");
 
@@ -38,14 +40,14 @@ const login = async () => {
         }
     }).then((res) => {
         router.push("/");
-        console.log('certo');
+        loginToken.value = res.data.value.token;
     })
 }
 </script>
 
 <style scoped>
 .content {
-    @apply flex p-4;
+    @apply bg-[#fcfdfdb0] flex p-4;
 
     .banner-img-side {
         @apply w-0 bg-[url("/assets/login-banner.png")] bg-cover bg-center bg-no-repeat rounded-lg;
@@ -64,7 +66,7 @@ const login = async () => {
         }
 
         form {
-            @apply w-full max-w-xl flex flex-col gap-8 text-center shadow-md rounded-lg px-8 py-8;
+            @apply w-full max-w-xl bg-white flex flex-col gap-8 text-center shadow-md rounded-lg px-8 py-8;
 
             h2 {
                 @apply text-3xl font-bold text-[#12b488] pb-4 border-b-2 border-b-[#12b48913];

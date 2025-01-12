@@ -11,7 +11,7 @@
         <p v-else class="shipping">
             <span>$5.00 saved</span>, explore more items with free shipping
         </p>
-        <div class="products space-y-8 h-[40rem] overflow-auto -mr-4">
+        <div class="products space-y-8 h-screen overflow-auto -mr-4">
             <div v-for="product in cart" :key="product.id"
                 class="product flex flex-col items-center gap-2 bg-gray-100 rounded-xl py-4 mr-3">
                 <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
