@@ -22,20 +22,20 @@
 <script setup>
 import { productsStore } from '../store/productsStore'
 
-const store = productsStore()
+const store = productsStore();
 
-const { $toast } = useNuxtApp()
+const { $toast } = useNuxtApp();
 
 const { product } = defineProps({
     product: Object
-})
+});
 
 const addInCart = (product) => {
     try {
-        store.addProduct(product)
-        $toast.success("Product added!")
+        store.addProduct(product);
+        $toast.success("Product added!");
     } catch (error) {
-        $toast.error("There was an error processing your request")
+        $toast.error("There was an error processing your request");
     }
 }
 </script>

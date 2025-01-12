@@ -15,9 +15,11 @@
                 </li>
                 <li class="user-account">
                     <IconsUser />
-                    <p>Hi! Teste</p>
-                    <div class="submenu">
-                        Login
+                    <div v-if="loginToken" @click="logout" class="submenu">
+                        <span>Logout</span>
+                    </div>
+                    <div v-else @click="login" class="submenu">
+                        <span>Login</span>
                     </div>
                 </li>
                 <li class="relative">
@@ -33,11 +35,24 @@
 import { productsStore } from '../store/productsStore'
 import { storeToRefs } from 'pinia';
 
-const visible = ref(false)
+const router = useRouter();
 
-const store = productsStore()
+const visible = ref(false);
 
-const { productsAmount } = storeToRefs(store)
+const store = productsStore();
+
+const { productsAmount } = storeToRefs(store);
+
+const loginToken = useCookie('loginToken');
+
+const login = () => {
+    router.push("/login");
+}
+
+const logout = () => {
+    loginToken.value = undefined;
+    router.push("/login");
+}
 </script>
 
 <style scoped>
@@ -51,7 +66,15 @@ const { productsAmount } = storeToRefs(store)
     }
 
     .submenu {
-        @apply hidden absolute top-[1.5rem] w-24 text-center bg-white px-4 py-2 rounded-lg;
+        @apply hidden absolute top-[1.5rem] left-[-2rem] w-24 text-center font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
+
+        span {
+            @apply duration-300;
+
+            &:hover {
+                @apply block bg-gray-200;
+            }
+        }
     }
 }
 
