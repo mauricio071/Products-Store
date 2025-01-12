@@ -1,6 +1,6 @@
 <template>
     <div v-if="productsAmount > 0 && $route.name !== 'cart'"
-        class="bg-white w-[15rem] fixed right-0 h-auto min-h-screen shadow-xl p-6 space-y-4 hidden xl:block">
+        class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
         <p class="text-center font-bold">Total: ${{ totalValue }}</p>
         <NuxtLink to="/cart" class="btn-goTo">Go to cart</NuxtLink>
         <hr>
@@ -11,7 +11,7 @@
         <p v-else class="shipping">
             <span>$5.00 saved</span>, explore more items with free shipping
         </p>
-        <div class="products space-y-8 h-screen overflow-auto -mr-4">
+        <div class="products space-y-8 overflow-auto -mr-4">
             <div v-for="product in cart" :key="product.id"
                 class="product flex flex-col items-center gap-2 bg-gray-100 rounded-xl py-4 mr-3">
                 <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
