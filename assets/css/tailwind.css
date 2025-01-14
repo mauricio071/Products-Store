@@ -15,10 +15,6 @@ h1 {
         @apply bg-white shadow-md rounded-lg p-4;
     }
 
-    .overview {
-        @apply bg-white shadow-md rounded-lg p-4 w-full lg:w-[30%] h-full space-y-4;
-    }
-
     .card {
         @apply shadow-lg h-full  rounded-lg bg-white flex flex-col justify-between p-8 mb-16 sm:p-4;
     }
@@ -28,11 +24,11 @@ h1 {
     }
 
     .btn {
-        @apply bg-[#12b488] border border-white duration-300 text-white px-3 py-2 rounded-md text-sm;
+        @apply bg-primary border border-white duration-300 text-white px-3 py-2 rounded-md text-sm;
     }
 
     .btn:hover {
-        @apply bg-white text-[#12b488] border border-[#12b488];
+        @apply bg-white text-primary border border-primary;
     }
 }
 
@@ -40,6 +36,13 @@ h1 {
     @apply flex justify-center items-center rounded-[50%] w-[24px] h-[24px] m-auto;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-top: 3px solid white;
+    animation: spin 1s linear infinite;
+}
+
+.loader-primary {
+    @apply flex justify-center items-center rounded-[50%] w-[150px] h-[150px] m-auto;
+    border: 8px solid rgba(18, 180, 136);
+    border-top: 8px solid white;
     animation: spin 1s linear infinite;
 }
 

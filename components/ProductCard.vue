@@ -5,16 +5,19 @@
             <div class="product-details">
                 <div class="flex items-center justify-between w-full">
                     <h3 class="text-[20px] font-bold">{{ product.title }}</h3>
-                    <i @click="remove(product.id)"
+                    <i v-if="!disabled" @click="remove(product.id)"
                         class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
                 </div>
                 <p>{{ product.description }}</p>
                 <div class="amounts">
                     <h3 class="font-bold">Amount:</h3>
                     <IconsMinus @click="removeUnitProduct(product.id)"
+                        :class="{ '!text-gray-200 !cursor-not-allowed': disabled }"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
                     <span class="font-semibold">{{ product.amount }}</span>
-                    <IconsPlus @click="addUnitProduct(product)" class="w-[1.5rem] text-gray-500 cursor-pointer" />
+                    <IconsPlus @click="addUnitProduct(product)"
+                        :class="{ '!text-gray-200 !cursor-not-allowed': disabled }"
+                        class="w-[1.5rem] text-gray-500 cursor-pointer" />
                 </div>
                 <p class="text-xl font-semibold">Total price: ${{ product.total.toFixed(2) }}</p>
             </div>
@@ -25,11 +28,11 @@
 <script setup>
 import { productsStore } from '~/store/productsStore';
 
-const { $toast } = useNuxtApp()
+const { $toast } = useNuxtApp();
 
-const { product } = defineProps(["product"])
+const { product, disabled } = defineProps(["product", "disabled"]);
 
-const store = productsStore()
+const store = productsStore();
 
 const remove = (id) => {
     try {
@@ -40,11 +43,15 @@ const remove = (id) => {
 }
 
 const removeUnitProduct = (id) => {
-    store.removeUnit(id);
+    if (!disabled) {
+        store.removeUnit(id);
+    }
 }
 
 const addUnitProduct = (product) => {
-    store.addProduct(product)
+    if (!disabled) {
+        store.addProduct(product);
+    }
 }
 </script>
 

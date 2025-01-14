@@ -1,12 +1,12 @@
 <template>
-    <div v-if="productsAmount > 0 && $route.name !== 'cart'"
+    <div v-if="productsAmount > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
         class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
-        <p class="text-center font-bold">Total: ${{ totalValue }}</p>
+        <p class="text-center font-bold">Total: ${{ subTotal }}</p>
         <NuxtLink to="/cart" class="btn-goTo">Go to cart</NuxtLink>
         <hr>
-        <p v-if="saveShipping >= 0" class="shipping">
+        <p v-if="shippingFee > 0" class="shipping">
             To save <span>$5.00</span> on shipping,
-            spend an additional <span>${{ saveShipping }}</span>
+            spend an additional <span>${{ +(costShipping - subTotal).toFixed(2) }}</span>
         </p>
         <p v-else class="shipping">
             <span>$5.00 saved</span>, explore more items with free shipping
@@ -33,17 +33,7 @@ import { storeToRefs } from 'pinia';
 
 const store = productsStore()
 
-const { cart, productsAmount, totalValue } = storeToRefs(store)
-
-const costShipping = 50;
-
-const saveShipping = computed(() => {
-    if (costShipping - totalValue >= 0) {
-        return 0;
-    } else {
-        return (costShipping - Number(totalValue.value)).toFixed(2);
-    }
-})
+const { cart, productsAmount, subTotal, costShipping, shippingFee } = storeToRefs(store)
 
 const removeUnitProduct = (id) => {
     store.removeUnit(id);
@@ -60,15 +50,15 @@ const addUnitProduct = (product) => {
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-[#12b488] rounded-[.3rem] ml-8;
+    @apply bg-primary rounded-[.3rem] ml-8;
 }
 
 .btn-goTo {
-    @apply block mx-auto text-center bg-[#12b488] duration-300 text-white w-full py-2 rounded-2xl border border-[#12b488];
+    @apply block mx-auto text-center bg-primary duration-300 text-white w-full py-2 rounded-2xl border border-primary;
 }
 
 .btn-goTo:hover {
-    @apply bg-white text-[#12b488];
+    @apply bg-white text-primary;
 }
 
 .shipping {

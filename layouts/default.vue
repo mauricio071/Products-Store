@@ -1,6 +1,7 @@
 <template>
     <div class="flex">
-        <div class="w-full" :class="{ 'xl:pr-60': productsAmount > 0 && $route.name !== 'cart' }">
+        <div class="w-full"
+            :class="{ 'xl:pr-60': productsAmount > 0 && $route.name !== 'cart' && $route.name !== 'payment' }">
             <Navbar />
 
             <div class="container mx-auto p-8">

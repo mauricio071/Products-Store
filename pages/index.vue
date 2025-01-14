@@ -17,8 +17,9 @@
                 </button>
             </div>
         </div>
+
         <template v-if="status !== 'success' || loading">
-            <img src="/public/img/loading.svg" alt="loading" class="m-auto">
+            <span class="loader-primary m-auto"></span>
         </template>
         <template v-else>
             <div class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -64,7 +65,7 @@ const categoryFilter = async (filter) => {
 
 :deep(.carousel) .carousel__prev,
 :deep(.carousel) .carousel__next {
-    @apply text-white bg-[#12b488] rounded-lg w-8 h-8 lg:w-10 lg:h-10;
+    @apply text-white bg-primary rounded-lg w-8 h-8 lg:w-10 lg:h-10;
 }
 
 .filters {
@@ -76,10 +77,10 @@ const categoryFilter = async (filter) => {
 }
 
 .filters button:hover {
-    @apply bg-[#12b488] border-[#12b488] text-white;
+    @apply bg-primary border-primary text-white;
 }
 
 .active {
-    @apply bg-[#12b488] border-[#12b488] text-white;
+    @apply bg-primary border-primary text-white;
 }
 </style>

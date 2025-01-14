@@ -123,6 +123,6 @@ const addInCart = () => {
 }
 
 :deep(.carousel) .carousel__icon {
-    @apply fill-white bg-[#12b488] w-20 h-8 rounded-[50%];
+    @apply fill-white bg-primary w-20 h-8 rounded-[50%];
 }
 </style>

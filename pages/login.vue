@@ -91,14 +91,14 @@ const login = async () => {
             @apply w-full max-w-xl bg-white flex flex-col gap-8 text-center shadow-md rounded-lg px-8 py-8;
 
             h2 {
-                @apply text-3xl font-bold text-[#12b488] pb-4 border-b-2 border-b-[#12b48913];
+                @apply text-3xl font-bold text-primary pb-4 border-b-2 border-b-[#12b48913];
             }
 
             .input-container {
                 @apply flex flex-col items-start gap-4;
 
                 label {
-                    @apply text-[#12b488] font-bold;
+                    @apply text-primary font-bold;
                 }
 
                 input {
@@ -107,7 +107,7 @@ const login = async () => {
             }
 
             .submit-btn {
-                @apply bg-[#12b488] px-4 py-2 rounded-xl duration-300;
+                @apply bg-primary px-4 py-2 rounded-xl duration-300;
 
                 &:hover {
                     @apply bg-[#10a17b];

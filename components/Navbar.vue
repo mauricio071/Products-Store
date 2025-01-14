@@ -8,25 +8,27 @@
             <button @click="visible = !visible" class="md:hidden">
                 <IconsMenu />
             </button>
-            <ul class="space-y-8 md:space-y-0 mt-8 md:my-0 justify-between gap-4 w-full md:w-[unset] md:flex"
-                :class="{ 'block': visible, 'hidden': !visible }">
-                <li>
-                    <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
-                </li>
-                <li class="user-account">
-                    <IconsUser />
-                    <div v-if="loginToken" @click="logout" class="submenu">
-                        <span>Logout</span>
-                    </div>
-                    <div v-else @click="login" class="submenu">
-                        <span>Login</span>
-                    </div>
-                </li>
-                <li class="relative">
-                    <div v-if="productsAmount > 0" class="product-counter">{{ productsAmount }}</div>
-                    <nuxt-link to="/cart"><i class="material-icons">shopping_cart</i></nuxt-link>
-                </li>
-            </ul>
+            <template v-if="route.name !== 'payment'">
+                <ul class="space-y-8 md:space-y-0 mt-8 md:my-0 justify-between gap-4 w-full md:w-[unset] md:flex"
+                    :class="{ 'block': visible, 'hidden': !visible }">
+                    <li>
+                        <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
+                    </li>
+                    <li class="user-account">
+                        <IconsUser />
+                        <div v-if="loginToken" @click="logout" class="submenu">
+                            <span>Logout</span>
+                        </div>
+                        <div v-else @click="login" class="submenu">
+                            <span>Login</span>
+                        </div>
+                    </li>
+                    <li class="relative">
+                        <div v-if="productsAmount > 0" class="product-counter">{{ productsAmount }}</div>
+                        <nuxt-link to="/cart"><i class="material-icons">shopping_cart</i></nuxt-link>
+                    </li>
+                </ul>
+            </template>
         </nav>
     </header>
 </template>
@@ -36,6 +38,7 @@ import { productsStore } from '../store/productsStore'
 import { storeToRefs } from 'pinia';
 
 const router = useRouter();
+const route = useRoute();
 
 const visible = ref(false);
 
@@ -79,6 +82,6 @@ const logout = () => {
 }
 
 .product-counter {
-    @apply absolute left-[10px] bottom-[20px] bg-[#12b488] text-white rounded-[50%] py-[1px] px-[6px] text-[10px];
+    @apply absolute left-[10px] bottom-[20px] bg-primary text-white rounded-[50%] py-[1px] px-[6px] text-[10px];
 }
 </style>
