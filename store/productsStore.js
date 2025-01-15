@@ -5,6 +5,8 @@ export const productsStore = defineStore("products", {
     state: () => ({
         cart: [],
         costShipping: 50,
+        checkAll: true,
+        // checkoutProducts: [],
     }),
     //action
     actions: {
@@ -16,6 +18,7 @@ export const productsStore = defineStore("products", {
                     ...product,
                     amount: amount ? amount : 1,
                     total: amount ? amount * product.price : product.price,
+                    checked: true,
                 };
                 this.cart.push(data);
             } else {
@@ -35,6 +38,18 @@ export const productsStore = defineStore("products", {
                 this.removeProduct(id);
             }
         },
+        checkAllProduct() {
+            this.checkAll = !this.checkAll;
+
+            this.cart = this.cart.map((product) => ({
+                ...product,
+                checked: this.checkAll,
+            }));
+            console.log(this.checkAll);
+        },
+        deleteCheckedProducts() {
+            this.cart = this.cart.filter((product) => !product.checked);
+        },
         removeAllProduct() {
             this.cart = [];
         },
@@ -49,7 +64,7 @@ export const productsStore = defineStore("products", {
         },
         subTotal() {
             return Number(
-                this.cart
+                this.checkoutCart
                     .reduce((total, item) => (total += item.total), 0)
                     .toFixed(2)
             );
@@ -65,14 +80,24 @@ export const productsStore = defineStore("products", {
             return +(this.subTotal * 0.2).toFixed(2);
         },
         totalSaved() {
-            if (this.shippingFee > 0) {
-                return "0";
-            } else {
-                return "5.0";
-            }
+            return 0;
         },
         totalValue() {
             return +(this.subTotal + this.tax + this.shippingFee).toFixed(2);
+        },
+        checkoutCart() {
+            return this.cart.filter((product) => product.checked);
+        },
+        selectAll() {
+            const verify = this.cart.find((product) => !product.checked);
+
+            if (!verify) {
+                this.checkAll = true;
+                return true;
+            } else {
+                this.checkAll = false;
+                return false;
+            }
         },
     },
     persist: true,

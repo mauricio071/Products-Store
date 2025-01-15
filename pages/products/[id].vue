@@ -13,10 +13,10 @@
                         <p>{{ product.rating.rate }}</p>
                     </div>
                     <div class="flex justify-between items-baseline my-2">
-                        <h2 class="text-lg md:text-xl font-bold mb-6">Price - ${{ product.price }}</h2>
+                        <h2 class="text-lg md:text-xl font-bold mb-6">Price: ${{ product.price }}</h2>
                         <p class="text-lg font-semibold">{{ product.rating.count }} sold</p>
                     </div>
-                    <div class="description space-y-4">
+                    <div class="description space-y-6">
                         <h3 class="font-bold border-b-2 pb-2 mb-4">Product description:</h3>
                         <p>{{ product.description }}</p>
                         <div class="amounts">
@@ -27,10 +27,16 @@
                             <span class=" font-semibold">{{ amount }}</span>
                             <IconsPlus @click="addUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer" />
                         </div>
-                        <button @click="addInCart" class="btn flex items-center gap-x-4">
-                            <i class="material-icons">add_shopping_cart</i>
-                            <span>Add in cart</span>
-                        </button>
+                        <div class="flex gap-4">
+                            <button @click="addToCart" class="btn flex justify-center items-center gap-x-4">
+                                <i class="material-icons">add_shopping_cart</i>
+                                <span class="font-semibold">Add to cart</span>
+                            </button>
+                            <button @click="addToCart('payment')" class="btn flex justify-center items-center gap-x-4">
+                                <i class="material-icons">shopping_cart</i>
+                                <span class="font-semibold">Buy now</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,7 +80,7 @@ const { id } = useRoute().params
 const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`)
 const products = ref([])
 
-const carregarSimilares = async () => {
+const loadSimilar = async () => {
     const { data } = await useFetch(`https://fakestoreapi.com/products/category/${product.value.category}`)
 
     const produtosFiltrados = data.value.filter((item) => item.id !== Number(id))
@@ -82,7 +88,7 @@ const carregarSimilares = async () => {
     products.value = produtosFiltrados
 }
 
-carregarSimilares()
+loadSimilar()
 
 const amount = ref(1)
 
@@ -100,15 +106,21 @@ const addUnitProduct = () => {
     amount.value += 1
 }
 
-const addInCart = () => {
+const addToCart = (payment) => {
     try {
-        addProduct(product.value, amount.value)
-        $toast.success("Product added!")
-        setTimeout(() => {
-            router.push({ path: "/" })
-        }, 1000)
+        addProduct(product.value, amount.value);
+
+        if (payment === "payment") {
+            router.push({ path: "/payment" }).then(() => {
+                $toast.success("Product added!");
+            });
+        } else {
+            router.push({ path: "/" }).then(() => {
+                $toast.success("Product added!");
+            });
+        }
     } catch (error) {
-        $toast.error("There was an error processing your request")
+        $toast.error("There was an error processing your request");
     }
 }
 </script>

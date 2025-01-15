@@ -25,7 +25,7 @@
                 <p>Estimated delivery: 1 month</p>
             </div>
             <div class="products">
-                <div v-for="product in cart" :key="product.id">
+                <div v-for="product in checkoutCart" :key="product.id">
                     <ProductCard :product="product" :disabled="true" />
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 </p>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Shipping fee:</span>
-                    <span>$5.0</span>
+                    <span>{{ shippingFee === 0 ? "Free" : "$5.0" }}</span>
                 </p>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Tax:</span>
@@ -54,7 +54,7 @@
                     <span>${{ totalValue }}</span>
                 </p>
                 <button @click="checkout" class="btn w-full">
-                    <span class="font-semibold text-lg">Checkout</span>
+                    <span class="font-semibold text-lg">Place order</span>
                 </button>
             </div>
             <div class="safety">
@@ -107,7 +107,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue } = storeToRefs(store);
+const { subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 
@@ -146,7 +146,7 @@ const completePurchase = () => {
     @apply space-y-4 lg:w-[70%];
 
     .address {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-8 sm:p-4;
+        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
 
         h2 {
             @apply text-xl font-bold mb-4;
@@ -162,7 +162,7 @@ const completePurchase = () => {
     }
 
     .payment-methods {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-8 sm:p-4;
+        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
 
         h2 {
             @apply text-xl font-bold mb-4;
@@ -170,7 +170,7 @@ const completePurchase = () => {
     }
 
     .shipping-method {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-8 sm:p-4;
+        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
 
         h2 {
             @apply text-xl font-bold mb-4;
@@ -190,12 +190,12 @@ const completePurchase = () => {
     @apply flex flex-col gap-4 lg:w-[30%];
 
     .overview {
-        @apply bg-white shadow-md rounded-lg p-4 w-full space-y-4;
+        @apply bg-white shadow-md rounded-lg p-6 w-full space-y-4;
     }
 
     .security,
     .safety {
-        @apply bg-white shadow-md rounded-lg px-6 py-8 flex flex-col gap-4;
+        @apply bg-white shadow-md rounded-lg p-6 flex flex-col gap-4;
 
         h3 {
             @apply text-lg font-bold;

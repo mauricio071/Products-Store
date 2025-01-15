@@ -2,7 +2,11 @@
     <div v-if="productsAmount > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
         class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
         <p class="text-center font-bold">Total: ${{ subTotal }}</p>
-        <NuxtLink to="/cart" class="btn-goTo">Go to cart</NuxtLink>
+        <NuxtLink :to="checkoutCart.length > 0 ? '/payment' : ''"
+            :class="{ 'opacity-40 cursor-not-allowed': checkoutCart.length === 0 }" class="btn-goTo">
+            Checkout
+        </NuxtLink>
+        <NuxtLink to="/cart" class="btn-goTo !bg-white !text-primary">Go to cart</NuxtLink>
         <hr>
         <p v-if="shippingFee > 0" class="shipping">
             To save <span>$5.00</span> on shipping,
@@ -14,6 +18,10 @@
         <div class="products space-y-8 overflow-auto -mr-4">
             <div v-for="product in cart" :key="product.id"
                 class="product flex flex-col items-center gap-2 bg-gray-100 rounded-xl py-4 mr-3">
+                <label class="checkbox -left-[4rem]">
+                    <input v-model="product.checked" type="checkbox" id="select-all">
+                    <span class="check"></span>
+                </label>
                 <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
                 <p class="font-semibold">${{ product.price }}</p>
                 <div class="amounts">
@@ -31,9 +39,9 @@
 import { productsStore } from '../store/productsStore'
 import { storeToRefs } from 'pinia';
 
-const store = productsStore()
+const store = productsStore();
 
-const { cart, productsAmount, subTotal, costShipping, shippingFee } = storeToRefs(store)
+const { cart, productsAmount, subTotal, costShipping, shippingFee, checkoutCart } = storeToRefs(store);
 
 const removeUnitProduct = (id) => {
     store.removeUnit(id);
@@ -54,19 +62,19 @@ const addUnitProduct = (product) => {
 }
 
 .btn-goTo {
-    @apply block mx-auto text-center bg-primary duration-300 text-white w-full py-2 rounded-2xl border border-primary;
-}
+    @apply block mx-auto font-semibold text-center bg-primary duration-300 text-white w-full py-2 rounded-2xl border border-primary;
 
-.btn-goTo:hover {
-    @apply bg-white text-primary;
+    &:hover {
+        @apply bg-[#11c091];
+    }
 }
 
 .shipping {
     @apply bg-gray-100 p-2 py-4 text-center font-semibold;
-}
 
-.shipping span {
-    @apply text-red-500;
+    span {
+        @apply text-red-500;
+    }
 }
 
 .amounts {

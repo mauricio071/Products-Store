@@ -14,18 +14,25 @@
                     <li>
                         <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
                     </li>
-                    <li class="user-account">
-                        <IconsUser />
-                        <div v-if="loginToken" @click="logout" class="submenu">
-                            <span>Logout</span>
-                        </div>
-                        <div v-else @click="login" class="submenu">
-                            <span>Login</span>
+                    <li>
+                        <div class="user-account">
+                            <IconsUser />
+                            <div v-if="loginToken" @click="logout" class="submenu">
+                                <span>Logout</span>
+                            </div>
+                            <div v-else @click="login" class="submenu">
+                                <span>Login</span>
+                            </div>
+                            <!-- Hi, user -->
+                            <span class="font-semibold text-sm ml-1">Account</span>
                         </div>
                     </li>
                     <li class="relative">
-                        <div v-if="productsAmount > 0" class="product-counter">{{ productsAmount }}</div>
-                        <nuxt-link to="/cart"><i class="material-icons">shopping_cart</i></nuxt-link>
+                        <nuxt-link to="/cart" class="flex items-end">
+                            <div v-if="productsAmount > 0" class="product-counter">{{ productsAmount }}</div>
+                            <i class="material-icons">shopping_cart</i>
+                            <span class="font-semibold text-sm ml-1">Cart</span>
+                        </nuxt-link>
                     </li>
                 </ul>
             </template>
@@ -60,7 +67,7 @@ const logout = () => {
 
 <style scoped>
 .user-account {
-    @apply flex gap-2 relative;
+    @apply flex items-end gap-2 relative;
 
     &:hover {
         .submenu {
@@ -69,19 +76,19 @@ const logout = () => {
     }
 
     .submenu {
-        @apply hidden absolute top-[1.5rem] left-[-2rem] w-24 text-center font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
+        @apply hidden absolute top-[1.5rem] left-[-2rem] w-40 text-center font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
 
         span {
-            @apply duration-300;
+            @apply block duration-300 py-2;
 
             &:hover {
-                @apply block bg-gray-200;
+                @apply bg-gray-200;
             }
         }
     }
 }
 
 .product-counter {
-    @apply absolute left-[10px] bottom-[20px] bg-primary text-white rounded-[50%] py-[1px] px-[6px] text-[10px];
+    @apply absolute bottom-[20px] left-4 bg-primary text-white rounded-[50%] py-[1px] px-[6px] text-[10px];
 }
 </style>

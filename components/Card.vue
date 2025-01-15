@@ -2,7 +2,7 @@
     <div class="card">
         <img :src="product.image" alt="Product image" class="max-h-[11rem] max-w-[70%] mx-auto flex-grow">
         <div @click="addInCart(product)" class="add-cart">
-            <IconsAddProdutct />
+            <i class="material-icons">add_shopping_cart</i>
         </div>
         <h2 class="text-2xl font-semibold my-4 truncate">{{ product.title }}</h2>
         <div class="rating">
@@ -46,11 +46,15 @@ const addInCart = (product) => {
 }
 
 .add-cart {
-    @apply absolute w-full right-[1rem] max-w-[3rem] bg-gray-100 rounded-[50%] p-2 shadow-lg cursor-pointer duration-300;
-}
+    @apply flex justify-center items-center w-14 h-14 absolute right-[1rem] bg-gray-100 rounded-[50%] shadow-lg cursor-pointer duration-300;
 
-.add-cart:hover {
-    @apply bg-[#1dd8a6];
+    &:hover {
+        @apply text-white bg-primary;
+    }
+
+    i {
+        @apply text-3xl;
+    }
 }
 
 .sale {
