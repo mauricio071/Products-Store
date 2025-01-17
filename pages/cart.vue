@@ -34,22 +34,18 @@
                         <span>Subtotal:</span>
                         <span>${{ subTotal }}</span>
                     </p>
-                    <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between">
-                        <span>Shipping fee:</span>
-                        <span>$5.0</span>
-                    </p>
-                    <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between">
-                        <span>Tax:</span>
-                        <span>${{ tax }}</span>
-                    </p>
                     <p v-if="subTotal > 0"
                         class="font-semibold text-xl flex justify-between pb-4 border-b border-b-gray">
                         <span>Total saved:</span>
                         <span class="text-red-500"> -$ {{ totalSaved }}</span>
                     </p>
                     <p class="font-bold text-2xl flex justify-between">
-                        <span>Total price:</span>
-                        <span>${{ subTotal > 0 ? totalValue : 0 }}</span>
+                        <span>Estimated total:</span>
+                        <span>${{ subTotal }}</span>
+                    </p>
+                    <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between text-gray-500">
+                        <span>Estimated tax:</span>
+                        <span>${{ tax }}</span>
                     </p>
                     <button @click="checkout" :class="{ 'opacity-40 cursor-not-allowed': checkoutCart.length === 0 }"
                         class="btn btn-checkout" :disabled="checkoutCart.length === 0">

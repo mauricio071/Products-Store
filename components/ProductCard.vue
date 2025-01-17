@@ -1,17 +1,15 @@
 <template>
     <div>
         <div class="product">
-            <div class="flex gap-2">
-                <template v-if="!disabled">
-                    <label class="checkbox">
-                        <input v-model="product.checked" type="checkbox" id="select-all">
-                        <span class="check !top-1/2 "></span>
-                    </label>
-                </template>
-                <nuxt-link :to="!disabled ? `/products/${product.id}` : ''">
-                    <img :src="product.image" :alt="product.title">
-                </nuxt-link>
-            </div>
+            <template v-if="!disabled">
+                <label class="checkbox self-start md:self-center">
+                    <input v-model="product.checked" type="checkbox" id="select-all">
+                    <span class="check !top-1/2 "></span>
+                </label>
+            </template>
+            <nuxt-link :to="!disabled ? `/products/${product.id}` : ''">
+                <img :src="product.image" :alt="product.title">
+            </nuxt-link>
             <div class="product-details">
                 <div class="flex items-center justify-between w-full">
                     <nuxt-link :to="!disabled ? `/products/${product.id}` : ''">
@@ -32,14 +30,12 @@
                         :class="{ '!text-gray-200 !cursor-not-allowed': disabled }"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
                 </div>
-                <p class="text-xl">
-                    <span class="font-bold">
-                        Total price:
-                    </span>
-                    <span>
-                        ${{ product.total.toFixed(2) }}
-                    </span>
+                <p class="text-xl font-bold">
+                    Total price: ${{ product.total.toFixed(2) }}
                 </p>
+                <span v-if="!disabled" class="text-gray-600 block !mt-1">
+                    +${{ (product.total * 0.2).toFixed(2) }} estimated tax
+                </span>
             </div>
         </div>
     </div>
@@ -77,15 +73,15 @@ const addUnitProduct = (product) => {
 
 <style scoped>
 .product {
-    @apply bg-white shadow-md rounded-lg px-6 py-8 min-h-[15rem] md:flex md:justify-between md:gap-2;
+    @apply bg-white shadow-md rounded-lg px-6 py-8 min-h-[15rem] flex flex-col items-center justify-between gap-4 md:flex-row;
 }
 
 .product img {
-    @apply flex-grow m-auto max-w-[150px] max-h-[150px] md:m-8;
+    @apply max-w-[150px] max-h-[150px] w-full;
 }
 
 .product-details {
-    @apply max-w-[45rem] space-y-6;
+    @apply max-w-[45rem] space-y-6 md:w-[70%];
 }
 
 .amounts {
