@@ -45,7 +45,6 @@ export const productsStore = defineStore("products", {
                 ...product,
                 checked: this.checkAll,
             }));
-            console.log(this.checkAll);
         },
         deleteCheckedProducts() {
             this.cart = this.cart.filter((product) => !product.checked);

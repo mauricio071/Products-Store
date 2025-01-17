@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="productsAmount < 1" class="text-center" style="height: calc(100vh - 160px);">
+        <div v-if="cart.length < 1" class="text-center" style="height: calc(100vh - 160px);">
             <div class="text-4xl mb-8">
                 Your cart is empty!
             </div>
@@ -11,7 +11,7 @@
         <div v-else class="container flex flex-col lg:flex-row gap-4">
             <div class="left-side">
                 <div class="cart-amount">
-                    <h1>Shopping cart ({{ productsAmount }})</h1>
+                    <h1>Shopping cart ({{ cart.length }})</h1>
                     <div class="flex items-center max-w-sm">
                         <label class="checkbox border-r border-r-gray-300 pr-4 mr-4">
                             <input v-model="selectAll" @click="store.checkAllProduct" type="checkbox" id="select-all">
@@ -53,7 +53,7 @@
                     </p>
                     <button @click="checkout" :class="{ 'opacity-40 cursor-not-allowed': checkoutCart.length === 0 }"
                         class="btn btn-checkout" :disabled="checkoutCart.length === 0">
-                        <span class="font-semibold text-lg">Checkout</span>
+                        <span class="font-semibold text-lg">Checkout ({{ checkoutCart.length }})</span>
                     </button>
                 </div>
                 <div class="security">
@@ -93,7 +93,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, productsAmount, subTotal, tax, totalSaved, totalValue, checkoutCart, selectAll } = storeToRefs(store);
+const { cart, subTotal, tax, totalSaved, totalValue, checkoutCart, selectAll } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 

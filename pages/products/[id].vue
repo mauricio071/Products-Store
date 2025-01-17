@@ -4,7 +4,7 @@
             <div class="md:grid md:grid-cols-2 items-center">
                 <div class="sm:p-7">
                     <img :src="product.image" :alt="product.description"
-                        class="max-h-[30rem] mx-auto mb-4 2xl:max-w-[30rem]">
+                        class="max-h-[18rem] mx-auto mb-4 lg:max-w-[30rem] lg:max-h-[27rem]">
                 </div>
                 <div class="sm:p-7">
                     <h1 class="text-xl md:text-3xl">{{ product.title }}</h1>
@@ -24,7 +24,7 @@
                             <IconsMinus @click="removeUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer"
                                 :class="amount === 1 ? 'text-[#d1d5db] cursor-not-allowed' : 'text-gray-500'" />
 
-                            <span class=" font-semibold">{{ amount }}</span>
+                            <span class="font-semibold">{{ amount }}</span>
                             <IconsPlus @click="addUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer" />
                         </div>
                         <div class="flex gap-4">

@@ -23,13 +23,12 @@
                             <div v-else @click="login" class="submenu">
                                 <span>Login</span>
                             </div>
-                            <!-- Hi, user -->
                             <span class="font-semibold text-sm ml-1">Account</span>
                         </div>
                     </li>
                     <li class="relative">
                         <nuxt-link to="/cart" class="flex items-end">
-                            <div v-if="productsAmount > 0" class="product-counter">{{ productsAmount }}</div>
+                            <div v-if="cart.length > 0" class="product-counter">{{ cart.length }}</div>
                             <i class="material-icons">shopping_cart</i>
                             <span class="font-semibold text-sm ml-1">Cart</span>
                         </nuxt-link>
@@ -51,7 +50,7 @@ const visible = ref(false);
 
 const store = productsStore();
 
-const { productsAmount } = storeToRefs(store);
+const { cart } = storeToRefs(store);
 
 const loginToken = useCookie('loginToken');
 
