@@ -1,5 +1,5 @@
 <template>
-    <div v-if="productsAmount > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
+    <div v-if="productsQuantity > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
         class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
         <p class="text-center font-bold">Total: ${{ subTotal }}</p>
         <NuxtLink :to="checkoutCart.length > 0 ? '/payment' : ''"
@@ -22,12 +22,14 @@
                     <input v-model="product.checked" type="checkbox" id="select-all">
                     <span class="check"></span>
                 </label>
-                <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
+                <nuxt-link :to="`/product/${product.id}`">
+                    <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
+                </nuxt-link>
                 <p class="font-semibold">${{ product.price }}</p>
-                <div class="amounts">
+                <div class="quantity">
                     <IconsMinus @click="removeUnitProduct(product.id)"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
-                    <span class="font-semibold">{{ product.amount }}</span>
+                    <span class="font-semibold">{{ product.quantity }}</span>
                     <IconsPlus @click="addUnitProduct(product)" class="w-[1.5rem] text-gray-500 cursor-pointer" />
                 </div>
             </div>
@@ -41,7 +43,7 @@ import { storeToRefs } from 'pinia';
 
 const store = productsStore();
 
-const { cart, productsAmount, subTotal, costShipping, shippingFee, checkoutCart } = storeToRefs(store);
+const { cart, productsQuantity, subTotal, costShipping, shippingFee, checkoutCart } = storeToRefs(store);
 
 const removeUnitProduct = (id) => {
     store.removeUnit(id);
@@ -77,7 +79,7 @@ const addUnitProduct = (product) => {
     }
 }
 
-.amounts {
+.quantity {
     @apply flex items-center gap-2;
 }
 </style>

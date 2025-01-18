@@ -11,7 +11,7 @@ h1 {
 }
 
 @layer components {
-    .cart-amount {
+    .cart-quantity {
         @apply bg-white shadow-md rounded-lg p-4;
     }
 

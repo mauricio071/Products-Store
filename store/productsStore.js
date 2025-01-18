@@ -6,24 +6,26 @@ export const productsStore = defineStore("products", {
         cart: [],
         costShipping: 50,
         checkAll: true,
-        // checkoutProducts: [],
+        wishList: [],
     }),
     //action
     actions: {
-        addProduct(product, amount) {
+        addProduct(product, quantity) {
             const exist = this.cart.find((item) => item.id === product.id);
 
             if (!exist) {
                 const data = {
                     ...product,
-                    amount: amount ? amount : 1,
-                    total: amount ? amount * product.price : product.price,
+                    quantity: quantity ? quantity : 1,
+                    total: quantity ? quantity * product.price : product.price,
                     checked: true,
                 };
                 this.cart.push(data);
             } else {
-                exist.amount += amount ? amount : 1;
-                exist.total += amount ? amount * product.price : exist.price;
+                exist.quantity += quantity ? quantity : 1;
+                exist.total += quantity
+                    ? quantity * product.price
+                    : exist.price;
             }
         },
         removeProduct(id) {
@@ -31,12 +33,15 @@ export const productsStore = defineStore("products", {
         },
         removeUnit(id) {
             const product = this.cart.find((item) => item.id === id);
-            if (product.amount > 1) {
-                product.amount -= 1;
+            if (product.quantity > 1) {
+                product.quantity -= 1;
                 product.total -= product.price;
             } else {
                 this.removeProduct(id);
             }
+        },
+        addToWish(id) {
+            this.wishList.push(id);
         },
         checkAllProduct() {
             this.checkAll = !this.checkAll;
@@ -49,17 +54,17 @@ export const productsStore = defineStore("products", {
         deleteCheckedProducts() {
             this.cart = this.cart.filter((product) => !product.checked);
         },
-        removeAllProduct() {
-            this.cart = [];
-        },
         checkout() {
             this.cart = [];
         },
     },
     //getter
     getters: {
-        productsAmount() {
-            return this.cart.reduce((total, item) => (total += item.amount), 0);
+        productsQuantity() {
+            return this.cart.reduce(
+                (total, item) => (total += item.quantity),
+                0
+            );
         },
         subTotal() {
             return Number(
@@ -97,6 +102,9 @@ export const productsStore = defineStore("products", {
                 this.checkAll = false;
                 return false;
             }
+        },
+        checkedAny() {
+            return this.cart.find((product) => product.checked);
         },
     },
     persist: true,

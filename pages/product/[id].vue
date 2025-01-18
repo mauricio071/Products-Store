@@ -24,12 +24,12 @@
                     <div class="description space-y-6">
                         <h3 class="font-bold border-b-2 pb-2 mb-4">Product description:</h3>
                         <p>{{ product.description }}</p>
-                        <div class="amounts">
-                            <h3 class="font-bold">Amount:</h3>
+                        <div class="quantity">
+                            <h3 class="font-bold">Quantity:</h3>
                             <IconsMinus @click="removeUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer"
-                                :class="amount === 1 ? 'text-[#d1d5db] cursor-not-allowed' : 'text-gray-500'" />
+                                :class="quantity === 1 ? '!text-[#d1d5db] !cursor-not-allowed' : 'text-gray-500'" />
 
-                            <span class="font-semibold">{{ amount }}</span>
+                            <span class="font-semibold">{{ quantity }}</span>
                             <IconsPlus @click="addUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer" />
                         </div>
                         <div class="flex gap-4">
@@ -41,6 +41,13 @@
                                 <i class="material-icons">shopping_cart</i>
                                 <span class="font-semibold">Buy now</span>
                             </button>
+                            <!-- <button class="favorite-btn">
+
+                                <i class="material-icons text-red-500">favorite</i>
+                            </button> -->
+                            <!-- <i class="material-icons text-red-500">favorite_border</i> -->
+
+
                         </div>
                     </div>
                 </div>
@@ -95,25 +102,25 @@ const loadSimilar = async () => {
 
 loadSimilar()
 
-const amount = ref(1)
+const quantity = ref(1)
 
 if (!product.value) {
     throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true })
 }
 
 const removeUnitProduct = () => {
-    if (amount.value > 1) {
-        amount.value -= 1
+    if (quantity.value > 1) {
+        quantity.value -= 1
     }
 }
 
 const addUnitProduct = () => {
-    amount.value += 1
+    quantity.value += 1
 }
 
 const addToCart = (payment) => {
     try {
-        addProduct(product.value, amount.value);
+        addProduct(product.value, quantity.value);
 
         if (payment === "payment") {
             router.push({ path: "/payment" }).then(() => {
@@ -131,9 +138,11 @@ const addToCart = (payment) => {
 </script>
 
 <style scoped>
-.amounts {
+.quantity {
     @apply flex items-center gap-2;
 }
+
+.favorite-btn {}
 
 .similar.card {
     @apply w-full my-8 mx-4 max-h-[25rem] max-w-[19rem] 2xl:min-w-[23rem];

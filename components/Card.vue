@@ -13,7 +13,7 @@
             <p class="text-2xl font-bold text-gray-500 truncate">${{ product.price }}</p>
             <p class="text-lg font-semibold">{{ product.rating.count }} sold</p>
         </div>
-        <nuxt-link :to="`/products/${product.id}`">
+        <nuxt-link :to="`/product/${product.id}`">
             <p class="btn">See details</p>
         </nuxt-link>
     </div>

@@ -10,15 +10,16 @@
         </div>
         <div v-else class="container flex flex-col lg:flex-row gap-4">
             <div class="left-side">
-                <div class="cart-amount">
+                <div class="cart-quantity">
                     <h1>Shopping cart ({{ cart.length }})</h1>
                     <div class="flex items-center max-w-sm">
-                        <label class="checkbox border-r border-r-gray-300 pr-4 mr-4">
+                        <label class="checkbox ">
                             <input v-model="selectAll" @click="store.checkAllProduct" type="checkbox" id="select-all">
                             <span class="check"></span>
                             Select all items
                         </label>
-                        <p @click="store.deleteCheckedProducts" class="delete-items">Delete selected items</p>
+                        <p v-if="checkedAny" @click="modal = true" class="delete-items">Delete selected items
+                        </p>
                     </div>
                 </div>
                 <div class="products">
@@ -78,6 +79,17 @@
                 </div>
             </div>
         </div>
+        <Modal :isVisible="modal" @close="closeModal">
+            <div class="flex flex-col gap-4 items-center justify-between lg:-mb-4">
+                <h3 class="text-2xl font-bold text-center">Remove</h3>
+                <i class="material-icons text-yellow-400 text-[5rem]">warning</i>
+                <p class="text-center max-w-lg text-gray-700 mb-4">
+                    This action will remove checked items from your shopping cart.
+                </p>
+                <button @click="removeProducts" class="btn w-full hover:bg-[#11c091] !text-white">Remove</button>
+                <button @click="closeModal" class="btn border-primary !bg-white !text-primary w-full">Cancel</button>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -89,9 +101,21 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, tax, totalSaved, totalValue, checkoutCart, selectAll } = storeToRefs(store);
+const { cart, subTotal, tax, totalSaved, checkoutCart, selectAll, checkedAny, productsQuantity } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
+
+const modal = ref(false);
+
+const closeModal = () => {
+    modal.value = false;
+}
+
+const removeProducts = () => {
+    store.deleteCheckedProducts();
+    closeModal();
+    $toast.success("Removed!");
+}
 
 const checkout = () => {
     if (!loginToken.value) {
@@ -109,7 +133,7 @@ const checkout = () => {
 .left-side {
     @apply space-y-4 lg:w-[70%];
 
-    .cart-amount {
+    .cart-quantity {
         @apply p-6;
 
         h1 {
@@ -122,7 +146,7 @@ const checkout = () => {
         }
 
         p.delete-items {
-            @apply font-bold underline text-blue-500;
+            @apply font-bold underline text-blue-500 border-l border-l-gray-300 pl-4 ml-4;
         }
     }
 

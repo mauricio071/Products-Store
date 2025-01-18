@@ -7,12 +7,12 @@
                     <span class="check !top-1/2 "></span>
                 </label>
             </template>
-            <nuxt-link :to="!disabled ? `/products/${product.id}` : ''">
+            <nuxt-link :to="!disabled ? `/product/${product.id}` : ''">
                 <img :src="product.image" :alt="product.title">
             </nuxt-link>
             <div class="product-details">
                 <div class="flex items-center justify-between w-full">
-                    <nuxt-link :to="!disabled ? `/products/${product.id}` : ''">
+                    <nuxt-link :to="!disabled ? `/product/${product.id}` : ''">
                         <h3 :class="{ 'hover:text-primary': !disabled }" class="text-[20px] font-bold duration-300">{{
                             product.title }}</h3>
                     </nuxt-link>
@@ -20,12 +20,12 @@
                         class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
                 </div>
                 <p>{{ product.description }}</p>
-                <div class="amounts">
-                    <h3 class="font-bold">Amount:</h3>
+                <div class="quantity">
+                    <h3 class="font-bold">Quantity:</h3>
                     <IconsMinus @click="removeUnitProduct(product.id)"
                         :class="{ ' !text-gray-200 !cursor-not-allowed': disabled }"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
-                    <span class="font-semibold">{{ product.amount }}</span>
+                    <span class="font-semibold">{{ product.quantity }}</span>
                     <IconsPlus @click="addUnitProduct(product)"
                         :class="{ '!text-gray-200 !cursor-not-allowed': disabled }"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
@@ -84,7 +84,7 @@ const addUnitProduct = (product) => {
     @apply max-w-[45rem] space-y-6 md:w-[70%];
 }
 
-.amounts {
+.quantity {
     @apply flex items-center gap-2;
 }
 </style>
