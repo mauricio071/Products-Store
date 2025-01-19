@@ -28,6 +28,11 @@ definePageMeta({
     layout: false,
     middleware: 'login'
 });
+
+useHead({
+    title: "Login - Products Store"
+});
+
 const { $toast } = useNuxtApp();
 const router = useRouter();
 

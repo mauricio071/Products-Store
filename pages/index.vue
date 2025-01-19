@@ -32,21 +32,25 @@
 </template>
 
 <script setup>
-const loading = ref(false)
+useHead({
+    title: "Products Store"
+});
 
-const { data: products, status } = await useFetch('https://fakestoreapi.com/products')
+const loading = ref(false);
 
-const filters = ['all', 'electronics', 'jewelery', "men's clothing", "women's clothing"]
+const { data: products, status } = await useFetch('https://fakestoreapi.com/products');
 
-const currentFilter = ref('all')
+const filters = ['all', 'electronics', 'jewelery', "men's clothing", "women's clothing"];
+
+const currentFilter = ref('all');
 
 const categoryFilter = async (filter) => {
-    loading.value = true
-    const filterType = filter === "all" ? '' : `/category/${filter}`
-    const { data } = await useFetch(`https://fakestoreapi.com/products${filterType}`)
-    products.value = data.value
-    currentFilter.value = filter
-    loading.value = false
+    loading.value = true;
+    const filterType = filter === "all" ? '' : `/category/${filter}`;
+    const { data } = await useFetch(`https://fakestoreapi.com/products${filterType}`);
+    products.value = data.value;
+    currentFilter.value = filter;
+    loading.value = false;
 }
 </script>
 

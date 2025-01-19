@@ -100,7 +100,11 @@ import { storeToRefs } from 'pinia';
 
 definePageMeta({
     middleware: "payment"
-})
+});
+
+useHead({
+    title: "Payment - Products Store"
+});
 
 const router = useRouter();
 const { $toast } = useNuxtApp();

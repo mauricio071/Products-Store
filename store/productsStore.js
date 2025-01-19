@@ -41,7 +41,18 @@ export const productsStore = defineStore("products", {
             }
         },
         addToWish(id) {
-            this.wishList.push(id);
+            const verify = this.wishList.find((productId) => productId === id);
+
+            if (!verify) {
+                this.wishList.push(id);
+            } else {
+                this.wishList = this.wishList.filter(
+                    (productId) => productId !== id
+                );
+            }
+        },
+        favorited(id) {
+            return this.wishList.find((productId) => productId === id);
         },
         checkAllProduct() {
             this.checkAll = !this.checkAll;

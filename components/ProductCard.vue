@@ -19,11 +19,11 @@
                     <i v-if="!disabled" @click="remove(product.id)"
                         class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
                 </div>
-                <p>{{ product.description }}</p>
+                <p class="truncate-multiline">{{ product.description }}</p>
                 <div class="quantity">
                     <h3 class="font-bold">Quantity:</h3>
                     <IconsMinus @click="removeUnitProduct(product.id)"
-                        :class="{ ' !text-gray-200 !cursor-not-allowed': disabled }"
+                        :class="{ '!text-gray-200 !cursor-not-allowed': disabled }"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
                     <span class="font-semibold">{{ product.quantity }}</span>
                     <IconsPlus @click="addUnitProduct(product)"
@@ -86,5 +86,13 @@ const addUnitProduct = (product) => {
 
 .quantity {
     @apply flex items-center gap-2;
+}
+
+.truncate-multiline {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 </style>

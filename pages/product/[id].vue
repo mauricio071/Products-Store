@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <div class="card">
-            <div class="md:grid md:grid-cols-2 items-center">
+            <div class="lg:grid lg:grid-cols-2 items-center">
                 <div class="sm:p-7">
                     <img :src="product.image" :alt="product.description"
                         class="max-h-[18rem] mx-auto mb-4 lg:max-w-[30rem] lg:max-h-[27rem]">
@@ -28,26 +28,22 @@
                             <h3 class="font-bold">Quantity:</h3>
                             <IconsMinus @click="removeUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer"
                                 :class="quantity === 1 ? '!text-[#d1d5db] !cursor-not-allowed' : 'text-gray-500'" />
-
                             <span class="font-semibold">{{ quantity }}</span>
                             <IconsPlus @click="addUnitProduct" class="max-w-[1.5rem] text-gray-500 cursor-pointer" />
                         </div>
-                        <div class="flex gap-4">
-                            <button @click="addToCart" class="btn flex justify-center items-center gap-x-4">
+                        <div class="flex flex-col items-[unset] sm:flex-row sm:items-center gap-4">
+                            <button @click="addToCart" class="btn flex justify-center items-center gap-x-2">
                                 <i class="material-icons">add_shopping_cart</i>
                                 <span class="font-semibold">Add to cart</span>
                             </button>
-                            <button @click="addToCart('payment')" class="btn flex justify-center items-center gap-x-4">
+                            <button @click="addToCart('payment')" class="btn flex justify-center items-center gap-x-2">
                                 <i class="material-icons">shopping_cart</i>
                                 <span class="font-semibold">Buy now</span>
                             </button>
-                            <!-- <button class="favorite-btn">
-
-                                <i class="material-icons text-red-500">favorite</i>
-                            </button> -->
-                            <!-- <i class="material-icons text-red-500">favorite_border</i> -->
-
-
+                            <button @click="store.addToWish(product.id)" class="favorite-btn">
+                                <i v-if="store.favorited(product.id)" class="material-icons text-red-500">favorite</i>
+                                <i v-else class="material-icons text-red-500">favorite_border</i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -69,7 +65,7 @@
 </template>
 
 <script setup>
-import { productsStore } from '../store/productsStore'
+import { productsStore } from '../store/productsStore';
 
 const breakpoints = {
     768: {
@@ -80,37 +76,43 @@ const breakpoints = {
     },
 }
 
-const store = productsStore()
+const store = productsStore();
 
-const { $toast } = useNuxtApp()
+const { favorited } = storeToRefs(store);
 
-const addProduct = store.addProduct
+const { $toast } = useNuxtApp();
 
-const router = useRouter()
+const addProduct = store.addProduct;
 
-const { id } = useRoute().params
-const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`)
-const products = ref([])
+const router = useRouter();
+
+const { id } = useRoute().params;
+const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`);
+const products = ref([]);
+
+useHead({
+    title: `${product.value.title} - Products Store`
+});
 
 const loadSimilar = async () => {
-    const { data } = await useFetch(`https://fakestoreapi.com/products/category/${product.value.category}`)
+    const { data } = await useFetch(`https://fakestoreapi.com/products/category/${product.value.category}`);
 
-    const produtosFiltrados = data.value.filter((item) => item.id !== Number(id))
+    const produtosFiltrados = data.value.filter((item) => item.id !== Number(id));
 
-    products.value = produtosFiltrados
+    products.value = produtosFiltrados;
 }
 
-loadSimilar()
+loadSimilar();
 
-const quantity = ref(1)
+const quantity = ref(1);
 
 if (!product.value) {
-    throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true })
+    throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true });
 }
 
 const removeUnitProduct = () => {
     if (quantity.value > 1) {
-        quantity.value -= 1
+        quantity.value -= 1;
     }
 }
 
@@ -142,7 +144,9 @@ const addToCart = (payment) => {
     @apply flex items-center gap-2;
 }
 
-.favorite-btn {}
+.favorite-btn {
+    @apply flex items-center justify-center rounded-lg border border-red-500 p-2;
+}
 
 .similar.card {
     @apply w-full my-8 mx-4 max-h-[25rem] max-w-[19rem] 2xl:min-w-[23rem];

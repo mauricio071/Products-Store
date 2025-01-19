@@ -99,6 +99,10 @@ import { storeToRefs } from 'pinia'
 const router = useRouter();
 const { $toast } = useNuxtApp();
 
+useHead({
+    title: "Shopping Cart - Products Store"
+});
+
 const store = productsStore();
 
 const { cart, subTotal, tax, totalSaved, checkoutCart, selectAll, checkedAny, productsQuantity } = storeToRefs(store);
