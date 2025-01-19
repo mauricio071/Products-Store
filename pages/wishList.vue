@@ -1,31 +1,34 @@
 <template>
-    <div class="products">
-        <div class="product">
-            <!-- <template v-if="!disabled">
-                <label class="checkbox self-start md:self-center">
-                    <input v-model="product.checked" type="checkbox" id="select-all">
-                    <span class="check !top-1/2 "></span>
-                </label>
-            </template> -->
-            <nuxt-link :to="`/product/${product.id}`">
-                <img :src="product.image" :alt="product.title">
-            </nuxt-link>
-            <div class="product-details">
-                <div class="flex items-center justify-between w-full">
-                    <nuxt-link :to="`/product/${product.id}`">
-                        <h3 class="text-[20px] font-bold duration-300 'hover:text-primary'">
-                            {{ product.title }}</h3>
-                    </nuxt-link>
-                    <i @click="remove(product.id)"
-                        class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
+    <div>
+        <div v-if="loading">loading</div>
+        <div v-else class="products">
+            <div v-for="product in products" :key="product.id" class="product">
+                <!-- <template v-if="!disabled">
+                    <label class="checkbox self-start md:self-center">
+                        <input v-model="product.checked" type="checkbox" id="select-all">
+                        <span class="check !top-1/2 "></span>
+                    </label>
+                </template> -->
+                <nuxt-link :to="`/product/${product.id}`">
+                    <img :src="product.image" :alt="product.title">
+                </nuxt-link>
+                <div class="product-details">
+                    <div class="flex items-center justify-between w-full">
+                        <nuxt-link :to="`/product/${product.id}`">
+                            <h3 class="text-[20px] font-bold duration-300 'hover:text-primary'">
+                                {{ product.title }}</h3>
+                        </nuxt-link>
+                        <i @click="remove(product.id)"
+                            class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
+                    </div>
+                    <p class="truncate-multiline">{{ product.description }}</p>
+                    <p class="text-xl font-bold">
+                        <!-- Price: ${{ product.total.toFixed(2) }} -->
+                    </p>
+                    <span v-if="!disabled" class="text-gray-600 block !mt-1">
+                        <!-- +${{ (product.total * 0.2).toFixed(2) }} estimated tax -->
+                    </span>
                 </div>
-                <p class="truncate-multiline">{{ product.description }}</p>
-                <p class="text-xl font-bold">
-                    Price: ${{ product.total.toFixed(2) }}
-                </p>
-                <span v-if="!disabled" class="text-gray-600 block !mt-1">
-                    +${{ (product.total * 0.2).toFixed(2) }} estimated tax
-                </span>
             </div>
         </div>
     </div>
@@ -42,9 +45,28 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const data = async(() => {
+const { wishList } = storeToRefs(store);
 
-})
+const products = ref([]);
+const loading = ref(true);
+
+const fetchProducts = async () => {
+    loading.value = true;
+
+    try {
+        const wishListProducts = await Promise.all(
+            wishList.value.map(async (favId) => (
+                $fetch(`https://fakestoreapi.com/products/${favId}`)
+            ))
+        );
+
+        products.value = wishListProducts;
+    } catch (e) {
+        console.log("Error: ", e);
+    } finally {
+        loading.value = false;
+    }
+}
 
 const remove = (id) => {
     try {
@@ -53,6 +75,8 @@ const remove = (id) => {
         $toast.error("There was an error processing your request");
     }
 }
+
+fetchProducts();
 </script>
 
 <style scoped>
