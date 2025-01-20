@@ -1,7 +1,7 @@
 <template>
     <div v-if="productsQuantity > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
         class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
-        <p class="text-center font-bold">Total: ${{ subTotal }}</p>
+        <p class="text-center font-bold">Total: {{ formattedPrice(subTotal) }}</p>
         <NuxtLink :to="checkoutCart.length > 0 ? '/payment' : ''"
             :class="{ 'opacity-40 cursor-not-allowed': checkoutCart.length === 0 }" class="btn-goTo">
             Checkout
@@ -9,8 +9,8 @@
         <NuxtLink to="/cart" class="btn-goTo !bg-white !text-primary">Go to cart</NuxtLink>
         <hr>
         <p v-if="shippingFee > 0" class="shipping">
-            To save <span>$5.00</span> on shipping,
-            spend an additional <span>${{ +(costShipping - subTotal).toFixed(2) }}</span>
+            To save <span>{{ formattedPrice(shippingFee) }}</span> on shipping,
+            spend an additional <span>{{ formattedPrice(costShipping - subTotal) }}</span>
         </p>
         <p v-else class="shipping">
             <span>$5.00 saved</span>, explore more items with free shipping
@@ -25,7 +25,7 @@
                 <nuxt-link :to="`/product/${product.id}`">
                     <img :src="product.image" :alt="product.title" class="rounded-lg max-w-[5rem]">
                 </nuxt-link>
-                <p class="font-semibold">${{ product.price }}</p>
+                <p class="font-semibold">{{ formattedPrice(product.price) }}</p>
                 <div class="quantity">
                     <IconsMinus @click="removeUnitProduct(product.id)"
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />

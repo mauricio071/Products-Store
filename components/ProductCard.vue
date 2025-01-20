@@ -6,7 +6,6 @@
                 <span class="check !top-1/2 "></span>
             </label>
             <div v-else class="-ml-2"></div>
-
             <nuxt-link :to="!disabled ? `/product/${product.id}` : ''">
                 <img :src="product.image" :alt="product.title">
             </nuxt-link>
@@ -31,10 +30,10 @@
                         class="w-[1.5rem] text-gray-500 cursor-pointer" />
                 </div>
                 <p class="text-xl font-bold">
-                    Total price: ${{ product.total.toFixed(2) }}
+                    Total price: {{ formattedPrice(product.total) }}
                 </p>
                 <span v-if="!disabled" class="text-gray-600 block !mt-1">
-                    +${{ (product.total * 0.2).toFixed(2) }} estimated tax
+                    +{{ formattedPrice(product.total * 0.2) }} estimated tax
                 </span>
             </div>
         </div>

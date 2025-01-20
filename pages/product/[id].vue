@@ -14,9 +14,9 @@
                     </div>
                     <div class="flex justify-between items-center mt-2 mb-8">
                         <div>
-                            <h2 class="text-lg md:text-2xl font-bold">Price: ${{ product.price.toFixed(2) }}</h2>
+                            <h2 class="text-lg md:text-2xl font-bold">Price: {{ formattedPrice(product.price) }}</h2>
                             <span class="text-gray-600 block !mt-1">
-                                +${{ (product.price * 0.2).toFixed(2) }} estimated tax
+                                +{{ formattedPrice(product.price * 0.2) }} estimated tax
                             </span>
                         </div>
                         <p class="text-lg font-semibold">{{ product.rating.count }} sold</p>

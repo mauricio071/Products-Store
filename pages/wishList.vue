@@ -28,7 +28,8 @@
                                 <nuxt-link :to="`/product/${product.id}`">
                                     <h3
                                         class="text-[20px] font-bold duration-300 truncate max-w-[27rem] hover:text-primary">
-                                        {{ product.title }}</h3>
+                                        {{ product.title }}
+                                    </h3>
                                 </nuxt-link>
                                 <i @click="remove(product.id)"
                                     class="material-icons cursor-pointer duration-300 hover:text-red-500">delete</i>
@@ -36,7 +37,7 @@
                             <p class="truncate-multiline">{{ product.description }}</p>
                             <div class="price flex justify-between items-center gap-4">
                                 <p class="text-xl font-bold">
-                                    Price: ${{ product.price.toFixed(2) }}
+                                    Price: {{ formattedPrice(product.price) }}
                                 </p>
                                 <div class="flex items-center">
                                     <p class="text-sm border-r border-r-gray-400 pr-2 mr-2">{{ product.rating.count }}
@@ -49,7 +50,7 @@
                                 </div>
                             </div>
                             <span class="text-gray-600 block !-mt-3">
-                                +${{ (product.price * 0.2).toFixed(2) }} estimated tax
+                                +{{ formattedPrice(product.price * 0.2) }} estimated tax
                             </span>
                             <button @click="addToCart(product)"
                                 class="btn flex justify-center items-center gap-x-2 self-end">

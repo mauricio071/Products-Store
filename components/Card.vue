@@ -10,7 +10,7 @@
             <p>{{ product.rating.rate }}</p>
         </div>
         <div class="flex justify-between items-center mb-4">
-            <p class="text-2xl font-bold text-gray-500 truncate">${{ product.price }}</p>
+            <p class="text-2xl font-bold text-gray-500 truncate">{{ formattedPrice(product.price) }}</p>
             <p class="text-lg font-semibold">{{ product.rating.count }} sold</p>
         </div>
         <nuxt-link :to="`/product/${product.id}`">

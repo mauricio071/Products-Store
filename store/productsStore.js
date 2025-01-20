@@ -83,10 +83,9 @@ export const productsStore = defineStore("products", {
             );
         },
         subTotal() {
-            return Number(
-                this.checkoutCart
-                    .reduce((total, item) => (total += item.total), 0)
-                    .toFixed(2)
+            return this.checkoutCart.reduce(
+                (total, item) => (total += item.total),
+                0
             );
         },
         shippingFee() {
@@ -97,13 +96,13 @@ export const productsStore = defineStore("products", {
             }
         },
         tax() {
-            return +(this.subTotal * 0.2).toFixed(2);
+            return this.subTotal * 0.2;
         },
         totalSaved() {
             return 0;
         },
         totalValue() {
-            return +(this.subTotal + this.tax + this.shippingFee).toFixed(2);
+            return this.subTotal + this.tax + this.shippingFee;
         },
         checkoutCart() {
             return this.cart.filter((product) => product.checked);

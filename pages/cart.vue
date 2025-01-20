@@ -19,7 +19,8 @@
                             <span class="check"></span>
                             Select all items
                         </label>
-                        <p v-if="checkedAny" @click="modal = true" class="delete-items">Delete selected items
+                        <p v-if="checkedAny" @click="modal = true" class="delete-items">
+                            Delete selected items
                         </p>
                     </div>
                 </div>
@@ -34,20 +35,20 @@
                     <h2 class="text-2xl font-semibold mb-4 text-primary">Summary</h2>
                     <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between">
                         <span>Subtotal:</span>
-                        <span>${{ subTotal }}</span>
+                        <span>{{ formattedPrice(subTotal) }}</span>
                     </p>
                     <p v-if="subTotal > 0"
                         class="font-semibold text-xl flex justify-between pb-4 border-b border-b-gray">
                         <span>Total saved:</span>
-                        <span class="text-red-500"> -$ {{ totalSaved }}</span>
+                        <span class="text-red-500"> -{{ formattedPrice(totalSaved) }}</span>
                     </p>
                     <p class="font-bold text-2xl flex justify-between">
                         <span>Estimated total:</span>
-                        <span>${{ subTotal }}</span>
+                        <span>{{ formattedPrice(subTotal) }}</span>
                     </p>
                     <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between text-gray-500">
                         <span>Estimated tax:</span>
-                        <span>${{ tax }}</span>
+                        <span>{{ formattedPrice(tax) }}</span>
                     </p>
                     <button @click="checkout" :class="{ 'opacity-40 cursor-not-allowed': checkoutCart.length === 0 }"
                         class="btn btn-checkout" :disabled="checkoutCart.length === 0">

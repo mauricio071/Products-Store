@@ -21,7 +21,7 @@
             </div>
             <div class="shipping-method">
                 <h2>Shipping Method</h2>
-                <p>Shipping: {{ shippingFee > 0 ? `$${shippingFee.toFixed(1)}` : "Free shipping" }} </p>
+                <p>Shipping: {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }} </p>
                 <p>Estimated delivery: 1 month</p>
             </div>
             <div class="products">
@@ -35,23 +35,23 @@
                 <h2 class="text-2xl font-semibold mb-4 text-primary">Summary</h2>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Subtotal:</span>
-                    <span>${{ subTotal }}</span>
+                    <span>{{ formattedPrice(subTotal) }}</span>
                 </p>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Shipping fee:</span>
-                    <span>{{ shippingFee === 0 ? "Free" : "$5.0" }}</span>
+                    <span>{{ shippingFee === 0 ? "Free" : "$5.00" }}</span>
                 </p>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Tax:</span>
-                    <span>${{ tax }}</span>
+                    <span>{{ formattedPrice(tax) }}</span>
                 </p>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Total saved:</span>
-                    <span class="text-red-500"> -$ {{ totalSaved }}</span>
+                    <span class="text-red-500"> -{{ formattedPrice(totalSaved) }}</span>
                 </p>
                 <p class="font-bold text-2xl flex justify-between pt-4 border-t border-t-gray">
                     <span>Total price:</span>
-                    <span>${{ totalValue }}</span>
+                    <span>{{ formattedPrice(totalValue) }}</span>
                 </p>
                 <button @click="checkout" class="btn w-full">
                     <span class="font-semibold text-lg">Place order</span>
