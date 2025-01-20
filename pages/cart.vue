@@ -32,7 +32,7 @@
             </div>
             <div class="right-side">
                 <div class="overview">
-                    <h2 class="text-2xl font-semibold mb-4 text-primary">Summary</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-primary">Summary</h2>
                     <p v-if="subTotal > 0" class="font-semibold text-xl flex justify-between">
                         <span>Subtotal:</span>
                         <span>{{ formattedPrice(subTotal) }}</span>

@@ -18,11 +18,29 @@
             </div>
             <div class="payment-methods">
                 <h2>Payment Methods</h2>
+                <div class="custom-radio">
+                    <label class="radiobutton">
+                        <input v-model="paymentMethod" value="pix" type="radio">
+                        <span>
+                            <IconsPix class="w-8 h-6" />
+                            Pix
+                        </span>
+                    </label>
+                    <label class="radiobutton">
+                        <input v-model="paymentMethod" value="credit_card" type="radio">
+                        <span>
+                            <IconsCreditCard class="w-8 h-6" />
+                            Credit Card
+                        </span>
+                    </label>
+                </div>
             </div>
             <div class="shipping-method">
                 <h2>Shipping Method</h2>
-                <p>Shipping: {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }} </p>
-                <p>Estimated delivery: 1 month</p>
+                <p>
+                    <span>Shipping:</span> {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }}
+                </p>
+                <p><span>Estimated delivery:</span> 1 month</p>
             </div>
             <div class="products">
                 <div v-for="product in checkoutCart" :key="product.id">
@@ -32,7 +50,7 @@
         </div>
         <div class="right-side">
             <div class="overview">
-                <h2 class="text-2xl font-semibold mb-4 text-primary">Summary</h2>
+                <h2 class="text-2xl font-bold mb-4 text-primary">Summary</h2>
                 <p class="font-semibold text-xl flex justify-between">
                     <span>Subtotal:</span>
                     <span>{{ formattedPrice(subTotal) }}</span>
@@ -117,6 +135,8 @@ const loginToken = useCookie("loginToken");
 
 const userData = ref({});
 
+const paymentMethod = ref();
+
 // Caso precise carregar do lado do client
 // onMounted(async () => {
 //     const data = await $fetch('https://fakestoreapi.com/users/2');
@@ -150,38 +170,42 @@ const completePurchase = () => {
     @apply space-y-4 lg:w-[70%];
 
     .address {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
+        @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
 
         h2 {
-            @apply text-xl font-bold mb-4;
+            @apply text-2xl font-bold mb-4 text-primary;
         }
 
         .address-content {
-            @apply grid grid-cols-2 max-w-[25rem];
+            @apply grid grid-cols-2 max-w-[28rem];
 
-            p span {
-                @apply font-semibold;
+            p {
+                span {
+                    @apply font-bold text-lg;
+                }
             }
         }
     }
 
     .payment-methods {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
+        @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
 
         h2 {
-            @apply text-xl font-bold mb-4;
+            @apply text-2xl font-bold mb-4 text-primary;
         }
     }
 
     .shipping-method {
-        @apply shadow-md rounded-lg bg-white flex flex-col justify-between p-6;
+        @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
 
         h2 {
-            @apply text-xl font-bold mb-4;
+            @apply text-2xl font-bold mb-4 text-primary;
         }
 
         p {
-            @apply font-semibold;
+            span {
+                @apply font-bold text-lg;
+            }
         }
     }
 
