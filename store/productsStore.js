@@ -54,6 +54,11 @@ export const productsStore = defineStore("products", {
         favorited(id) {
             return this.wishList.find((productId) => productId === id);
         },
+        removeWishList(id) {
+            this.wishList = this.wishList.filter(
+                (productId) => productId !== id
+            );
+        },
         checkAllProduct() {
             this.checkAll = !this.checkAll;
 

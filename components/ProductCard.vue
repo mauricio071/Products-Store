@@ -1,23 +1,23 @@
 <template>
     <div>
         <div class="product">
-            <template v-if="!disabled">
-                <label class="checkbox self-start md:self-center">
-                    <input v-model="product.checked" type="checkbox" id="select-all">
-                    <span class="check !top-1/2 "></span>
-                </label>
-            </template>
+            <label v-if="!disabled" class="checkbox self-start md:self-center">
+                <input v-model="product.checked" type="checkbox" id="select-all">
+                <span class="check !top-1/2 "></span>
+            </label>
+            <div v-else class="-ml-2"></div>
+
             <nuxt-link :to="!disabled ? `/product/${product.id}` : ''">
                 <img :src="product.image" :alt="product.title">
             </nuxt-link>
             <div class="product-details">
-                <div class="flex items-center justify-between w-full">
+                <div class="flex items-center justify-between gap-2 w-full">
                     <nuxt-link :to="!disabled ? `/product/${product.id}` : ''">
                         <h3 :class="{ 'hover:text-primary': !disabled }" class="text-[20px] font-bold duration-300">{{
                             product.title }}</h3>
                     </nuxt-link>
                     <i v-if="!disabled" @click="remove(product.id)"
-                        class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
+                        class="material-icons cursor-pointer duration-300 hover:text-red-500">delete</i>
                 </div>
                 <p class="truncate-multiline">{{ product.description }}</p>
                 <div class="quantity">

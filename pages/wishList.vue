@@ -1,33 +1,63 @@
 <template>
     <div>
-        <div v-if="loading">loading</div>
-        <div v-else class="products">
-            <div v-for="product in products" :key="product.id" class="product">
-                <!-- <template v-if="!disabled">
-                    <label class="checkbox self-start md:self-center">
-                        <input v-model="product.checked" type="checkbox" id="select-all">
-                        <span class="check !top-1/2 "></span>
-                    </label>
-                </template> -->
-                <nuxt-link :to="`/product/${product.id}`">
-                    <img :src="product.image" :alt="product.title">
+        <div v-if="loading" class="loading-screen">
+            <span v-if="loading" class="loader-primary"></span>
+        </div>
+        <div v-else>
+            <div v-if="products.length === 0" class="text-center flex flex-col items-center justify-center"
+                style="height: calc(100vh - 156px);">
+                <div class="font-bold text-4xl mb-8">
+                    Your wish list is empty!
+                </div>
+                <nuxt-link to="/" class="text-2xl btn">
+                    See products
                 </nuxt-link>
-                <div class="product-details">
-                    <div class="flex items-center justify-between w-full">
+            </div>
+            <div v-else>
+                <div class="title-container">
+                    <h1 class="mb-0">Wish List ({{ products.length }})</h1>
+                </div>
+                <div class="products">
+                    <div v-for="product in products" :key="product.id" class="product">
+                        <div class="-ml-6"></div>
                         <nuxt-link :to="`/product/${product.id}`">
-                            <h3 class="text-[20px] font-bold duration-300 'hover:text-primary'">
-                                {{ product.title }}</h3>
+                            <img :src="product.image" :alt="product.title">
                         </nuxt-link>
-                        <i @click="remove(product.id)"
-                            class="material-icons mb-2 cursor-pointer duration-300 hover:text-red-500">delete</i>
+                        <div class="product-details">
+                            <div class="flex items-center justify-between gap-2 w-full">
+                                <nuxt-link :to="`/product/${product.id}`">
+                                    <h3
+                                        class="text-[20px] font-bold duration-300 truncate max-w-[27rem] hover:text-primary">
+                                        {{ product.title }}</h3>
+                                </nuxt-link>
+                                <i @click="remove(product.id)"
+                                    class="material-icons cursor-pointer duration-300 hover:text-red-500">delete</i>
+                            </div>
+                            <p class="truncate-multiline">{{ product.description }}</p>
+                            <div class="price flex justify-between items-center gap-4">
+                                <p class="text-xl font-bold">
+                                    Price: ${{ product.price.toFixed(2) }}
+                                </p>
+                                <div class="flex items-center">
+                                    <p class="text-sm border-r border-r-gray-400 pr-2 mr-2">{{ product.rating.count }}
+                                        sold
+                                    </p>
+                                    <div class="rating">
+                                        <IconsStar class="w-5" />
+                                        <p>{{ product.rating.rate }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-gray-600 block !-mt-3">
+                                +${{ (product.price * 0.2).toFixed(2) }} estimated tax
+                            </span>
+                            <button @click="addToCart(product)"
+                                class="btn flex justify-center items-center gap-x-2 self-end">
+                                <i class="material-icons">add_shopping_cart</i>
+                                <span class="font-semibold">Add to cart</span>
+                            </button>
+                        </div>
                     </div>
-                    <p class="truncate-multiline">{{ product.description }}</p>
-                    <p class="text-xl font-bold">
-                        <!-- Price: ${{ product.total.toFixed(2) }} -->
-                    </p>
-                    <span v-if="!disabled" class="text-gray-600 block !mt-1">
-                        <!-- +${{ (product.total * 0.2).toFixed(2) }} estimated tax -->
-                    </span>
                 </div>
             </div>
         </div>
@@ -68,9 +98,20 @@ const fetchProducts = async () => {
     }
 }
 
+const addToCart = (product) => {
+    try {
+        store.addProduct(product, 1);
+        $toast.success("Product added!");
+    } catch (error) {
+        $toast.error("There was an error processing your request");
+    }
+}
+
 const remove = (id) => {
     try {
-        store.removeProduct(id);
+        store.removeWishList(id);
+
+        products.value = products.value.filter((product) => product.id !== id);
     } catch (error) {
         $toast.error("There was an error processing your request");
     }
@@ -80,18 +121,23 @@ fetchProducts();
 </script>
 
 <style scoped>
+.loading-screen {
+    @apply flex justify-center;
+    height: calc(100vh - 156px);
+}
+
 .products {
-    @apply flex flex-col gap-4;
+    @apply grid gap-4 2xl:grid-cols-2;
 
     .product {
-        @apply bg-white shadow-md rounded-lg px-6 py-8 min-h-[15rem] flex flex-col items-center justify-between gap-4 md:flex-row;
+        @apply bg-white shadow-md rounded-lg px-6 py-4 min-h-[15rem] flex flex-col items-center justify-between gap-4 md:flex-row;
 
         img {
             @apply max-w-[150px] max-h-[150px] w-full;
         }
 
         .product-details {
-            @apply max-w-[45rem] space-y-6 md:w-[70%];
+            @apply max-w-[45rem] flex flex-col gap-4 md:w-[70%];
 
             .truncate-multiline {
                 display: -webkit-box;

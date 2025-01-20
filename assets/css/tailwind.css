@@ -11,8 +11,12 @@ h1 {
 }
 
 @layer components {
-    .cart-quantity {
-        @apply bg-white shadow-md rounded-lg p-4;
+    .title-container {
+        @apply bg-white shadow-md rounded-lg p-6 mb-6;
+
+        h1 {
+            @apply font-bold lg:text-3xl;
+        }
     }
 
     .card {

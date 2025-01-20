@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div v-if="cart.length < 1" class="text-center" style="height: calc(100vh - 160px);">
-            <div class="text-4xl mb-8">
+        <div v-if="cart.length < 1" class="text-center flex flex-col items-center justify-center"
+            style="height: calc(100vh - 156px);">
+            <div class="font-bold text-4xl mb-8">
                 Your cart is empty!
             </div>
             <nuxt-link to="/" class="text-2xl btn">
@@ -10,7 +11,7 @@
         </div>
         <div v-else class="container flex flex-col lg:flex-row gap-4">
             <div class="left-side">
-                <div class="cart-quantity">
+                <div class="title-container">
                     <h1>Shopping cart ({{ cart.length }})</h1>
                     <div class="flex items-center max-w-sm">
                         <label class="checkbox ">
@@ -137,12 +138,7 @@ const checkout = () => {
 .left-side {
     @apply space-y-4 lg:w-[70%];
 
-    .cart-quantity {
-        @apply p-6;
-
-        h1 {
-            @apply font-bold mb-6 lg:text-3xl;
-        }
+    .title-container {
 
         p,
         label {
