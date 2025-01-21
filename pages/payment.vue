@@ -71,7 +71,7 @@
                     <span>Total price:</span>
                     <span>{{ formattedPrice(totalValue) }}</span>
                 </p>
-                <button @click="checkout" class="btn w-full">
+                <button @click="completePurchase" class="btn w-full">
                     <span class="font-semibold text-lg">Place order</span>
                 </button>
             </div>
@@ -147,6 +147,11 @@ const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
 
 const completePurchase = () => {
+    switch (paymentMethod) {
+        case "pix":
+
+            break;
+    }
     if (!loginToken.value) {
         router.push("/login").then(() => {
             $toast.warning("Login is required");

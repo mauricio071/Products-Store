@@ -24,10 +24,9 @@
                             <img :src="product.image" :alt="product.title">
                         </nuxt-link>
                         <div class="product-details">
-                            <div class="flex items-center justify-between gap-2 w-full">
+                            <div class="flex items-center justify-between gap-2 ">
                                 <nuxt-link :to="`/product/${product.id}`">
-                                    <h3
-                                        class="text-[20px] font-bold duration-300 truncate max-w-[27rem] hover:text-primary">
+                                    <h3 class="text-[20px] font-bold duration-300 truncate-oneline hover:text-primary">
                                         {{ product.title }}
                                     </h3>
                                 </nuxt-link>
@@ -144,6 +143,14 @@ fetchProducts();
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
                 line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .truncate-oneline {
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
             }
