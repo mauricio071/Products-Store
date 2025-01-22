@@ -4,9 +4,10 @@
             :class="{ 'xl:pr-60': productsQuantity > 0 && $route.name !== 'cart' && $route.name !== 'payment' }">
             <Navbar />
 
-            <div class="container mx-auto p-8">
+            <div class="container mx-auto px-8 pt-8 pb-12">
                 <slot />
             </div>
+            <!-- <Footer v-if="$route.name !== 'product-id'" /> -->
         </div>
 
         <Sidebar />

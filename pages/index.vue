@@ -9,6 +9,7 @@
                 <Navigation />
             </template>
         </carousel>
+
         <div class="filters">
             <div v-for="filter in filters" :key="filter">
                 <button @click="categoryFilter(filter)" :class="{ 'active': filter === currentFilter }"

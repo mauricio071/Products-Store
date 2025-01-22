@@ -71,7 +71,9 @@
                     <span>Total price:</span>
                     <span>{{ formattedPrice(totalValue) }}</span>
                 </p>
-                <button @click="completePurchase" class="btn w-full">
+                <button @click="completePurchase" :disabled="paymentMethod === ''"
+                    :class="{ 'opacity-40 cursor-not-allowed': paymentMethod === '' }"
+                    class="btn w-full disabled:hover:bg-primary disabled:hover:text-white">
                     <span class="font-semibold text-lg">Place order</span>
                 </button>
             </div>
@@ -115,6 +117,7 @@
 <script setup>
 import { productsStore } from '~/store/productsStore';
 import { storeToRefs } from 'pinia';
+import { v4 as uuid4 } from "uuid";
 
 definePageMeta({
     middleware: "payment"
@@ -129,13 +132,13 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 
 const userData = ref({});
 
-const paymentMethod = ref();
+const paymentMethod = ref('');
 
 // Caso precise carregar do lado do client
 // onMounted(async () => {
@@ -147,11 +150,6 @@ const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
 
 const completePurchase = () => {
-    switch (paymentMethod) {
-        case "pix":
-
-            break;
-    }
     if (!loginToken.value) {
         router.push("/login").then(() => {
             $toast.warning("Login is required");
@@ -159,13 +157,27 @@ const completePurchase = () => {
         return
     }
 
-    try {
-        // store.checkout();
-        router.push({ path: "/" }).then(() => {
-            $toast.success("Purchase completed!");
-        });
-    } catch (error) {
-        $toast.error("There was an error processing your request");
+    const transactionId = uuid4();
+    const today = new Date();
+    const formattedDateTime = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}:${today.getSeconds().toString().padStart(2, '0')}`;
+
+    const data = {
+        id: transactionId,
+        date: formattedDateTime,
+        totalValue: totalValue.value,
+        products: cart.value.map((product) => ({
+            productId: product.id,
+            quantity: product.quantity
+        }))
+    }
+
+    store.checkout(data);
+    switch (paymentMethod.value) {
+        case "pix":
+            router.push({ path: `/paymentPix/${data.id}` }).then(() => {
+                $toast.success("Purchase completed successfully");
+            });
+            break;
     }
 }
 </script>

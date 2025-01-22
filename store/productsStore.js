@@ -7,6 +7,7 @@ export const productsStore = defineStore("products", {
         costShipping: 50,
         checkAll: true,
         wishList: [],
+        orders: [],
     }),
     //action
     actions: {
@@ -70,8 +71,9 @@ export const productsStore = defineStore("products", {
         deleteCheckedProducts() {
             this.cart = this.cart.filter((product) => !product.checked);
         },
-        checkout() {
+        checkout(data) {
             this.cart = [];
+            this.orders.push(data);
         },
     },
     //getter

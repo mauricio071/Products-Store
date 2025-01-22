@@ -78,8 +78,6 @@ const breakpoints = {
 
 const store = productsStore();
 
-const { favorited } = storeToRefs(store);
-
 const { $toast } = useNuxtApp();
 
 const addProduct = store.addProduct;
