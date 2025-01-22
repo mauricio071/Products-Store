@@ -4,7 +4,8 @@
         <div v-else class="payment-container">
             <h1>AWAITING PAYMENT</h1>
             <h2>Total value: {{ formattedPrice(pixValue) }}</h2>
-            <p class="font-semibold">This code is valid for 24 hours</p>
+            <!-- TODO -->
+            <!-- <p class="font-semibold">This code is valid for 24 hours</p> -->
             <img :src="qrCode" alt="QR Code Pix" v-if="qrCode" />
             <div class="flex flex-col gap-4 sm:flex-row sm:gap-2">
                 <input :value="pixCode" type="text" disabled>
@@ -39,6 +40,10 @@ import { generatePixQrCode } from '~/services/pixService';
 
 definePageMeta({
     middleware: 'payment-pix'
+});
+
+useHead({
+    title: "Payment - Products Store"
 });
 
 const { $toast } = useNuxtApp();

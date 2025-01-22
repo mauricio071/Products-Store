@@ -13,6 +13,7 @@
     "@nuxt/fonts": "0.10.3",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@pinia/nuxt": "^0.5.4",
+    "nanoid": "^5.0.9",
     "nuxt": "^3.12.4",
     "pinia": "^2.2.2",
     "qrcode-pix": "5.0.0",

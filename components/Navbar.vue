@@ -18,14 +18,27 @@
                         <div class="user-account">
                             <IconsUser />
                             <div class="submenu">
-                                <div v-if="loginToken">
-                                    <nuxt-link to="/wishList">Wish List</nuxt-link>
-                                </div>
-                                <div v-if="loginToken" @click="logout">
-                                    <span>Logout</span>
-                                </div>
-                                <div v-else @click="login">
-                                    <span>Login</span>
+                                <template v-if="loginToken">
+                                    <div>
+                                        <nuxt-link to="/myOrders" class="menu-item">
+                                            <i class="material-icons-outlined">shopping_bag</i>
+                                            My Orders
+                                        </nuxt-link>
+                                    </div>
+                                    <div>
+                                        <nuxt-link to="/wishList" class="menu-item">
+                                            <i class="material-icons">favorite_border</i>
+                                            Wish List
+                                        </nuxt-link>
+                                    </div>
+                                    <div @click="logout" class="menu-item">
+                                        <i class="material-icons ml-0.5 -mr-0.5">logout</i>
+                                        Logout
+                                    </div>
+                                </template>
+                                <div v-else @click="login" class="menu-item">
+                                    <i class="material-icons">login</i>
+                                    Login
                                 </div>
                             </div>
                             <span class="font-semibold text-sm ml-1">Account</span>
@@ -75,16 +88,15 @@ const logout = () => {
 
     &:hover {
         .submenu {
-            @apply block;
+            @apply flex;
         }
     }
 
     .submenu {
-        @apply hidden absolute top-[1.5rem] left-[-2rem] w-40 text-center font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
+        @apply hidden absolute top-[1.5rem] left-[-2rem] w-40 flex-col font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
 
-        span,
-        a {
-            @apply block duration-300 py-2;
+        .menu-item {
+            @apply flex items-center gap-3 duration-300 p-4 w-full;
 
             &:hover {
                 @apply bg-gray-200;

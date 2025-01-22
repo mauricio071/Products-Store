@@ -117,7 +117,7 @@
 <script setup>
 import { productsStore } from '~/store/productsStore';
 import { storeToRefs } from 'pinia';
-import { v4 as uuid4 } from "uuid";
+import { nanoid } from 'nanoid';
 
 definePageMeta({
     middleware: "payment"
@@ -132,7 +132,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, orders } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 
@@ -157,9 +157,9 @@ const completePurchase = () => {
         return
     }
 
-    const transactionId = uuid4();
+    const transactionId = nanoid(12);
     const today = new Date();
-    const formattedDateTime = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}:${today.getSeconds().toString().padStart(2, '0')}`;
+    const formattedDateTime = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
 
     const data = {
         id: transactionId,
@@ -171,12 +171,12 @@ const completePurchase = () => {
         }))
     }
 
-    store.checkout(data);
     switch (paymentMethod.value) {
         case "pix":
             router.push({ path: `/paymentPix/${data.id}` }).then(() => {
                 $toast.success("Purchase completed successfully");
             });
+            store.checkout(data);
             break;
     }
 }
