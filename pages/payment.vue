@@ -40,7 +40,7 @@
                 <p>
                     <span>Shipping:</span> {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }}
                 </p>
-                <p><span>Estimated delivery:</span> 1 month</p>
+                <p><span>Estimated delivery:</span> 1 week</p>
             </div>
             <div class="products">
                 <div v-for="product in checkoutCart" :key="product.id">
@@ -160,11 +160,16 @@ const completePurchase = () => {
     const transactionId = nanoid(12);
     const today = new Date();
     const formattedDateTime = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
+    const estimatedDate = new Date();
+    estimatedDate.setDate(today.getDate() + 7);
+    const formattedEstimatedDate = `${estimatedDate.getFullYear()}-${(estimatedDate.getMonth() + 1).toString().padStart(2, '0')}-${estimatedDate.getDate().toString().padStart(2, '0')} ${estimatedDate.getHours().toString().padStart(2, '0')}:${estimatedDate.getMinutes().toString().padStart(2, '0')}`;
 
     const data = {
         id: transactionId,
         date: formattedDateTime,
+        estimatedDate: formattedEstimatedDate,
         totalValue: totalValue.value,
+        status: "To pay",
         products: cart.value.map((product) => ({
             productId: product.id,
             quantity: product.quantity
@@ -173,10 +178,11 @@ const completePurchase = () => {
 
     switch (paymentMethod.value) {
         case "pix":
+            store.checkout(data);
             router.push({ path: `/paymentPix/${data.id}` }).then(() => {
                 $toast.success("Purchase completed successfully");
+                store.emptyShoppingCart();
             });
-            store.checkout(data);
             break;
     }
 }

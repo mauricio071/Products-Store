@@ -71,9 +71,22 @@ export const productsStore = defineStore("products", {
         deleteCheckedProducts() {
             this.cart = this.cart.filter((product) => !product.checked);
         },
-        checkout(data) {
+        emptyShoppingCart() {
             this.cart = [];
+        },
+        checkout(data) {
             this.orders.push(data);
+        },
+        confirmPayment(id) {
+            this.orders = this.orders.map((order) => {
+                if (order.id === id) {
+                    return {
+                        ...order,
+                        status: "To Receive",
+                    };
+                }
+                return order;
+            });
         },
     },
     //getter

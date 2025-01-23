@@ -24,11 +24,15 @@
                     <div class="products">
                         <div v-for="product in order.products" :key="product.id" class="product">
                             <div class="order-detail">
-                                <h3>Completed</h3>
+                                <h3>
+                                    {{
+                                        new Date(today()) > new Date(order.estimatedDate) ? "Completed" : order.status
+                                    }}
+                                </h3>
                                 <div class="flex items-center">
                                     <p>Order ID: {{ order.id }}</p>
                                     <div class="ml-3">
-                                        <nuxt-link to="/"
+                                        <nuxt-link :to="`/myOrders/details-${order.id}`"
                                             class="font-bold flex items-center duration-300 text-sm hover:text-primary sm:text-base">
                                             Order details
                                             <i class="material-icons">chevron_right</i>
@@ -50,7 +54,6 @@
                                             </h3>
                                         </nuxt-link>
                                     </div>
-                                    <!-- <p class="truncate-multiline">{{ product.description }}</p> -->
                                     <div class="price flex justify-between items-center gap-4">
                                         <p class="text-lg font-semibold">
                                             Price: {{ formattedPrice(product.price) }}
@@ -97,7 +100,6 @@ const store = productsStore();
 
 const { orders } = storeToRefs(store);
 
-const products = ref([]);
 const loading = ref(true);
 const ordersHistory = ref([]);
 
@@ -110,6 +112,7 @@ const fetchProducts = async () => {
                 const products = await Promise.all((
                     order.products.map(async (product) => {
                         const productData = await $fetch(`https://fakestoreapi.com/products/${product.productId}`);
+
                         return {
                             ...productData,
                             quantity: product.quantity
@@ -138,6 +141,11 @@ const addToCart = (product) => {
     } catch (error) {
         $toast.error("There was an error processing your request");
     }
+}
+
+const today = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
 }
 
 fetchProducts();
@@ -176,14 +184,6 @@ fetchProducts();
 
             .product-details {
                 @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
-
-                .truncate-multiline {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 3;
-                    line-clamp: 3;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                }
 
                 .truncate-oneline {
                     display: -webkit-box;

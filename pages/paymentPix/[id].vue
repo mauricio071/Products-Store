@@ -2,32 +2,50 @@
     <div class="content">
         <div v-if="loading" class="loader-primary"></div>
         <div v-else class="payment-container">
-            <h1>AWAITING PAYMENT</h1>
-            <h2>Total value: {{ formattedPrice(pixValue) }}</h2>
-            <!-- TODO -->
-            <!-- <p class="font-semibold">This code is valid for 24 hours</p> -->
-            <img :src="qrCode" alt="QR Code Pix" v-if="qrCode" />
-            <div class="flex flex-col gap-4 sm:flex-row sm:gap-2">
-                <input :value="pixCode" type="text" disabled>
-                <button @click="copyToClipboard" class="btn font-bold flex items-center gap-2">
-                    <i class="material-icons">content_copy</i>
-                    Copy code
-                </button>
-            </div>
-            <p class="max-w-xl">
-                To make the payment for your order, scan the <strong>QR code</strong> or copy and paste the
-                <strong>Pix code</strong> into your payment app.
-            </p>
-            <p>
-                (This is a fake Pix code, click
-                <nuxt-link to="/" class="text-blue-500 font-bold duration-300 hover:text-blue-700">
-                    here
-                </nuxt-link>
-                to continue)
-            </p>
+            <h1>{{ order.status !== "To pay" ? "Payment confirmed" : "Awaiting payment" }}</h1>
+            <template v-if="order.status === 'To pay'">
+                <div class="space-y-2">
+                    <h3><span class="font-bold">Order ID: </span> {{ order.id }}</h3>
+                    <h2>Total value: {{ formattedPrice(pixValue) }}</h2>
+                </div>
+                <img :src="qrCode" alt="QR Code Pix" v-if="qrCode" />
+                <div class="flex flex-col gap-4 sm:flex-row sm:gap-2">
+                    <input :value="pixCode" type="text" disabled>
+                    <button @click="copyToClipboard" class="btn font-bold flex items-center gap-2">
+                        <i class="material-icons">content_copy</i>
+                        Copy code
+                    </button>
+                </div>
+                <p class="max-w-xl">
+                    To make the payment for your order, scan the <strong>QR code</strong> or copy and paste the
+                    <strong>Pix code</strong> into your payment app.
+                </p>
+                <p>
+                    (This is a fake Pix code, click
+                    <span @click="completeTransaction"
+                        class="text-blue-500 font-bold duration-300 cursor-pointer hover:text-blue-700">
+                        here
+                    </span>
+                    to continue)
+                </p>
+            </template>
+            <template v-else>
+                <i class="material-icons text-green-500 text-[120px]">check_circle</i>
+                <p>
+                    Your payment has been successfully completed! Thank you for your purchase.
+                </p>
+                <p>
+                    Click
+                    <nuxt-link :to="`/myOrders/details-${order.id}`"
+                        class="text-blue-500 font-bold duration-300 cursor-pointer hover:text-blue-700">
+                        here
+                    </nuxt-link>
+                    to see more details about your order.
+                </p>
+            </template>
             <nuxt-link to="/"
                 class="flex items-center gap-2 mt-4 text-blue-500 font-bold duration-300 hover:text-blue-700">
-                <i class="material-icons ">arrow_back</i>
+                <i class="material-icons">arrow_back</i>
                 Back to Home
             </nuxt-link>
         </div>
@@ -52,18 +70,17 @@ const store = productsStore();
 
 const { orders } = storeToRefs(store);
 
+const order = ref(null);
 const qrCode = ref(null);
 const pixCode = ref(null);
 const loading = ref(true);
 const pixValue = ref(null);
 
-// finalValue.value = totalValue.value;
-
 onMounted(async () => {
     loading.value = true;
     try {
-        const order = orders.value.find((order) => order.id === $route.params.id);
-        pixValue.value = order.totalValue;
+        order.value = orders.value.find((order) => order.id === $route.params.id);
+        pixValue.value = order.value.totalValue;
         const pixData = {
             value: 0.01,
         };
@@ -82,6 +99,12 @@ const copyToClipboard = () => {
     navigator.clipboard.writeText(pixCode).then(() => {
         $toast.success("Pix code copied to clipboard");
     });
+}
+
+const completeTransaction = () => {
+    store.confirmPayment($route.params.id);
+    order.value.status = "To Receive";
+    $toast.success("Payment confirmed successfully!");
 }
 </script>
 
