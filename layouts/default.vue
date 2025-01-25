@@ -1,7 +1,8 @@
 <template>
     <div class="flex">
-        <div class="w-full"
-            :class="{ 'xl:pr-60': productsQuantity > 0 && $route.name !== 'cart' && $route.name !== 'payment' }">
+        <div class="w-full" :class="{
+            'xl:pr-60': productsQuantity > 0 && checkUrlSidebar($route.name)
+        }">
             <Navbar />
 
             <div class="container mx-auto px-8 pt-8 pb-12">
@@ -18,7 +19,7 @@
 import { productsStore } from '../store/productsStore'
 import { storeToRefs } from 'pinia';
 
-const store = productsStore()
+const store = productsStore();
 
-const { productsQuantity } = storeToRefs(store)
+const { productsQuantity } = storeToRefs(store);
 </script>

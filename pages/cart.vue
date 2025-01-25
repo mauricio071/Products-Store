@@ -88,8 +88,10 @@
                 <p class="text-center max-w-lg text-gray-700 mb-4">
                     This action will remove checked items from your shopping cart.
                 </p>
-                <button @click="removeProducts" class="btn w-full hover:bg-[#11c091] !text-white">Remove</button>
-                <button @click="closeModal" class="btn border-primary !bg-white !text-primary w-full">Cancel</button>
+                <button @click="removeProducts"
+                    class="btn w-full hover:bg-[#11c091] !text-white max-w-[15rem]">Remove</button>
+                <button @click="closeModal"
+                    class="btn border-primary !bg-white !text-primary w-full max-w-[15rem]">Cancel</button>
             </div>
         </Modal>
     </div>

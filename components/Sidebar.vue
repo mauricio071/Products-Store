@@ -1,5 +1,5 @@
 <template>
-    <div v-if="productsQuantity > 0 && $route.name !== 'cart' && $route.name !== 'payment'"
+    <div v-if="productsQuantity > 0 && checkUrlSidebar($route.name)"
         class="bg-white w-[15rem] fixed top-0 right-0 h-full shadow-xl p-6 space-y-4 hidden xl:flex flex-col">
         <p class="text-center font-bold">Total: {{ formattedPrice(subTotal) }}</p>
         <NuxtLink :to="checkoutCart.length > 0 ? '/payment' : ''"

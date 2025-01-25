@@ -60,6 +60,11 @@ h1 {
     }
 }
 
+.loading-screen {
+    @apply flex justify-center;
+    height: calc(100vh - 156px);
+}
+
 .checkbox {
     @apply relative pl-[35px] flex items-center cursor-pointer;
 

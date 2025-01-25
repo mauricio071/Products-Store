@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="loading-screen">
-            <span v-if="loading" class="loader-primary"></span>
+            <span class="loader-primary"></span>
         </div>
         <div v-else>
             <div v-if="orders.length === 0" class="text-center flex flex-col items-center justify-center"
@@ -25,14 +25,12 @@
                         <div v-for="product in order.products" :key="product.id" class="product">
                             <div class="order-detail">
                                 <h3>
-                                    {{
-                                        new Date(today()) > new Date(order.estimatedDate) ? "Completed" : order.status
-                                    }}
+                                    {{ order.status }}
                                 </h3>
                                 <div class="flex items-center">
                                     <p>Order ID: {{ order.id }}</p>
                                     <div class="ml-3">
-                                        <nuxt-link :to="`/myOrders/details-${order.id}`"
+                                        <nuxt-link :to="`/myOrders/details-${order.id + product.id}`"
                                             class="font-bold flex items-center duration-300 text-sm hover:text-primary sm:text-base">
                                             Order details
                                             <i class="material-icons">chevron_right</i>
@@ -99,7 +97,7 @@ const { $toast } = useNuxtApp();
 const store = productsStore();
 
 const { orders } = storeToRefs(store);
-
+// orders.value = []
 const loading = ref(true);
 const ordersHistory = ref([]);
 
@@ -107,6 +105,7 @@ const fetchProducts = async () => {
     loading.value = true;
 
     try {
+        store.completeOrder();
         const orderedProducts = await Promise.all(
             orders.value.map(async (order) => {
                 const products = await Promise.all((
@@ -143,20 +142,10 @@ const addToCart = (product) => {
     }
 }
 
-const today = () => {
-    const today = new Date();
-    return `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
-}
-
 fetchProducts();
 </script>
 
 <style scoped>
-.loading-screen {
-    @apply flex justify-center;
-    height: calc(100vh - 156px);
-}
-
 .products {
     @apply grid gap-4 2xl:grid-cols-2;
 

@@ -170,6 +170,7 @@ const completePurchase = () => {
         estimatedDate: formattedEstimatedDate,
         totalValue: totalValue.value,
         status: "To pay",
+        paymentMethod: paymentMethod.value,
         products: cart.value.map((product) => ({
             productId: product.id,
             quantity: product.quantity

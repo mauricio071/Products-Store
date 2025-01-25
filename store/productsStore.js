@@ -82,7 +82,63 @@ export const productsStore = defineStore("products", {
                 if (order.id === id) {
                     return {
                         ...order,
-                        status: "To Receive",
+                        status: "To receive",
+                    };
+                }
+                return order;
+            });
+        },
+        getOrder(id) {
+            return this.orders.find((order) => order.id === id);
+        },
+        completeOrder() {
+            const today = new Date();
+            const todayFormatted = `${today.getFullYear()}-${(
+                today.getMonth() + 1
+            )
+                .toString()
+                .padStart(2, "0")}-${today
+                .getDate()
+                .toString()
+                .padStart(2, "0")} ${today
+                .getHours()
+                .toString()
+                .padStart(2, "0")}:${today
+                .getMinutes()
+                .toString()
+                .padStart(2, "0")}`;
+
+            this.orders = this.orders.map((order) => {
+                const verify =
+                    new Date(todayFormatted) > new Date(order.estimatedDate);
+
+                if (verify && order.status === "To pay") {
+                    return {
+                        ...order,
+                        status: "Canceled",
+                    };
+                }
+
+                if (
+                    verify && order.status === "To receive"
+                        ? "Completed"
+                        : order.status
+                ) {
+                    return {
+                        ...order,
+                        status: "Completed",
+                    };
+                }
+
+                return order;
+            });
+        },
+        cancelOrder(id) {
+            this.orders = this.orders.map((order) => {
+                if (order.id === id) {
+                    return {
+                        ...order,
+                        status: "Canceled",
                     };
                 }
                 return order;

@@ -1,54 +1,232 @@
 <template>
-    <div class="max-w-5xl mx-auto">
-        <div class="card">
-            Status
+    <div>
+        <div v-if="loading" class="loading-screen">
+            <span class="loader-primary"></span>
         </div>
-        <div class="card security">
-            <div class="security-content">
-                <div class="item">
-                    <IconsPackage />
-                    <h3>Fast delivery</h3>
+        <div v-else class="max-w-5xl mx-auto flex flex-col gap-6">
+            <div class="card status">
+                <h1>{{ order.status }}</h1>
+                <p v-if="order.status === 'To pay'">
+                    Your order is awaiting payment. Please complete the payment to proceed.
+                </p>
+                <p v-if="order.status === 'To receive'">
+                    Your order has been shipped and is on its way to you. Please wait for delivery.
+                </p>
+                <p v-if="order.status === 'Completed'">
+                    Your order has been successfully completed. Thank you for shopping with us!
+                </p>
+                <p v-if="order.status === 'Canceled'">
+                    Your order has been canceled. We apologize for any inconvenience caused
+                    and hope to serve you in the future.
+                </p>
+                <div class="flex gap-4">
+                    <nuxt-link v-if="order.status === 'To pay'" :to="`/paymentPix/${order.id}`">
+                        <button class="btn rounded-xl hover:bg-primary hover:text-white">
+                            <span class="font-semibold text-lg">Pay now</span>
+                        </button>
+                    </nuxt-link>
+                    <button v-else @click="addToCart(product)" class="btn rounded-xl hover:bg-primary hover:text-white">
+                        <span class="font-semibold text-lg">Add to cart</span>
+                    </button>
+                    <button v-if="order.status !== 'Completed' && order.status !== 'Canceled'" @click="modal = true"
+                        class="btn rounded-xl border-primary bg-white text-primary">
+                        <span class="font-semibold text-lg">Cancel order</span>
+                    </button>
                 </div>
-                <p>Receive your orders quickly with our efficient and reliable delivery service.</p>
             </div>
-            <div class="security-content">
-                <div class="item">
-                    <IconsShield />
-                    <h3>Security & Privacy</h3>
+            <div class="card security">
+                <div class="security-content">
+                    <div class="item">
+                        <IconsPackage />
+                        <h3>Fast delivery</h3>
+                    </div>
+                    <p>Receive your orders quickly with our efficient and reliable delivery service.</p>
                 </div>
-                <p>Your data is always protected with the highest security and privacy standards.</p>
-            </div>
-            <div class="security-content">
-                <div class="item">
-                    <IconsLock />
-                    <h3>Safe Payments</h3>
+                <div class="security-content">
+                    <div class="item">
+                        <i class="material-icons-outlined text-[#4CAF50]">undo</i>
+                        <h3>Free returns</h3>
+                    </div>
+                    <p>Return your items for free within the return period. No hassle, no extra cost.</p>
                 </div>
-                <p>Make payments with confidence using our secure and encrypted payment system.</p>
+                <div class="security-content">
+                    <div class="item">
+                        <i class="material-icons-outlined text-[#2196F3]">verified</i>
+                        <h3>Buyer Protection</h3>
+                    </div>
+                    <p>Shop with confidence. We ensure secure transactions and safeguard your purchases.</p>
+                </div>
             </div>
-        </div>
-        <div class="grid gap-6 mb-6 sm:grid-cols-2">
+            <div class="grid gap-6 lg:grid-cols-2">
+                <div class="card address">
+                    <h2><i class="material-icons-outlined">place</i>
+                        Shipping address
+                    </h2>
+                    <div class="address-content">
+                        <p><span>Name: </span> {{ userData.name?.firstname + " " + userData.name?.lastname }}</p>
+                        <p><span>Phone: </span> {{ userData?.phone }}</p>
+                    </div>
+                    <div class="address-content">
+                        <p><span>City: </span> {{ userData.address?.city }}</p>
+                        <p><span>Street: </span> {{ userData.address?.street }}</p>
+                    </div>
+                    <div class="address-content">
+                        <p><span>Number: </span> {{ userData.address?.number }}</p>
+                        <p><span>Zipcode: </span> {{ userData.address?.zipcode }}</p>
+                    </div>
+                </div>
+                <div class="card order-info">
+                    <h2>
+                        <i class="material-icons-outlined">receipt</i>
+                        Order info
+                    </h2>
+                    <div class="info-content">
+                        <p><span>Order ID: </span> {{ order.id }}</p>
+                    </div>
+                    <div class="info-content">
+                        <p><span>Order date: </span> {{ order.date }}</p>
+                    </div>
+                    <div v-if="order.status === 'completed'" class="info-content">
+                        <p><span>Order completed on: </span> {{ order.estimatedDate }}</p>
+                    </div>
+                    <div class="info-content">
+                        <p><span>Payment method: </span> {{ order.paymentMethod }}</p>
+                    </div>
+                </div>
+            </div>
             <div class="card">
-                Address
-            </div>
-            <div class="card">
-                Order info
+                <div class="product-content">
+                    <div class="-ml-6"></div>
+                    <nuxt-link :to="`/product/${product.id}`">
+                        <img :src="product.image" :alt="product.title">
+                    </nuxt-link>
+                    <!-- <div class="product-details">
+                        <div class="flex items-center justify-between gap-2 ">
+                            <nuxt-link :to="`/product/${product.id}`">
+                                <h3 class="text-[20px] font-bold duration-300 truncate-oneline hover:text-primary">
+                                    {{ product.title }}
+                                </h3>
+                            </nuxt-link>
+                        </div>
+                        <div class="price flex justify-between items-center gap-4">
+                            <p class="text-lg font-semibold">
+                                Price: {{ formattedPrice(product.price) }}
+                            </p>
+                        </div>
+                        <div class="quantity text-lg font-semibold">
+                            <h3>Quantity:</h3>
+                            <span>{{ product.quantity }}</span>
+                        </div>
+                        <div class="total self-end font-bold text-2xl">
+                            Total: {{ formattedPrice(product.price * product.quantity * 1.2) }}
+                        </div>
+
+                        <button v-if="true" @click="addToCart(product)"
+                            class="btn flex justify-center items-center gap-x-2 self-end w-40">
+                            <i class="material-icons">add_shopping_cart</i>
+                            <span class="font-semibold">Add to cart</span>
+                        </button>
+                        <button v-else @click="addToCart(product)"
+                            class="btn flex justify-center items-center gap-x-2 self-end w-40">
+                            <i class="material-icons">add_shopping_cart</i>
+                            <span class="font-semibold">Pay now</span>
+                        </button>
+                    </div> -->
+                </div>
             </div>
         </div>
-        <div class="card">
-            Product
-        </div>
+        <Modal :isVisible="modal" @close="closeModal">
+            <div class="flex flex-col gap-4 items-center justify-between lg:-mb-4">
+                <h3 class="text-2xl font-bold text-center">Cancel order</h3>
+                <i class="material-icons text-yellow-400 text-[5rem]">warning</i>
+                <p class="text-center max-w-lg text-gray-700 mb-4">
+                    Are you sure you want to cancel this order? Once canceled,
+                    it will no longer be processed or delivered.
+                </p>
+                <button @click="cancelOrder"
+                    class="btn w-full max-w-[15rem] hover:bg-[#11c091] !text-white">Confirm</button>
+                <button @click="closeModal"
+                    class="btn border-primary !bg-white !text-primary w-full max-w-[15rem]">Cancel</button>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script setup>
+import { productsStore } from '~/store/productsStore';
+
 useHead({
     title: "Details - Products Store"
 });
+const $route = useRoute();
+const { $toast } = useNuxtApp();
+
+const order = ref({});
+
+const userData = ref({});
+const loading = ref(false);
+
+const store = productsStore();
+
+const modal = ref(false);
+
+const closeModal = () => {
+    modal.value = false;
+}
+
+const userDataFetch = async () => {
+    try {
+        const data = await $fetch('https://fakestoreapi.com/users/2');
+        userData.value = data;
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+const getOrder = async () => {
+    order.value = store.getOrder($route.params.id);
+    const productId = $route.params.name[13];
+    console.log(productId);
+
+    // await $fetch(``)
+}
+
+const cancelOrder = () => {
+    store.cancelOrder(order.value.id);
+    closeModal();
+    getOrder();
+    $toast.success("Order canceled!");
+}
+
+const addToCart = (product) => {
+    try {
+        store.addProduct(product, 1);
+        $toast.success("Product added!");
+    } catch (error) {
+        $toast.error("There was an error processing your request");
+    }
+}
+
+onMounted(async () => {
+    // loading.value = true;
+    store.completeOrder();
+    await userDataFetch();
+    await getOrder();
+    loading.value = false;
+})
 </script>
 
 <style scoped>
 .card {
-    @apply mb-6 p-6;
+    @apply p-6 mb-0;
+}
+
+.status {
+    @apply flex flex-col gap-3;
+
+    h1 {
+        @apply font-extrabold text-2xl mb-0;
+    }
 }
 
 .security {
@@ -67,6 +245,62 @@ useHead({
 
         &:last-of-type {
             @apply border-none pb-0;
+        }
+    }
+}
+
+.address {
+    @apply flex flex-col gap-1.5 justify-between p-6;
+
+    h2 {
+        @apply text-2xl font-bold mb-4 text-primary flex items-center gap-2;
+    }
+
+    .address-content {
+        @apply grid grid-cols-2 max-w-[28rem];
+
+        p {
+            span {
+                @apply font-bold text-lg;
+            }
+        }
+    }
+}
+
+.product-content {
+    @apply flex flex-col items-center justify-between gap-4 md:flex-row;
+
+    img {
+        @apply max-w-[150px] max-h-[150px] w-full;
+    }
+
+    .product-details {
+        @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
+
+        .truncate-oneline {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    }
+}
+
+.order-info {
+    @apply flex flex-col gap-1.5 justify-between p-6;
+
+    h2 {
+        @apply text-2xl font-bold mb-4 text-primary flex items-center gap-2;
+    }
+
+    .info-content {
+        @apply flex gap-2;
+
+        p {
+            span {
+                @apply font-bold text-lg;
+            }
         }
     }
 }
