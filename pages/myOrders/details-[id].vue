@@ -25,7 +25,8 @@
                             <span class="font-semibold text-lg">Pay now</span>
                         </button>
                     </nuxt-link>
-                    <button v-else @click="addToCart(product)" class="btn rounded-xl hover:bg-primary hover:text-white">
+                    <button v-else @click="addToCart(productData)"
+                        class="btn rounded-xl hover:bg-primary hover:text-white">
                         <span class="font-semibold text-lg">Add to cart</span>
                     </button>
                     <button v-if="order.status !== 'Completed' && order.status !== 'Canceled'" @click="modal = true"
@@ -100,7 +101,7 @@
                     <nuxt-link :to="`/product/${product.id}`">
                         <img :src="product.image" :alt="product.title">
                     </nuxt-link>
-                    <!-- <div class="product-details">
+                    <div class="product-details">
                         <div class="flex items-center justify-between gap-2 ">
                             <nuxt-link :to="`/product/${product.id}`">
                                 <h3 class="text-[20px] font-bold duration-300 truncate-oneline hover:text-primary">
@@ -113,7 +114,7 @@
                                 Price: {{ formattedPrice(product.price) }}
                             </p>
                         </div>
-                        <div class="quantity text-lg font-semibold">
+                        <div class="flex items-center gap-2 text-lg font-semibold">
                             <h3>Quantity:</h3>
                             <span>{{ product.quantity }}</span>
                         </div>
@@ -131,7 +132,7 @@
                             <i class="material-icons">add_shopping_cart</i>
                             <span class="font-semibold">Pay now</span>
                         </button>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -164,7 +165,9 @@ const { $toast } = useNuxtApp();
 const order = ref({});
 
 const userData = ref({});
-const loading = ref(false);
+const loading = ref(true);
+const product = ref(null);
+const productData = ref(null)
 
 const store = productsStore();
 
@@ -184,11 +187,20 @@ const userDataFetch = async () => {
 }
 
 const getOrder = async () => {
-    order.value = store.getOrder($route.params.id);
-    const productId = $route.params.name[13];
-    console.log(productId);
+    const orderId = $route.params.id.slice(0, 12);
+    const productId = $route.params.id.slice(12);
+    order.value = store.getOrder(orderId);
 
-    // await $fetch(``)
+    const data = await $fetch(`https://fakestoreapi.com/products/${productId}`);
+    const additionalData = order.value.products.find((product) => product.productId === Number(productId));
+    productData.value = data;
+
+    const formattedData = {
+        ...data,
+        ...additionalData
+    }
+
+    product.value = formattedData;
 }
 
 const cancelOrder = () => {
@@ -208,8 +220,8 @@ const addToCart = (product) => {
 }
 
 onMounted(async () => {
-    // loading.value = true;
-    store.completeOrder();
+    loading.value = true;
+    // store.completeOrder();
     await userDataFetch();
     await getOrder();
     loading.value = false;

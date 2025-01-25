@@ -57,7 +57,7 @@
                                             Price: {{ formattedPrice(product.price) }}
                                         </p>
                                     </div>
-                                    <div class="quantity text-lg font-semibold">
+                                    <div class="flex items-center gap-2 text-lg font-semibold">
                                         <h3>Quantity:</h3>
                                         <span>{{ product.quantity }}</span>
                                     </div>
@@ -105,7 +105,7 @@ const fetchProducts = async () => {
     loading.value = true;
 
     try {
-        store.completeOrder();
+        // store.completeOrder();
         const orderedProducts = await Promise.all(
             orders.value.map(async (order) => {
                 const products = await Promise.all((
@@ -184,9 +184,5 @@ fetchProducts();
             }
         }
     }
-}
-
-.quantity {
-    @apply flex items-center gap-2;
 }
 </style>

@@ -36,7 +36,7 @@
                 </p>
                 <p>
                     Click
-                    <nuxt-link :to="`/myOrders/details-${order.id}`"
+                    <nuxt-link :to="`/myOrders`"
                         class="text-blue-500 font-bold duration-300 cursor-pointer hover:text-blue-700">
                         here
                     </nuxt-link>
