@@ -95,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card product">
                 <div class="product-content">
                     <div class="-ml-6"></div>
                     <nuxt-link :to="`/product/${product.id}`">
@@ -118,9 +118,6 @@
                             <h3>Quantity:</h3>
                             <span>{{ product.quantity }}</span>
                         </div>
-                        <div class="total self-end font-bold text-2xl">
-                            Total: {{ formattedPrice(product.price * product.quantity * 1.2) }}
-                        </div>
 
                         <button v-if="true" @click="addToCart(product)"
                             class="btn flex justify-center items-center gap-x-2 self-end w-40">
@@ -132,6 +129,26 @@
                             <i class="material-icons">add_shopping_cart</i>
                             <span class="font-semibold">Pay now</span>
                         </button>
+                    </div>
+                </div>
+                <div class="product-price">
+                    <div class="price-container">
+                        <p>
+                            <span>Subtotal: </span>
+                            {{ formattedPrice(product.price) }}
+                        </p>
+                        <p>
+                            <span>Shipping: </span>
+                            {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }}
+                        </p>
+                        <p>
+                            <span>Tax total: </span>
+                            {{ formattedPrice(product.price * product.quantity * 0.2) }}
+                        </p>
+                        <p class="!font-bold !text-lg !text-black">
+                            <span>Total: </span>
+                            {{ formattedPrice(product.price * product.quantity * 1.2) }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -170,6 +187,7 @@ const product = ref(null);
 const productData = ref(null)
 
 const store = productsStore();
+const { shippingFee } = storeToRefs(store);
 
 const modal = ref(false);
 
@@ -279,22 +297,38 @@ onMounted(async () => {
     }
 }
 
-.product-content {
-    @apply flex flex-col items-center justify-between gap-4 md:flex-row;
+.product {
+    @apply bg-white shadow-md rounded-lg p-6 min-h-[15rem];
 
-    img {
-        @apply max-w-[150px] max-h-[150px] w-full;
+    .product-price {
+        @apply pt-6 mt-6 border-t border-t-gray-200;
+
+        .price-container {
+            @apply flex flex-col gap-2 max-w-xs ml-auto;
+
+            p {
+                @apply flex items-center justify-between text-gray-400 text-sm;
+            }
+        }
     }
 
-    .product-details {
-        @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
+    .product-content {
+        @apply flex flex-col items-center justify-between gap-4 md:flex-row;
 
-        .truncate-oneline {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        img {
+            @apply max-w-[150px] max-h-[150px] w-full;
+        }
+
+        .product-details {
+            @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
+
+            .truncate-oneline {
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                line-clamp: 1;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
         }
     }
 }
