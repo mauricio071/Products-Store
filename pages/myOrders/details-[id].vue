@@ -135,11 +135,11 @@
                     <div class="price-container">
                         <p>
                             <span>Subtotal: </span>
-                            {{ formattedPrice(product.price) }}
+                            {{ formattedPrice(product.price * product.quantity) }}
                         </p>
                         <p>
                             <span>Shipping: </span>
-                            {{ shippingFee > 0 ? `${formattedPrice(shippingFee)}` : "Free shipping" }}
+                            {{ order.shippingFee === 0 ? "Free" : `${formattedPrice(order.shippingFee)}` }}
                         </p>
                         <p>
                             <span>Tax total: </span>
@@ -147,7 +147,7 @@
                         </p>
                         <p class="!font-bold !text-lg !text-black">
                             <span>Total: </span>
-                            {{ formattedPrice(product.price * product.quantity * 1.2) }}
+                            {{ formattedPrice(product.price * product.quantity * 1.2 + order.shippingFee) }}
                         </p>
                     </div>
                 </div>

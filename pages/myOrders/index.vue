@@ -147,7 +147,7 @@ fetchProducts();
 
 <style scoped>
 .products {
-    @apply grid gap-4 2xl:grid-cols-2;
+    @apply grid gap-4 2xl:grid-cols-2 border-b border-b-gray-200 pb-10;
 
     .product {
         @apply bg-white shadow-md rounded-lg px-6 py-4 min-h-[15rem];

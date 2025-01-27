@@ -2,8 +2,8 @@
     <div class="content">
         <div v-if="loading" class="loader-primary"></div>
         <div v-else class="payment-container">
-            <h1>{{ order.status !== "To pay" ? "Payment confirmed" : "Awaiting payment" }}</h1>
             <template v-if="order.status === 'To pay'">
+                <h1>Awaiting payment</h1>
                 <div class="space-y-2">
                     <h3><span class="font-bold">Order ID: </span> {{ order.id }}</h3>
                     <h2>Total value: {{ formattedPrice(pixValue) }}</h2>
@@ -29,7 +29,24 @@
                     to continue)
                 </p>
             </template>
-            <template v-else>
+            <template v-if="order.status === 'Canceled'">
+                <h1>Canceled</h1>
+                <i class="material-icons text-red-500 text-[120px]">cancel</i>
+                <p>
+                    Your order has been canceled. We apologize for any inconvenience caused
+                    and hope to serve you in the future.
+                </p>
+                <p>
+                    Click
+                    <nuxt-link :to="`/myOrders`"
+                        class="text-blue-500 font-bold duration-300 cursor-pointer hover:text-blue-700">
+                        here
+                    </nuxt-link>
+                    to see more details about your order.
+                </p>
+            </template>
+            <template v-if="order.status === 'Completed' || order.status === 'To receive'">
+                <h1>Payment confirmed</h1>
                 <i class="material-icons text-green-500 text-[120px]">check_circle</i>
                 <p>
                     Your payment has been successfully completed! Thank you for your purchase.
@@ -103,7 +120,7 @@ const copyToClipboard = () => {
 
 const completeTransaction = () => {
     store.confirmPayment($route.params.id);
-    order.value.status = "To Receive";
+    order.value.status = "To receive";
     $toast.success("Payment confirmed successfully!");
 }
 </script>

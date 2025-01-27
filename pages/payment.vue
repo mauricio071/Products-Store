@@ -168,6 +168,7 @@ const completePurchase = () => {
         id: transactionId,
         date: formattedDateTime,
         estimatedDate: formattedEstimatedDate,
+        shippingFee: shippingFee.value,
         totalValue: totalValue.value,
         status: "To pay",
         paymentMethod: paymentMethod.value,
@@ -176,6 +177,8 @@ const completePurchase = () => {
             quantity: product.quantity
         }))
     }
+    console.log(data.shippingFee);
+
 
     switch (paymentMethod.value) {
         case "pix":
