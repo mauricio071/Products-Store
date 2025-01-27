@@ -45,14 +45,14 @@
                 </div>
                 <div class="security-content">
                     <div class="item">
-                        <i class="material-icons-outlined text-[#4CAF50]">undo</i>
+                        <IconsUndo class="text-[#4CAF50]" />
                         <h3>Free returns</h3>
                     </div>
                     <p>Return your items for free within the return period. No hassle, no extra cost.</p>
                 </div>
                 <div class="security-content">
                     <div class="item">
-                        <i class="material-icons-outlined text-[#2196F3]">verified</i>
+                        <IconsVeirified class="text-[#2196F3]" />
                         <h3>Buyer Protection</h3>
                     </div>
                     <p>Shop with confidence. We ensure secure transactions and safeguard your purchases.</p>
@@ -60,7 +60,8 @@
             </div>
             <div class="grid gap-6 lg:grid-cols-2">
                 <div class="card address">
-                    <h2><i class="material-icons-outlined">place</i>
+                    <h2>
+                        <IconsMappin />
                         Shipping address
                     </h2>
                     <div class="address-content">
@@ -78,7 +79,7 @@
                 </div>
                 <div class="card order-info">
                     <h2>
-                        <i class="material-icons-outlined">receipt</i>
+                        <IconsDocument />
                         Order info
                     </h2>
                     <div class="info-content">
@@ -187,7 +188,6 @@ const product = ref(null);
 const productData = ref(null)
 
 const store = productsStore();
-const { shippingFee } = storeToRefs(store);
 
 const modal = ref(false);
 
@@ -239,7 +239,7 @@ const addToCart = (product) => {
 
 onMounted(async () => {
     loading.value = true;
-    // store.completeOrder();
+    store.completeOrder();
     await userDataFetch();
     await getOrder();
     loading.value = false;

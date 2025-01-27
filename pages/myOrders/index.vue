@@ -17,7 +17,7 @@
                 <div class="title-container">
                     <h1 class="mb-0">My Orders</h1>
                 </div>
-                <div v-for="order in ordersHistory" :key="order.id">
+                <div v-for="order in ordersHistory" :key="order.id" class="order-content">
                     <div class="text-primary font-bold text-2xl mt-8 mb-4">
                         Order date: {{ order.date }}
                     </div>
@@ -97,7 +97,7 @@ const { $toast } = useNuxtApp();
 const store = productsStore();
 
 const { orders } = storeToRefs(store);
-// orders.value = []
+
 const loading = ref(true);
 const ordersHistory = ref([]);
 
@@ -105,7 +105,7 @@ const fetchProducts = async () => {
     loading.value = true;
 
     try {
-        // store.completeOrder();
+        store.completeOrder();
         const orderedProducts = await Promise.all(
             orders.value.map(async (order) => {
                 const products = await Promise.all((
@@ -146,40 +146,46 @@ fetchProducts();
 </script>
 
 <style scoped>
-.products {
-    @apply grid gap-4 2xl:grid-cols-2 border-b border-b-gray-200 pb-10;
+.order-content {
+    &:not(:last-of-type) {
+        @apply border-b border-b-gray-200 pb-10;
+    }
 
-    .product {
-        @apply bg-white shadow-md rounded-lg px-6 py-4 min-h-[15rem];
+    .products {
+        @apply grid gap-4 2xl:grid-cols-2;
 
-        .order-detail {
-            @apply flex justify-between items-center pb-4 mb-4 border-b border-b-gray-200;
+        .product {
+            @apply bg-white shadow-md rounded-lg px-6 py-4 min-h-[15rem];
 
-            h3 {
-                @apply font-bold text-xl sm:text-2xl;
+            .order-detail {
+                @apply flex justify-between items-center pb-4 mb-4 border-b border-b-gray-200;
+
+                h3 {
+                    @apply font-bold text-xl sm:text-2xl;
+                }
+
+                p {
+                    @apply text-sm border-r border-r-gray-300 pr-3 hidden sm:block;
+                }
             }
 
-            p {
-                @apply text-sm border-r border-r-gray-300 pr-3 hidden sm:block;
-            }
-        }
+            .product-content {
+                @apply flex flex-col items-center justify-between gap-4 md:flex-row;
 
-        .product-content {
-            @apply flex flex-col items-center justify-between gap-4 md:flex-row;
+                img {
+                    @apply max-w-[150px] max-h-[150px] w-full;
+                }
 
-            img {
-                @apply max-w-[150px] max-h-[150px] w-full;
-            }
+                .product-details {
+                    @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
 
-            .product-details {
-                @apply max-w-[45rem] flex flex-col gap-4 w-full md:w-[70%];
-
-                .truncate-oneline {
-                    display: -webkit-box;
-                    -webkit-line-clamp: 1;
-                    line-clamp: 1;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
+                    .truncate-oneline {
+                        display: -webkit-box;
+                        -webkit-line-clamp: 1;
+                        line-clamp: 1;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                    }
                 }
             }
         }

@@ -21,7 +21,7 @@
                                 <template v-if="loginToken">
                                     <div>
                                         <nuxt-link to="/myOrders" class="menu-item">
-                                            <i class="material-icons-outlined">shopping_bag</i>
+                                            <IconsShoppingBag />
                                             My Orders
                                         </nuxt-link>
                                     </div>
@@ -99,7 +99,7 @@ const logout = () => {
             @apply flex items-center gap-3 duration-300 p-4 w-full;
 
             &:hover {
-                @apply bg-gray-200;
+                @apply bg-gray-200 text-primary;
             }
         }
     }

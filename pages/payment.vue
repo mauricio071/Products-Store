@@ -177,8 +177,6 @@ const completePurchase = () => {
             quantity: product.quantity
         }))
     }
-    console.log(data.shippingFee);
-
 
     switch (paymentMethod.value) {
         case "pix":

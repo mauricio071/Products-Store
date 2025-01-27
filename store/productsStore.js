@@ -119,11 +119,7 @@ export const productsStore = defineStore("products", {
                     };
                 }
 
-                if (
-                    verify && order.status === "To receive"
-                        ? "Completed"
-                        : order.status
-                ) {
+                if (verify && order.status === "To receive") {
                     return {
                         ...order,
                         status: "Completed",

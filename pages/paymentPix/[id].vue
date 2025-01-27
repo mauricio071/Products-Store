@@ -95,11 +95,12 @@ const pixValue = ref(null);
 
 onMounted(async () => {
     loading.value = true;
+    store.completeOrder();
     try {
         order.value = orders.value.find((order) => order.id === $route.params.id);
         pixValue.value = order.value.totalValue;
         const pixData = {
-            value: 0.01,
+            value: pixValue.value * 6,
         };
         const result = await generatePixQrCode(pixData);
         qrCode.value = result.qrCode;
