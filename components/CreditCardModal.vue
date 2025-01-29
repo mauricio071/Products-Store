@@ -7,8 +7,13 @@
                     <IconsSecurity />
                     Your payment information is safe with us
                 </p>
-                <div class="icons">
-
+                <div class="gap-2 items-center bg-[#53c0a336] w-full text-gray-800 px-4 py-4 rounded-lg hidden sm:flex">
+                    <IconsCreditCard class="w-8 h-6 border border-gray-200 px-1.5 bg-white" />
+                    <h2 class="font-semibold">Pay in installments</h2>
+                    <IconsVisa class="w-8 h-6 px-1 bg-white" />
+                    <IconsMastercard class="w-8 h-6 px-1 bg-white" />
+                    <IconsAmericanExpress class="w-8 h-6 px-1 bg-white" />
+                    <IconsElo class="w-8 h-6 px-1 bg-white" />
                 </div>
                 <Form :validation-schema="schema" @submit="onSubmit" class="w-full text-center">
                     <div class="grid gap-2 w-full border-b border-b-gray-300 pb-8 mb-4 sm:gap-8 sm:grid-cols-2">
