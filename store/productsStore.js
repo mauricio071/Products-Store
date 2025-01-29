@@ -8,6 +8,8 @@ export const productsStore = defineStore("products", {
         checkAll: true,
         wishList: [],
         orders: [],
+        creditCard: null,
+        installment: null,
     }),
     //action
     actions: {
@@ -139,6 +141,12 @@ export const productsStore = defineStore("products", {
                 }
                 return order;
             });
+        },
+        saveCreditCard(data) {
+            this.creditCard = data;
+        },
+        saveInstallment(data) {
+            this.installment = data;
         },
     },
     //getter

@@ -111,6 +111,7 @@
                 </div>
             </div>
         </div>
+        <CreditCardModal />
     </div>
 </template>
 
@@ -118,6 +119,7 @@
 import { productsStore } from '~/store/productsStore';
 import { storeToRefs } from 'pinia';
 import { nanoid } from 'nanoid';
+import CreditCardModal from '~/components/CreditCardModal.vue';
 
 definePageMeta({
     middleware: "payment"

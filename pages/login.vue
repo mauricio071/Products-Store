@@ -99,18 +99,6 @@ const login = async () => {
                 @apply text-3xl font-bold text-primary pb-4 border-b-2 border-b-[#12b48913];
             }
 
-            .input-container {
-                @apply flex flex-col items-start gap-4;
-
-                label {
-                    @apply text-primary font-bold;
-                }
-
-                input {
-                    @apply w-full p-4 rounded-lg border outline-none;
-                }
-            }
-
             .submit-btn {
                 @apply bg-primary px-4 py-2 rounded-xl duration-300;
 

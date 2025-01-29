@@ -1,6 +1,4 @@
 export default (routeName) => {
-    console.log(routeName);
-
     if (
         routeName === "cart" ||
         routeName === "payment" ||

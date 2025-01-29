@@ -60,6 +60,19 @@ h1 {
     }
 }
 
+.input-container {
+    @apply flex flex-col items-start gap-4;
+
+    label {
+        @apply text-primary font-bold;
+    }
+
+    input,
+    select {
+        @apply w-full p-4 rounded-lg border outline-none;
+    }
+}
+
 .loading-screen {
     @apply flex justify-center;
     height: calc(100vh - 156px);
@@ -123,4 +136,8 @@ h1 {
             @apply border border-gray-200 px-1.5;
         }
     }
+}
+
+.error-message {
+    @apply text-red-500 text-sm text-start block;
 }
