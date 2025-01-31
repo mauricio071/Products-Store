@@ -31,10 +31,11 @@
                         <span>
                             <IconsCreditCard class="w-8 h-6" />
                             Credit card
-                            <div v-if="installment && cardNumber"
-                                class="flex items-baseline gap-2 text-sm font-normal ml-2 text-gray-800">
-                                <span>{{ formattedCreditcard(cardNumber) }}</span>
-                                <span class="text-end block !-mt-0.5 ">
+                            <div class="flex items-baseline gap-2 text-sm font-normal ml-2 text-gray-800">
+                                <span v-if="cardNumber">{{ formattedCreditcard(cardNumber) }}</span>
+                                <span v-if="creditCard && !cardNumber">
+                                    {{ formattedCreditcard(creditCard.cardNumber) }}</span>
+                                <span v-if="installment && (cardNumber || creditCard)" class="text-end block !-mt-0.5 ">
                                     {{ installment }}
                                 </span>
                             </div>
@@ -122,7 +123,8 @@
                 </div>
             </div>
         </div>
-        <CreditCardModal :modal="modal" @close-modal="closeModal" @addCreditcardInfo="addCreditcardInfo" />
+        <CreditCardModal :modal="modal" :disabledInputs="false" @close-modal="closeModal"
+            @addCreditcardInfo="addCreditcardInfo" />
     </div>
 </template>
 
@@ -145,7 +147,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment, creditCard } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 

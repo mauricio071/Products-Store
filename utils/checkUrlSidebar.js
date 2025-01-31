@@ -4,6 +4,7 @@ export default (routeName) => {
         routeName === "payment" ||
         routeName === "myOrders" ||
         routeName === "wishList" ||
+        routeName === "accountDetails" ||
         routeName === "payment-purchase-id" ||
         routeName === "myOrders-details-id"
     ) {

@@ -75,25 +75,27 @@
                             </div>
                             <ErrorMessage name="cvv" class="error-message" />
                         </div>
-                        <div>
+                        <div v-if="!disabledInputs">
                             <label v-if="!creditCard" class="checkbox -mt-4 mb-4">
                                 <Field type="checkbox" :value="true" :unchecked-value="false" name="saveCard" />
                                 <span class="check"></span>
                                 Save card details
                             </label>
-                            <div class="input-container">
-                                <label>Choose months of installment</label>
-                                <Field v-model="installmentData" as="select" name="installment">
-                                    <option v-for="i in 6 " :key="i" :value="formattedInstallment(i)">
-                                        {{ formattedInstallment(i) }}
-                                    </option>
-                                </Field>
+                            <div>
+                                <div class="input-container">
+                                    <label>Choose months of installment</label>
+                                    <Field v-model="installmentData" as="select" name="installment">
+                                        <option v-for="i in 6 " :key="i" :value="formattedInstallment(i)">
+                                            {{ formattedInstallment(i) }}
+                                        </option>
+                                    </Field>
+                                </div>
+                                <ErrorMessage name="installment" class="error-message" />
                             </div>
-                            <ErrorMessage name="installment" class="error-message" />
                         </div>
                     </div>
                     <button class="btn w-full hover:bg-[#11c091] !text-white py-3 max-w-[20rem]">
-                        Save & confirm
+                        {{ disabledInputs ? "Save" : "Save & confirm" }}
                     </button>
                 </Form>
             </div>
@@ -106,7 +108,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { productsStore } from '~/store/productsStore';
 
-const { modal } = defineProps(['modal']);
+const { modal, disabledInputs } = defineProps(['modal', 'disabledInputs']);
 const emit = defineEmits(["closeModal", "addCreditcardInfo"]);
 
 const store = productsStore();
@@ -123,7 +125,7 @@ const schema = yup.object({
     month: yup.string().required("Expiration month is required"),
     year: yup.string().required("Expiration year is required"),
     cvv: yup.string().required('The CVV is required').matches(/^\d{3}$/, 'The CVV must contain exactly 3 digits'),
-    installment: yup
+    installment: disabledInputs ? yup.string().notRequired() : yup
         .string()
         .required("Please select the number of installments")
         .min(1, "You must select at least one installment"),
@@ -178,13 +180,15 @@ const formattedInstallment = (i) => {
 const onSubmit = (values) => {
     const data = values;
     const installment = data.installment;
-    if (data.saveCard) {
+    if (data.saveCard || disabledInputs) {
         store.saveCreditCard(data);
     }
-    delete data.saveCard;
-    delete data.installment;
-    emit("addCreditcardInfo", data.cardNumber);
-    store.saveInstallment(installment);
+    if (!disabledInputs) {
+        delete data.saveCard;
+        delete data.installment;
+        emit("addCreditcardInfo", data.cardNumber);
+        store.saveInstallment(installment);
+    }
     closeModal();
     creditCardData.value = {};
 };

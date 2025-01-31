@@ -31,8 +31,14 @@
                                             Wish List
                                         </nuxt-link>
                                     </div>
+                                    <div>
+                                        <nuxt-link to="/accountDetails" class="menu-item">
+                                            <IconsAccountCircle class="w-[1.6rem] h-[1.6rem] -ml-0.25" />
+                                            Account
+                                        </nuxt-link>
+                                    </div>
                                     <div @click="logout" class="menu-item">
-                                        <i class="material-icons ml-0.5 -mr-0.5">logout</i>
+                                        <i class="material-icons ml-0.5 -mr-0.25">logout</i>
                                         Logout
                                     </div>
                                 </template>
