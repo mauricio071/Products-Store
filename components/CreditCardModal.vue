@@ -15,9 +15,18 @@
                     <IconsAmericanExpress class="w-8 h-6 px-1 bg-white" />
                     <IconsElo class="w-8 h-6 px-1 bg-white" />
                 </div>
-                <Form :validation-schema="schema" @submit="onSubmit" class="w-full text-center">
+                <Form :validation-schema="creditCard ? schema2 : schema" @submit="onSubmit" class="w-full text-center">
+                    <div v-if="creditCard" class="input-container mb-4">
+                        <label>Credit card</label>
+                        <div class="flex items-center gap-4">
+                            <span class="text-gray-800">
+                                {{ formattedCreditcard(creditCard.cardNumber) }}
+                            </span>
+                            <p @click="removeCreditCard" class="underline text-red-500 cursor-pointer">Remove</p>
+                        </div>
+                    </div>
                     <div class="grid gap-2 w-full border-b border-b-gray-300 pb-8 mb-4 sm:gap-8 sm:grid-cols-2">
-                        <div>
+                        <div v-if="!creditCard">
                             <div class="input-container">
                                 <label>Card number</label>
                                 <Field v-model="creditCardData.cardNumber" name="cardNumber"
@@ -25,7 +34,7 @@
                             </div>
                             <ErrorMessage name="cardNumber" class="error-message" />
                         </div>
-                        <div>
+                        <div v-if="!creditCard">
                             <div class="input-container">
                                 <label>Cardholder name</label>
                                 <Field v-model="creditCardData.cardholder" name="cardholder" type="text"
@@ -33,7 +42,7 @@
                             </div>
                             <ErrorMessage name="cardholder" class="error-message" />
                         </div>
-                        <div>
+                        <div v-if="!creditCard">
                             <div class="input-container">
                                 <label>Expiration Date</label>
                                 <div class="flex items-baseline gap-2 w-full">
@@ -50,14 +59,15 @@
                                     <div class="w-full">
                                         <Field v-model="creditCardData.year" as="select" name="year">
                                             <option value="" disabled selected>YY</option>
-                                            <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                                            <option v-for="year in years" :key="year" :value="year">{{ year }}
+                                            </option>
                                         </Field>
                                         <ErrorMessage name="year" class="error-message" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div v-if="!creditCard">
                             <div class="input-container">
                                 <label>CVV</label>
                                 <Field v-model="creditCardData.cvv" name="cvv" v-mask="'###'" type="text"
@@ -66,6 +76,11 @@
                             <ErrorMessage name="cvv" class="error-message" />
                         </div>
                         <div>
+                            <label v-if="!creditCard" class="checkbox -mt-4 mb-4">
+                                <Field type="checkbox" :value="true" :unchecked-value="false" name="saveCard" />
+                                <span class="check"></span>
+                                Save card details
+                            </label>
                             <div class="input-container">
                                 <label>Choose months of installment</label>
                                 <Field v-model="installmentData" as="select" name="installment">
@@ -92,10 +107,10 @@ import * as yup from "yup";
 import { productsStore } from '~/store/productsStore';
 
 const { modal } = defineProps(['modal']);
-const emit = defineEmits(["closeModal"]);
+const emit = defineEmits(["closeModal", "addCreditcardInfo"]);
 
 const store = productsStore();
-const { totalValue, creditCard, installment } = storeToRefs(store);
+const { totalValue, creditCard } = storeToRefs(store);
 const creditCardData = ref({});
 const installmentData = ref(null);
 
@@ -112,11 +127,18 @@ const schema = yup.object({
         .string()
         .required("Please select the number of installments")
         .min(1, "You must select at least one installment"),
-})
+});
+
+const schema2 = yup.object({
+    installment: yup
+        .string()
+        .required("Please select the number of installments")
+        .min(1, "You must select at least one installment"),
+});
 
 const closeModal = () => {
     emit('closeModal');
-}
+};
 
 const months = [
     { value: '01', name: 'January (01)' },
@@ -141,13 +163,8 @@ for (let i = 0; i <= 25; i++) {
 }
 
 onMounted(() => {
-    if (creditCard.value.cardNumber) {
+    if (creditCard.value) {
         creditCardData.value = creditCard.value;
-    }
-    if (installment.value) {
-        installmentData.value = installment.value;
-        console.log(installment.value);
-
     }
 });
 
@@ -161,11 +178,21 @@ const formattedInstallment = (i) => {
 const onSubmit = (values) => {
     const data = values;
     const installment = data.installment;
+    if (data.saveCard) {
+        store.saveCreditCard(data);
+    }
+    delete data.saveCard;
     delete data.installment;
-    store.saveCreditCard(data);
+    emit("addCreditcardInfo", data.cardNumber);
     store.saveInstallment(installment);
     closeModal();
+    creditCardData.value = {};
 };
+
+const removeCreditCard = () => {
+    store.removeCreditCard();
+    creditCardData.value = {};
+}
 </script>
 
 <style scoped></style>

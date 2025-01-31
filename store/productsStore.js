@@ -145,6 +145,9 @@ export const productsStore = defineStore("products", {
         saveCreditCard(data) {
             this.creditCard = data;
         },
+        removeCreditCard() {
+            this.creditCard = null;
+        },
         saveInstallment(data) {
             this.installment = data;
         },

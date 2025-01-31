@@ -30,10 +30,10 @@
                         <input v-model="paymentMethod" value="Credit card" type="radio">
                         <span>
                             <IconsCreditCard class="w-8 h-6" />
-                            Credit Card
-                            <div v-if="installment"
+                            Credit card
+                            <div v-if="installment && cardNumber"
                                 class="flex items-baseline gap-2 text-sm font-normal ml-2 text-gray-800">
-                                <span>{{ formattedCreditcard(creditCard.cardNumber) }}</span>
+                                <span>{{ formattedCreditcard(cardNumber) }}</span>
                                 <span class="text-end block !-mt-0.5 ">
                                     {{ installment }}
                                 </span>
@@ -122,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <CreditCardModal :modal="modal" @close-modal="closeModal" />
+        <CreditCardModal :modal="modal" @close-modal="closeModal" @addCreditcardInfo="addCreditcardInfo" />
     </div>
 </template>
 
@@ -145,13 +145,19 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment, creditCard } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 
 const userData = ref({});
 
 const paymentMethod = ref('');
+
+const cardNumber = ref('');
+
+const addCreditcardInfo = (info) => {
+    cardNumber.value = info;
+}
 
 // Caso precise carregar do lado do client
 // onMounted(async () => {
@@ -226,12 +232,6 @@ watch(paymentMethod, (newValue, oldValue) => {
         modal.value = true;
     }
 })
-
-const formattedCreditcard = (cardNumber) => {
-    return cardNumber
-        .replace(/\s/g, "")
-        .replace(/^(\d{4})\d{6,10}(\d{4})$/, "$1 **** **** $2");
-}
 </script>
 
 <style scoped>
