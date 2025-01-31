@@ -5,10 +5,10 @@
         }">
             <Navbar />
 
-            <div class="container mx-auto px-8 pt-8 pb-12">
+            <div class="container mx-auto px-8 pt-8 pb-12" style="min-height: calc(100vh - 148px);">
                 <slot />
             </div>
-            <!-- <Footer v-if="$route.name !== 'product-id'" /> -->
+            <Footer />
         </div>
 
         <Sidebar />

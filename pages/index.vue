@@ -19,7 +19,9 @@
         </div>
 
         <template v-if="loading">
-            <span class="loader-primary m-auto"></span>
+            <div class="h-screen">
+                <span class="loader-primary m-auto"></span>
+            </div>
         </template>
         <template v-else>
             <div class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

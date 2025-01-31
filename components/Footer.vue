@@ -9,10 +9,10 @@
 
 <style scoped>
 footer {
-    @apply bg-primary w-full flex justify-center items-center text-white p-6;
+    @apply bg-primary w-full flex justify-center items-center text-white p-4;
 
     p {
-        @apply text-lg text-center;
+        @apply text-center;
     }
 }
 </style>
