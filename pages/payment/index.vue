@@ -135,7 +135,7 @@ import { nanoid } from 'nanoid';
 import CreditCardModal from '~/components/CreditCardModal.vue';
 
 definePageMeta({
-    middleware: "payment"
+    middleware: ["auth", "payment"]
 });
 
 useHead({

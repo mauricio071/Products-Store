@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <template v-if="status !== 'success' || loading">
+        <template v-if="loading">
             <span class="loader-primary m-auto"></span>
         </template>
         <template v-else>
@@ -36,9 +36,20 @@ useHead({
     title: "Products Store"
 });
 
-const loading = ref(false);
+const loading = ref(true);
+const products = ref([]);
 
-const { data: products, status } = await useFetch('https://fakestoreapi.com/products');
+const fetchProducts = async () => {
+    loading.value = true;
+    try {
+        const data = await $fetch('https://fakestoreapi.com/products');
+        products.value = data;
+    } catch (e) {
+        console.log("Error: ", e);
+    } finally {
+        loading.value = false;
+    }
+}
 
 const filters = ['all', 'electronics', 'jewelery', "men's clothing", "women's clothing"];
 
@@ -52,6 +63,7 @@ const categoryFilter = async (filter) => {
     currentFilter.value = filter;
     loading.value = false;
 }
+fetchProducts();
 </script>
 
 <style scoped>

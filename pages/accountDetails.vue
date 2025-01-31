@@ -52,6 +52,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: 'auth'
+});
+
 useHead({
     title: "Account Details - Products Store"
 });
@@ -76,15 +80,26 @@ const closeModal = () => {
     modal.value = false;
 }
 
-const { data } = await useFetch('https://fakestoreapi.com/users/2');
-userData.value = data.value;
-loading.value = false;
+const fetchProducts = async () => {
+    loading.value = true;
+
+    try {
+        const data = await $fetch('https://fakestoreapi.com/users/2');
+        userData.value = data;
+    } catch (e) {
+        console.log("Error: ", e);
+    } finally {
+        loading.value = false;
+    }
+}
 
 const deleteCreditcard = () => {
     store.removeCreditCard();
     modalDelete.value = false;
     $toast.success("Card removed successfully!");
 }
+
+fetchProducts();
 </script>
 
 <style scoped>

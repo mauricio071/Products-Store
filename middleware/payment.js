@@ -1,14 +1,9 @@
 import { productsStore } from "~/store/productsStore";
 
 export default defineNuxtRouteMiddleware((to, from) => {
-    const loginToken = useCookie("loginToken");
     const store = productsStore();
 
     if (store.cart.length === 0) {
         return navigateTo("/");
-    }
-
-    if (!loginToken.value) {
-        return navigateTo("/login");
     }
 });

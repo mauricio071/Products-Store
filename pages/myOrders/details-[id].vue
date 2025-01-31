@@ -174,9 +174,14 @@
 <script setup>
 import { productsStore } from '~/store/productsStore';
 
+definePageMeta({
+    middleware: 'auth'
+});
+
 useHead({
     title: "Details - Products Store"
 });
+
 const $route = useRoute();
 const { $toast } = useNuxtApp();
 

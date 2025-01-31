@@ -74,7 +74,7 @@ import { productsStore } from '~/store/productsStore';
 import { generatePixQrCode } from '~/services/pixService';
 
 definePageMeta({
-    middleware: 'payment-pix'
+    middleware: 'auth'
 });
 
 useHead({

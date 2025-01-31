@@ -4,15 +4,7 @@
             <span class="loader-primary"></span>
         </div>
         <div v-else>
-            <div v-if="orders.length === 0" class="text-center flex flex-col items-center justify-center"
-                style="height: calc(100vh - 156px);">
-                <div class="font-bold text-4xl mb-8">
-                    You have no orders!
-                </div>
-                <nuxt-link to="/" class="text-2xl btn">
-                    See products
-                </nuxt-link>
-            </div>
+            <EmptyScreen v-if="orders.length === 0" message="You have no orders!" />
             <div v-else>
                 <div class="title-container">
                     <h1 class="mb-0">My Orders</h1>
@@ -86,11 +78,15 @@
 </template>
 
 <script setup>
+import { productsStore } from '~/store/productsStore';
+
+definePageMeta({
+    middleware: 'auth'
+});
+
 useHead({
     title: "My Orders - Products Store"
 });
-
-import { productsStore } from '~/store/productsStore';
 
 const { $toast } = useNuxtApp();
 

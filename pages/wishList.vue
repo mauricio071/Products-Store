@@ -4,15 +4,7 @@
             <span v-if="loading" class="loader-primary"></span>
         </div>
         <div v-else>
-            <div v-if="products.length === 0" class="text-center flex flex-col items-center justify-center"
-                style="height: calc(100vh - 156px);">
-                <div class="font-bold text-4xl mb-8">
-                    Your wish list is empty!
-                </div>
-                <nuxt-link to="/" class="text-2xl btn">
-                    See products
-                </nuxt-link>
-            </div>
+            <EmptyScreen v-if="products.length === 0" message="Your wish list is empty!" />
             <div v-else>
                 <div class="title-container">
                     <h1 class="mb-0">Wish List ({{ products.length }})</h1>
@@ -65,6 +57,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: 'auth'
+});
+
 useHead({
     title: "Wish List - Products Store"
 });

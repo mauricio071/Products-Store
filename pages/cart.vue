@@ -1,14 +1,6 @@
 <template>
     <div>
-        <div v-if="cart.length < 1" class="text-center flex flex-col items-center justify-center"
-            style="height: calc(100vh - 156px);">
-            <div class="font-bold text-4xl mb-8">
-                Your cart is empty!
-            </div>
-            <nuxt-link to="/" class="text-2xl btn">
-                See products
-            </nuxt-link>
-        </div>
+        <EmptyScreen v-if="cart.length < 1" message="Your cart is empty!" />
         <div v-else class="container flex flex-col lg:flex-row gap-4">
             <div class="left-side">
                 <div class="title-container">

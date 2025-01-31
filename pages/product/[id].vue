@@ -14,7 +14,8 @@
                     </div>
                     <div class="flex justify-between items-center mt-2 mb-8">
                         <div>
-                            <h2 class="text-lg md:text-2xl font-bold">Price: {{ formattedPrice(product.price) }}</h2>
+                            <h2 class="text-lg md:text-2xl font-bold">Price: {{ formattedPrice(product.price) }}
+                            </h2>
                             <span class="text-gray-600 block !mt-1">
                                 +{{ formattedPrice(product.price * 0.2) }} estimated tax
                             </span>
@@ -50,7 +51,10 @@
             </div>
         </div>
         <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
-        <client-only>
+        <div v-if="loading">
+            <span class="loader-primary"></span>
+        </div>
+        <client-only v-else>
             <carousel :items-to-show="1" :breakpoints="breakpoints">
                 <slide v-for="product in products" :key="product.id">
                     <Card :product="product" class="similar" />
@@ -85,19 +89,26 @@ const addProduct = store.addProduct;
 const router = useRouter();
 
 const { id } = useRoute().params;
-const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`);
 const products = ref([]);
+const loading = ref(true);
+
+const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`);
 
 useHead({
     title: `${product.value.title} - Products Store`
 });
 
 const loadSimilar = async () => {
-    const { data } = await useFetch(`https://fakestoreapi.com/products/category/${product.value.category}`);
-
-    const produtosFiltrados = data.value.filter((item) => item.id !== Number(id));
-
-    products.value = produtosFiltrados;
+    loading.value = true;
+    try {
+        const data = await $fetch(`https://fakestoreapi.com/products/category/${product.value.category}`);
+        const produtosFiltrados = data.filter((item) => item.id !== Number(id));
+        products.value = produtosFiltrados;
+    } catch (e) {
+        console.log("Error: ", e);
+    } finally {
+        loading.value = false;
+    }
 }
 
 loadSimilar();
