@@ -27,10 +27,17 @@
                         </span>
                     </label>
                     <label class="radiobutton">
-                        <input v-model="paymentMethod" value="credit_card" type="radio">
+                        <input v-model="paymentMethod" value="Credit card" type="radio">
                         <span>
                             <IconsCreditCard class="w-8 h-6" />
                             Credit Card
+                            <div v-if="installment"
+                                class="flex items-baseline gap-2 text-sm font-normal ml-2 text-gray-800">
+                                <span>{{ formattedCreditcard(creditCard.cardNumber) }}</span>
+                                <span class="text-end block !-mt-0.5 ">
+                                    {{ installment }}
+                                </span>
+                            </div>
                         </span>
                     </label>
                 </div>
@@ -71,6 +78,10 @@
                     <span>Total price:</span>
                     <span>{{ formattedPrice(totalValue) }}</span>
                 </p>
+                <span v-if="installment && paymentMethod === 'Credit card'"
+                    class="text-end block !-mt-0.5 text-gray-800">
+                    {{ installment }}
+                </span>
                 <button @click="completePurchase" :disabled="paymentMethod === ''"
                     :class="{ 'opacity-40 cursor-not-allowed': paymentMethod === '' }"
                     class="btn w-full disabled:hover:bg-primary disabled:hover:text-white">
@@ -111,7 +122,7 @@
                 </div>
             </div>
         </div>
-        <CreditCardModal />
+        <CreditCardModal :modal="modal" @close-modal="closeModal" />
     </div>
 </template>
 
@@ -134,7 +145,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, orders } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment, creditCard } = storeToRefs(store);
 
 const loginToken = useCookie("loginToken");
 
@@ -147,6 +158,8 @@ const paymentMethod = ref('');
 //     const data = await $fetch('https://fakestoreapi.com/users/2');
 //     userData.value = data;
 // });
+
+store.resetInstallment();
 
 const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
@@ -172,7 +185,7 @@ const completePurchase = () => {
         estimatedDate: formattedEstimatedDate,
         shippingFee: shippingFee.value,
         totalValue: totalValue.value,
-        status: "To pay",
+        status: paymentMethod.value === "pix" ? "To pay" : "To receive",
         paymentMethod: paymentMethod.value,
         products: cart.value.map((product) => ({
             productId: product.id,
@@ -183,12 +196,41 @@ const completePurchase = () => {
     switch (paymentMethod.value) {
         case "pix":
             store.checkout(data);
-            router.push({ path: `/paymentPix/${data.id}` }).then(() => {
+            router.push({ path: `/payment/purchase-${data.id}` }).then(() => {
                 $toast.success("Purchase completed successfully");
                 store.emptyShoppingCart();
             });
             break;
+        case "Credit card":
+            store.resetInstallment();
+            store.checkout(data);
+            router.push({ path: `/payment/purchase-${data.id}` }).then(() => {
+                $toast.success("Payment confirmed successfully!");
+                store.emptyShoppingCart();
+            });
+            break;
     }
+}
+
+const modal = ref(false);
+
+const closeModal = () => {
+    modal.value = false;
+    if (!installment.value) {
+        paymentMethod.value = '';
+    }
+}
+
+watch(paymentMethod, (newValue, oldValue) => {
+    if (newValue === 'Credit card') {
+        modal.value = true;
+    }
+})
+
+const formattedCreditcard = (cardNumber) => {
+    return cardNumber
+        .replace(/\s/g, "")
+        .replace(/^(\d{4})\d{6,10}(\d{4})$/, "$1 **** **** $2");
 }
 </script>
 

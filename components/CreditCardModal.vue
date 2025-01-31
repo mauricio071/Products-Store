@@ -20,15 +20,16 @@
                         <div>
                             <div class="input-container">
                                 <label>Card number</label>
-                                <Field name="cardNumber" v-mask="'#### #### #### ####'" type="text"
-                                    placeholder="Card number" />
+                                <Field v-model="creditCardData.cardNumber" name="cardNumber"
+                                    v-mask="'#### #### #### ####'" type="text" placeholder="Card number" />
                             </div>
                             <ErrorMessage name="cardNumber" class="error-message" />
                         </div>
                         <div>
                             <div class="input-container">
                                 <label>Cardholder name</label>
-                                <Field name="cardholder" type="text" placeholder="Cardholder name" />
+                                <Field v-model="creditCardData.cardholder" name="cardholder" type="text"
+                                    placeholder="Cardholder name" />
                             </div>
                             <ErrorMessage name="cardholder" class="error-message" />
                         </div>
@@ -37,7 +38,7 @@
                                 <label>Expiration Date</label>
                                 <div class="flex items-baseline gap-2 w-full">
                                     <div class="w-full">
-                                        <Field as="select" name="month">
+                                        <Field v-model="creditCardData.month" as="select" name="month">
                                             <option value="" disabled selected>MM</option>
                                             <option v-for="month in months" :key="month.value" :value="month.value">
                                                 {{ month.name }}
@@ -47,7 +48,7 @@
                                     </div>
                                     /
                                     <div class="w-full">
-                                        <Field as="select" name="year">
+                                        <Field v-model="creditCardData.year" as="select" name="year">
                                             <option value="" disabled selected>YY</option>
                                             <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
                                         </Field>
@@ -59,17 +60,17 @@
                         <div>
                             <div class="input-container">
                                 <label>CVV</label>
-                                <Field name="cvv" v-mask="'###'" type="text" placeholder="CVV" />
+                                <Field v-model="creditCardData.cvv" name="cvv" v-mask="'###'" type="text"
+                                    placeholder="CVV" />
                             </div>
                             <ErrorMessage name="cvv" class="error-message" />
                         </div>
                         <div>
                             <div class="input-container">
                                 <label>Choose months of installment</label>
-                                <Field as="select" name="installment">
-                                    <option v-for="i in 6 " :key="i" :value="i" :selected="i === 1">
-                                        {{ formattedPrice(totalValue / i) }} * {{ i }}
-                                        {{ i > 1 ? "months" : "month" }}
+                                <Field v-model="installmentData" as="select" name="installment">
+                                    <option v-for="i in 6 " :key="i" :value="formattedInstallment(i)">
+                                        {{ formattedInstallment(i) }}
                                     </option>
                                 </Field>
                             </div>
@@ -90,8 +91,13 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 import { productsStore } from '~/store/productsStore';
 
+const { modal } = defineProps(['modal']);
+const emit = defineEmits(["closeModal"]);
+
 const store = productsStore();
-const { totalValue } = storeToRefs(store);
+const { totalValue, creditCard, installment } = storeToRefs(store);
+const creditCardData = ref({});
+const installmentData = ref(null);
 
 const schema = yup.object({
     cardNumber: yup.string().required("Card number is required").matches(/^(?:\d\s?){16}$/, "Card number must be 16 digits"),
@@ -103,15 +109,13 @@ const schema = yup.object({
     year: yup.string().required("Expiration year is required"),
     cvv: yup.string().required('The CVV is required').matches(/^\d{3}$/, 'The CVV must contain exactly 3 digits'),
     installment: yup
-        .number()
+        .string()
         .required("Please select the number of installments")
         .min(1, "You must select at least one installment"),
 })
 
-const modal = ref(true);
-
 const closeModal = () => {
-    modal.value = false;
+    emit('closeModal');
 }
 
 const months = [
@@ -134,6 +138,24 @@ const today = new Date();
 
 for (let i = 0; i <= 25; i++) {
     years.value.push(today.getFullYear() + i);
+}
+
+onMounted(() => {
+    if (creditCard.value.cardNumber) {
+        creditCardData.value = creditCard.value;
+    }
+    if (installment.value) {
+        installmentData.value = installment.value;
+        console.log(installment.value);
+
+    }
+});
+
+const formattedInstallment = (i) => {
+    const installment = `${formattedPrice(totalValue.value / i)} * ${i} `;
+    const month = i > 1 ? "months" : "month";
+    const formattedValue = installment + month;
+    return formattedValue;
 }
 
 const onSubmit = (values) => {

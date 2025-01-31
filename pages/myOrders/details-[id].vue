@@ -20,7 +20,7 @@
                     and hope to serve you in the future.
                 </p>
                 <div class="flex gap-4">
-                    <nuxt-link v-if="order.status === 'To pay'" :to="`/paymentPix/${order.id}`">
+                    <nuxt-link v-if="order.status === 'To pay'" :to="`/payment/purchase-${order.id}`">
                         <button class="btn rounded-xl hover:bg-primary hover:text-white">
                             <span class="font-semibold text-lg">Pay now</span>
                         </button>

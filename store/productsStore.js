@@ -148,6 +148,9 @@ export const productsStore = defineStore("products", {
         saveInstallment(data) {
             this.installment = data;
         },
+        resetInstallment() {
+            this.installment = null;
+        },
     },
     //getter
     getters: {

@@ -4,7 +4,7 @@ export default (routeName) => {
         routeName === "payment" ||
         routeName === "myOrders" ||
         routeName === "wishList" ||
-        routeName === "paymentPix-id" ||
+        routeName === "payment-purchase-id" ||
         routeName === "myOrders-details-id"
     ) {
         return false;
