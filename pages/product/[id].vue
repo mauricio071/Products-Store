@@ -114,7 +114,7 @@ const loadSimilar = async () => {
     } catch (e) {
         console.log("Error: ", e);
     } finally {
-        // loading.value = false;
+        loading.value = false;
     }
 }
 
