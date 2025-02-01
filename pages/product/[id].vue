@@ -55,14 +55,12 @@
             <span class="loader-primary"></span>
         </div> -->
         <div v-if="loading" class="flex gap-8 justify-around overflow-auto">
-            <div v-for="index in 3" :key="index" class="skeleton-loader sm:my-8 sm:mx-8 max-w-[336px] h-[336px]">
+            <div v-for="index in 3" :key="index"
+                class="skeleton-loader sm:my-8 sm:mx-8 max-w-[304px] 2xl:max-w-[336px] h-[380px]">
             </div>
         </div>
         <client-only v-else>
             <carousel :items-to-show="1" :breakpoints="breakpoints">
-                <slide v-for="product in products" :key="product.id">
-                    <Card :product="product" class="similar" />
-                </slide>
                 <slide v-for="product in products" :key="product.id">
                     <Card :product="product" class="similar" />
                 </slide>
