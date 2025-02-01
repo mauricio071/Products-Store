@@ -103,11 +103,6 @@ fetchProducts();
 </script>
 
 <style scoped>
-.loading-screen {
-    @apply flex justify-center;
-    height: calc(100vh - 156px);
-}
-
 .address {
     @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
 

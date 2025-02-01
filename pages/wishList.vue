@@ -117,11 +117,6 @@ fetchProducts();
 </script>
 
 <style scoped>
-.loading-screen {
-    @apply flex justify-center;
-    height: calc(100vh - 156px);
-}
-
 .products {
     @apply grid gap-4 2xl:grid-cols-2;
 

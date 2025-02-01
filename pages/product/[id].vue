@@ -4,7 +4,7 @@
             <div class="lg:grid lg:grid-cols-2 items-center">
                 <div class="sm:p-7">
                     <img :src="product.image" :alt="product.description"
-                        class="max-h-[18rem] mx-auto mb-4 lg:max-w-[30rem] lg:max-h-[27rem]">
+                        class="max-h-[18rem] mx-auto mb-4 2xl:max-w-[30rem] 2xl:max-h-[27rem]">
                 </div>
                 <div class="sm:p-7">
                     <h1 class="text-xl md:text-3xl">{{ product.title }}</h1>
@@ -51,11 +51,18 @@
             </div>
         </div>
         <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
-        <div v-if="loading">
+        <!-- <div v-if="loading">
             <span class="loader-primary"></span>
+        </div> -->
+        <div v-if="loading" class="flex gap-8 overflow-auto">
+            <div v-for="index in 3" :key="index" class="skeleton-loader sm:my-8 sm:mx-8 max-w-[336px] h-[336px]">
+            </div>
         </div>
         <client-only v-else>
             <carousel :items-to-show="1" :breakpoints="breakpoints">
+                <slide v-for="product in products" :key="product.id">
+                    <Card :product="product" class="similar" />
+                </slide>
                 <slide v-for="product in products" :key="product.id">
                     <Card :product="product" class="similar" />
                 </slide>

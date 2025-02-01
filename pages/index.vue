@@ -18,18 +18,13 @@
             </div>
         </div>
 
-        <template v-if="loading">
-            <div class="h-screen">
-                <span class="loader-primary m-auto"></span>
+        <div class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div v-if="loading" v-for="index in 20" :key="index" class="skeleton-loader h-[398px] mb-8 sm:mb-0">
             </div>
-        </template>
-        <template v-else>
-            <div class="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div v-for="product in products" :key="product.id">
-                    <Card :product="product" />
-                </div>
+            <div v-else v-for="product in products" :key="product.id">
+                <Card :product="product" />
             </div>
-        </template>
+        </div>
     </div>
 </template>
 
