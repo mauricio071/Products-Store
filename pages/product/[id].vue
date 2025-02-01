@@ -54,7 +54,7 @@
         <!-- <div v-if="loading">
             <span class="loader-primary"></span>
         </div> -->
-        <div v-if="loading" class="flex gap-8 overflow-auto">
+        <div v-if="loading" class="flex gap-8 justify-around overflow-auto">
             <div v-for="index in 3" :key="index" class="skeleton-loader sm:my-8 sm:mx-8 max-w-[336px] h-[336px]">
             </div>
         </div>
@@ -114,7 +114,7 @@ const loadSimilar = async () => {
     } catch (e) {
         console.log("Error: ", e);
     } finally {
-        loading.value = false;
+        // loading.value = false;
     }
 }
 
