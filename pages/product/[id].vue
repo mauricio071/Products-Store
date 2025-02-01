@@ -51,9 +51,6 @@
             </div>
         </div>
         <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
-        <!-- <div v-if="loading">
-            <span class="loader-primary"></span>
-        </div> -->
         <div v-if="loading" class="flex gap-8 justify-around overflow-auto">
             <div v-for="index in 3" :key="index"
                 class="skeleton-loader sm:my-8 sm:mx-8 max-w-[304px] 2xl:max-w-[336px] h-[380px]">
