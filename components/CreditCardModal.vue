@@ -186,9 +186,9 @@ const onSubmit = (values) => {
     if (!disabledInputs) {
         delete data.saveCard;
         delete data.installment;
-        emit("addCreditcardInfo", data.cardNumber);
         store.saveInstallment(installment);
     }
+    emit("addCreditcardInfo", data.cardNumber);
     closeModal();
     creditCardData.value = {};
 };

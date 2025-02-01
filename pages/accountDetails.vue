@@ -34,7 +34,8 @@
                 </div>
             </div>
         </div>
-        <CreditCardModal :modal="modal" :disabledInputs="true" @close-modal="closeModal" />
+        <CreditCardModal :modal="modal" :disabledInputs="true" @close-modal="closeModal"
+            @addCreditcardInfo="completed" />
         <Modal :isVisible="modalDelete" @close="modalDelete = false">
             <div class="flex flex-col gap-4 items-center justify-between lg:-mb-4">
                 <h3 class="text-2xl font-bold text-center">Remove</h3>
@@ -66,9 +67,8 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { wishList, creditCard } = storeToRefs(store);
+const { creditCard } = storeToRefs(store);
 
-const products = ref([]);
 const loading = ref(true);
 
 const userData = ref({});
@@ -78,6 +78,10 @@ const modalDelete = ref(false);
 
 const closeModal = () => {
     modal.value = false;
+}
+
+const completed = () => {
+    $toast.success("Card added successfully!");
 }
 
 const fetchProducts = async () => {
