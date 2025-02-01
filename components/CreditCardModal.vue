@@ -198,5 +198,3 @@ const removeCreditCard = () => {
     creditCardData.value = {};
 }
 </script>
-
-<style scoped></style>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="loading-screen">
-            <span v-if="loading" class="loader-primary"></span>
+            <span class="loader-primary"></span>
         </div>
         <div v-else class="max-w-4xl mx-auto space-y-4">
             <div class="address">

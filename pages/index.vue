@@ -60,6 +60,7 @@ const categoryFilter = async (filter) => {
     currentFilter.value = filter;
     loading.value = false;
 }
+
 fetchProducts();
 </script>
 
@@ -83,14 +84,14 @@ fetchProducts();
 
 .filters {
     @apply flex flex-wrap justify-center gap-4 mt-8 mb-12 lg:justify-end;
-}
 
-.filters button {
-    @apply border rounded-xl px-4 py-2 duration-300 sm:px-6;
-}
+    button {
+        @apply border rounded-xl px-4 py-2 duration-300 sm:px-6;
 
-.filters button:hover {
-    @apply bg-primary border-primary text-white;
+        &:hover {
+            @apply bg-primary border-primary text-white;
+        }
+    }
 }
 
 .active {

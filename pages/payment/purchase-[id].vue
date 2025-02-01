@@ -112,7 +112,6 @@ onMounted(async () => {
     }
 });
 
-
 const copyToClipboard = () => {
     navigator.clipboard.writeText(pixCode).then(() => {
         $toast.success("Pix code copied to clipboard");
