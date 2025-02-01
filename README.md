@@ -1,6 +1,6 @@
 <div align="center"> <h1>Products Store</h1> </div>
 
-<p align="center">Aplicação de vendas com carrinho persistente, desenvolvida com Nuxt.js!</p>
+<p align="center">Loja online desenvolvida com Nuxt.js, inspirada no AliExpress!</p>
 
 <p align="center">
   <img alt="Github Language Count" src="https://img.shields.io/github/languages/count/mauricio071/Products-Store?color=00bfa6">
@@ -12,12 +12,13 @@
 
 ## 📝 Sobre o projeto
 
-Esta aplicação de vendas foi construída utilizando o framework Nuxt.js, com integração a uma API fictícia para listar e exibir os produtos disponíveis. O Pinia foi implementado para gerenciar o estado do carrinho de compras, garantindo que os itens permaneçam salvos no navegador, mesmo após atualizar ou fechar a página, trazendo uma experiência semelhante ao AliExpress.
+A aplicação de loja de produtos foi desenvolvida com Nuxt.js, baseada na experiência do AliExpress. Ela integra uma API fictícia para listar e exibir produtos, enquanto o Pinia gerencia o estado do carrinho e dos itens favoritados, garantindo que permaneçam salvos no navegador, mesmo após atualizações ou fechamento da página. Além disso, a aplicação conta com um backend utilizando Nitro para gerar QR Code para Pix.
 
 ## 🛠 Tecnologias utilizadas
 
 -   **Vue.js** - Framework JavaScript progressivo
 -   **Nuxt.js** - Framework baseado em Vue.js para SSR
+-   **Nitro** - Camada de servidor do Nuxt para backends e APIs
 -   **Pinia** - Biblioteca de gerenciamento de estado
 -   **JavaScript** - Linguagem de programação
 -   **HTML** - Estrutura do conteúdo
