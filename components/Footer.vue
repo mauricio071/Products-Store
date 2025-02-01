@@ -1,6 +1,6 @@
 <template>
     <footer>
-        <p>Product Store &copy; Developed by Mauricio Naoki 2024</p>
+        <p>Product Store &copy; Developed by Mauricio Naoki 2025</p>
     </footer>
 </template>
 
