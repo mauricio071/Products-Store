@@ -4,7 +4,7 @@
         </div>
         <div class="form-side">
             <form @submit.prevent="login">
-                <h2>Log in</h2>
+                <h2>Login</h2>
                 <div class="input-container">
                     <label>Type your username: </label>
                     <input v-model="username" type="text" placeholder="Username" required>
@@ -93,7 +93,7 @@ const login = async () => {
         }
 
         form {
-            @apply w-full max-w-xl bg-white flex flex-col gap-8 text-center shadow-md rounded-lg px-8 py-8;
+            @apply w-full max-w-xl bg-white flex flex-col gap-8 text-center shadow-md rounded-lg p-8;
 
             h2 {
                 @apply text-3xl font-bold text-primary pb-4 border-b-2 border-b-[#12b48913];
