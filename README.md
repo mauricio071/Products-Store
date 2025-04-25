@@ -20,9 +20,9 @@ A aplicação de loja de produtos foi desenvolvida com Nuxt.js, baseada na exper
 -   **Nuxt.js** - Framework baseado em Vue.js para SSR
 -   **Nitro** - Camada de servidor do Nuxt para backends e APIs
 -   **Pinia** - Biblioteca de gerenciamento de estado
--   **JavaScript** - Linguagem de programação
--   **HTML** - Estrutura do conteúdo
--   **CSS** - Estilização da interface
+-   **JavaScript** - Linguagem de programação para desenvolvimento web
+-   **HTML** - Linguagem de marcação que estrutura o conteúdo na web
+-   **CSS** - Linguagem de estilos usada para definir o visual das interfaces web
 -   **Tailwind CSS** - Framework de estilos
 
 ## 📸 Screenshots
