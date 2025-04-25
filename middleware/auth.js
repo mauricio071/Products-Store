@@ -1,7 +1,13 @@
-export default defineNuxtRouteMiddleware((to, from) => {
-    const loginToken = useCookie("loginToken");
+export default defineNuxtRouteMiddleware(async () => {
+    const { $auth } = useNuxtApp();
 
-    if (!loginToken.value) {
-        return navigateTo("/login");
-    }
+    return new Promise((resolve) => {
+        $auth.onAuthStateChanged((currentUser) => {
+            if (!currentUser) {
+                resolve(navigateTo("/login", { replace: true }));
+            } else {
+                resolve();
+            }
+        });
+    });
 });

@@ -3,7 +3,7 @@
         <div class="font-bold text-4xl mb-4">
             {{ message }}
         </div>
-        <nuxt-link v-if="!loginToken" to="/login"
+        <nuxt-link v-if="!isLoggedIn" to="/login"
             class="text-2xl btn px-4 bg-white text-primary border-primary max-w-[15rem] w-full">
             Login
         </nuxt-link>
@@ -16,5 +16,5 @@
 <script setup>
 const { message } = defineProps(['message']);
 
-const loginToken = useCookie("loginToken");
+const { isLoggedIn } = useAuth();
 </script>

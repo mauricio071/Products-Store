@@ -61,7 +61,7 @@ h1 {
 }
 
 .input-container {
-    @apply flex flex-col items-start gap-4;
+    @apply flex flex-col items-start gap-2;
 
     label {
         @apply text-primary font-bold;
@@ -70,6 +70,15 @@ h1 {
     input,
     select {
         @apply w-full p-4 rounded-lg border outline-none;
+    }
+}
+
+.divider {
+    @apply flex items-center gap-2;
+
+    &::before,
+    &::after {
+        @apply content-[""] w-full h-[0.1px] bg-[#0000001f];
     }
 }
 

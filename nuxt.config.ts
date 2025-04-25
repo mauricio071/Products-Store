@@ -21,4 +21,13 @@ export default defineNuxtConfig({
             ],
         },
     },
+
+    runtimeConfig: {
+        public: {
+            FIREBASE_API_KEY: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
+            FIREBASE_AUTH_DOMAIN: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
+            FIREBASE_PROJECT_ID: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
+            FIREBASE_APP_ID: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
+        },
+    },
 });

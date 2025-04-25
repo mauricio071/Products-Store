@@ -14,11 +14,11 @@
                     <li>
                         <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
                     </li>
-                    <li>
+                    <li v-if="isAuthResolved">
                         <div class="user-account">
                             <IconsUser />
                             <div class="submenu">
-                                <template v-if="loginToken">
+                                <template v-if="isLoggedIn">
                                     <div>
                                         <nuxt-link to="/myOrders" class="menu-item">
                                             <IconsShoppingBag />
@@ -65,7 +65,10 @@
 
 <script setup>
 import { productsStore } from '../store/productsStore'
+import { signOut } from "firebase/auth";
 import { storeToRefs } from 'pinia';
+
+const { $auth } = useNuxtApp();
 
 const router = useRouter();
 const route = useRoute();
@@ -76,14 +79,14 @@ const store = productsStore();
 
 const { cart } = storeToRefs(store);
 
-const loginToken = useCookie('loginToken');
+const { isAuthResolved, isLoggedIn } = useAuth();
 
 const login = () => {
     router.push("/login");
 }
 
-const logout = () => {
-    loginToken.value = undefined;
+const logout = async () => {
+    await signOut($auth);
     router.push("/login");
 }
 </script>

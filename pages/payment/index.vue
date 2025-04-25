@@ -149,7 +149,7 @@ const store = productsStore();
 
 const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment, creditCard } = storeToRefs(store);
 
-const loginToken = useCookie("loginToken");
+const { isLoggedIn } = useAuth();
 
 const userData = ref({});
 
@@ -173,10 +173,8 @@ const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
 
 const completePurchase = () => {
-    if (!loginToken.value) {
-        router.push("/login").then(() => {
-            $toast.warning("Login is required");
-        });
+    if (!isLoggedIn) {
+        router.push("/login").then(() => $toast.warning("Login is required"));
         return
     }
 

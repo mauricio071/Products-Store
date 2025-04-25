@@ -103,9 +103,9 @@ const store = productsStore();
 
 const { cart, subTotal, tax, totalSaved, checkoutCart, selectAll, checkedAny, productsQuantity } = storeToRefs(store);
 
-const loginToken = useCookie("loginToken");
-
 const modal = ref(false);
+
+const { isLoggedIn } = useAuth();
 
 const closeModal = () => {
     modal.value = false;
@@ -117,12 +117,10 @@ const removeProducts = () => {
     $toast.success("Removed!");
 }
 
+//TODO não está mostrando toast
 const checkout = () => {
-    if (!loginToken.value) {
-        router.push("/login").then(() => {
-            $toast.warning("Login is required");
-        });
-        return
+    if (!isLoggedIn) {
+        router.push("/login").then(() => $toast.warning("Login is required"));
     } else {
         router.push("/payment");
     }
