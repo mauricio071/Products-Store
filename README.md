@@ -12,7 +12,7 @@
 
 ## 📝 Sobre o projeto
 
-A aplicação de loja de produtos foi desenvolvida com Nuxt.js, baseada na experiência do AliExpress. Ela integra uma API fictícia para listar e exibir produtos, enquanto o Pinia gerencia o estado do carrinho e dos itens favoritados, garantindo que permaneçam salvos no navegador, mesmo após atualizações ou fechamento da página. Além disso, a aplicação conta com um backend utilizando Nitro para gerar QR Code para Pix.
+A aplicação foi desenvolvida com Nuxt.js, baseada na experiência do AliExpress. Ela integra uma API fictícia para listar e exibir produtos, enquanto o Pinia gerencia o estado do carrinho e dos itens favoritados, garantindo que permaneçam salvos no navegador, mesmo após atualizações ou fechamento da página. Além disso, a aplicação conta com um backend utilizando Nitro para gerar QR Code para Pix.
 
 ## 🛠 Tecnologias utilizadas
 
