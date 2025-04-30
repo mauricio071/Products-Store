@@ -42,7 +42,7 @@
                                 <span class="font-semibold">Buy now</span>
                             </button>
                             <button @click="store.addToWish(product.id)" class="favorite-btn">
-                                <i v-if="store.favorited(product.id)" class="material-icons text-red-500">favorite</i>
+                                <i v-if="isFavorite" class="material-icons text-red-500">favorite</i>
                                 <i v-else class="material-icons text-red-500">favorite_border</i>
                             </button>
                         </div>
@@ -83,7 +83,6 @@ const breakpoints = {
 }
 
 const store = productsStore();
-
 const { $toast } = useNuxtApp();
 
 const addProduct = store.addProduct;
@@ -148,6 +147,17 @@ const addToCart = (payment) => {
         $toast.error("There was an error processing your request");
     }
 }
+const isFavorite = ref(false);
+
+onMounted(async () => {
+    const wishList = await store.fetchWishList();
+    isFavorite.value = wishList.find((product) => product.itemId === id);
+})
+
+
+// favorited(id) {
+//     return this.wishList.find((product) => product.itemId === id);
+// }
 </script>
 
 <style scoped>

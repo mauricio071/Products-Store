@@ -65,13 +65,12 @@ useHead({
     title: "Wish List - Products Store"
 });
 
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { productsStore } from '~/store/productsStore';
 
-const { $toast } = useNuxtApp();
+const { $toast, $db, $auth } = useNuxtApp();
 
 const store = productsStore();
-
-const { wishList } = storeToRefs(store);
 
 const products = ref([]);
 const loading = ref(true);
@@ -80,9 +79,11 @@ const fetchProducts = async () => {
     loading.value = true;
 
     try {
+        const wishListFire = await store.fetchWishList();
+
         const wishListProducts = await Promise.all(
-            wishList.value.map(async (favId) => (
-                $fetch(`https://fakestoreapi.com/products/${favId}`)
+            wishListFire.map(async (item) => (
+                $fetch(`https://fakestoreapi.com/products/${item.itemId}`)
             ))
         );
 

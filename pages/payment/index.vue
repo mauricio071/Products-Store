@@ -143,7 +143,7 @@ useHead({
 });
 
 const router = useRouter();
-const { $toast } = useNuxtApp();
+const { $toast, $auth } = useNuxtApp();
 
 const store = productsStore();
 
@@ -172,13 +172,12 @@ store.resetInstallment();
 const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
 
-const completePurchase = () => {
+const completePurchase = async () => {
     if (!isLoggedIn) {
         router.push("/login").then(() => $toast.warning("Login is required"));
         return
     }
 
-    const transactionId = nanoid(12);
     const today = new Date();
     const formattedDateTime = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')} ${today.getHours().toString().padStart(2, '0')}:${today.getMinutes().toString().padStart(2, '0')}`;
     const estimatedDate = new Date();
@@ -186,7 +185,7 @@ const completePurchase = () => {
     const formattedEstimatedDate = `${estimatedDate.getFullYear()}-${(estimatedDate.getMonth() + 1).toString().padStart(2, '0')}-${estimatedDate.getDate().toString().padStart(2, '0')} ${estimatedDate.getHours().toString().padStart(2, '0')}:${estimatedDate.getMinutes().toString().padStart(2, '0')}`;
 
     const data = {
-        id: transactionId,
+        uid: $auth.currentUser.uid,
         date: formattedDateTime,
         estimatedDate: formattedEstimatedDate,
         shippingFee: shippingFee.value,
@@ -201,8 +200,8 @@ const completePurchase = () => {
 
     switch (paymentMethod.value) {
         case "pix":
-            store.checkout(data);
-            router.push({ path: `/payment/purchase-${data.id}` }).then(() => {
+            const purchaseId = await store.checkout(data);
+            router.push({ path: `/payment/purchase-${purchaseId}` }).then(() => {
                 $toast.success("Purchase completed successfully");
                 store.emptyShoppingCart();
             });

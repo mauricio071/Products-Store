@@ -92,7 +92,7 @@ const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
-const { orders } = storeToRefs(store);
+const orders = ref([]);
 
 const loading = ref(true);
 const ordersHistory = ref([]);
@@ -100,8 +100,9 @@ const ordersHistory = ref([]);
 const fetchProducts = async () => {
     loading.value = true;
 
-    try {
-        store.completeOrder();
+    try { 
+        // store.completeOrder();
+        orders.value = await store.getOrders();
         const orderedProducts = await Promise.all(
             orders.value.map(async (order) => {
                 const products = await Promise.all((
@@ -137,6 +138,10 @@ const addToCart = (product) => {
         $toast.error("There was an error processing your request");
     }
 }
+
+onMounted(async () => {
+    await fetchProducts();
+})
 
 fetchProducts();
 </script>

@@ -27,8 +27,6 @@
 
 <script setup>
 import {
-    browserSessionPersistence,
-    setPersistence,
     signInWithEmailAndPassword,
     signInWithPopup,
 } from "firebase/auth";
@@ -51,7 +49,6 @@ const toggleFormType = () => {
 const handleLogin = async () => {
     loading.value = true;
     try {
-        await setPersistence($auth, browserSessionPersistence);
         await signInWithEmailAndPassword($auth, email.value, password.value);
         router.push("/").then(() => $toast.success("Login successful!"));
     } catch (error) {
@@ -64,7 +61,6 @@ const handleLogin = async () => {
 
 const signGoogle = async () => {
     try {
-        await setPersistence($auth, browserSessionPersistence);
         const result = await signInWithPopup($auth, $googleProvider);
 
         if (
@@ -74,7 +70,7 @@ const signGoogle = async () => {
             // await createAllDocuments(db, result.user.uid);
         }
 
-        router.push("/").then(() => $toast.success("Login realizado com sucesso!"));
+        router.push("/").then(() => $toast.success("Login successful!"));
     } catch (error) {
         if (error.code === "auth/popup-closed-by-user") {
             return;

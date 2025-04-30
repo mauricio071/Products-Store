@@ -85,8 +85,6 @@ const { $toast } = useNuxtApp();
 const $route = useRoute();
 const store = productsStore();
 
-const { orders } = storeToRefs(store);
-
 const order = ref(null);
 const qrCode = ref(null);
 const pixCode = ref(null);
@@ -95,9 +93,9 @@ const pixValue = ref(null);
 
 onMounted(async () => {
     loading.value = true;
-    store.completeOrder();
+    // store.completeOrder();
     try {
-        order.value = orders.value.find((order) => order.id === $route.params.id);
+        order.value = await store.getOrder($route.params.id);
         pixValue.value = order.value.totalValue;
         const pixData = {
             value: pixValue.value * 6,

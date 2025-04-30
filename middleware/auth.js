@@ -1,4 +1,5 @@
 export default defineNuxtRouteMiddleware(async () => {
+    if (!process.client) return;
     const { $auth } = useNuxtApp();
 
     return new Promise((resolve) => {

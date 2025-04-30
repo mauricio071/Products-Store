@@ -5,7 +5,7 @@
         }">
             <Navbar />
 
-            <div class="container mx-auto px-8 pt-8 pb-12" style="min-height: calc(100vh - 148px);">
+            <div class="container mx-auto px-8 pt-10 pb-12" style="min-height: calc(100vh - 148px);">
                 <slot />
             </div>
             <Footer />

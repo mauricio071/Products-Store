@@ -209,10 +209,10 @@ const userDataFetch = async () => {
     }
 }
 
-const getOrder = async () => {
-    const orderId = $route.params.id.slice(0, 12);
-    const productId = $route.params.id.slice(12);
-    order.value = store.getOrder(orderId);
+const getOrderDetails = async () => {
+    const orderId = $route.params.id.slice(0, -1);
+    const productId = $route.params.id.at(-1);
+    order.value = await store.getOrder(orderId);
 
     const data = await $fetch(`https://fakestoreapi.com/products/${productId}`);
     const additionalData = order.value.products.find((product) => product.productId === Number(productId));
@@ -226,10 +226,10 @@ const getOrder = async () => {
     product.value = formattedData;
 }
 
-const cancelOrder = () => {
-    store.cancelOrder(order.value.id);
+const cancelOrder = async () => {
+    await store.cancelOrder(order.value.id);
     closeModal();
-    getOrder();
+    getOrderDetails();
     $toast.success("Order canceled!");
 }
 
@@ -246,7 +246,7 @@ onMounted(async () => {
     loading.value = true;
     store.completeOrder();
     await userDataFetch();
-    await getOrder();
+    await getOrderDetails();
     loading.value = false;
 })
 </script>

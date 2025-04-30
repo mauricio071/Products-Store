@@ -1,3 +1,14 @@
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    updateDoc,
+    where,
+} from "firebase/firestore";
 import { defineStore } from "pinia";
 
 export const productsStore = defineStore("products", {
@@ -10,6 +21,7 @@ export const productsStore = defineStore("products", {
         orders: [],
         creditCard: null,
         installment: null,
+        wishList: [],
     }),
     //action
     actions: {
@@ -43,24 +55,64 @@ export const productsStore = defineStore("products", {
                 this.removeProduct(id);
             }
         },
-        addToWish(id) {
-            const verify = this.wishList.find((productId) => productId === id);
+        async fetchWishList() {
+            const { $db, $auth } = useNuxtApp();
+            const wishListCollection = collection($db, "wishList");
+            const wishListQuery = query(
+                wishListCollection,
+                where("uid", "==", $auth.currentUser.uid)
+            );
+            const querySnapShot = await getDocs(wishListQuery);
+            const wishListFire = querySnapShot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
 
-            if (!verify) {
-                this.wishList.push(id);
-            } else {
-                this.wishList = this.wishList.filter(
-                    (productId) => productId !== id
+            this.wishList = wishListFire;
+
+            return wishListFire;
+        },
+        async addToWish(id) {
+            const { $db, $auth, $toast } = useNuxtApp();
+            const $router = useRouter();
+
+            if ($auth.currentUser) {
+                const wishListFire = await this.fetchWishList();
+
+                const verify = wishListFire.find(
+                    (product) => product.itemId === id
                 );
+
+                const wishItem = {
+                    uid: $auth.currentUser.uid,
+                    itemId: id,
+                };
+
+                if (!verify) {
+                    this.wishList.push(wishItem);
+                    await addDoc(collection($db, "wishList"), wishItem);
+                } else {
+                    this.wishList.filter((product) => product.itemId !== id);
+                    const document = doc($db, "wishList", verify.id);
+                    await deleteDoc(document);
+                }
+            } else {
+                $router
+                    .push("/login")
+                    .then(() => $toast.warning("Login is required"));
             }
         },
-        favorited(id) {
-            return this.wishList.find((productId) => productId === id);
-        },
-        removeWishList(id) {
-            this.wishList = this.wishList.filter(
-                (productId) => productId !== id
+
+        async removeWishList(id) {
+            const { $db } = useNuxtApp();
+
+            const wishListFire = await this.fetchWishList();
+
+            const verify = wishListFire.find(
+                (product) => product.itemId === id
             );
+            const document = doc($db, "wishList", verify.id);
+            await deleteDoc(document);
         },
         checkAllProduct() {
             this.checkAll = !this.checkAll;
@@ -76,24 +128,48 @@ export const productsStore = defineStore("products", {
         emptyShoppingCart() {
             this.cart = [];
         },
-        checkout(data) {
-            this.orders.push(data);
+        async checkout(data) {
+            const { $db } = useNuxtApp();
+            const document = await addDoc(collection($db, "orders"), data);
+            return document.id;
         },
-        confirmPayment(id) {
-            this.orders = this.orders.map((order) => {
-                if (order.id === id) {
-                    return {
-                        ...order,
-                        status: "To receive",
-                    };
-                }
-                return order;
+        async confirmPayment(id) {
+            const { $db } = useNuxtApp();
+            const orderDoc = doc($db, "orders", id);
+            const orderData = await getDoc(orderDoc);
+
+            await updateDoc(orderDoc, {
+                ...orderData.data(),
+                status: "To receive",
             });
         },
-        getOrder(id) {
-            return this.orders.find((order) => order.id === id);
+        async getOrders() {
+            const { $db, $auth } = useNuxtApp();
+            const ordersCollection = collection($db, "orders");
+            const ordersQuery = query(
+                ordersCollection,
+                where("uid", "==", $auth.currentUser.uid)
+            );
+            const querySnapShot = await getDocs(ordersQuery);
+            const ordersFire = querySnapShot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
+
+            return ordersFire;
+        },
+        async getOrder(id) {
+            const { $db } = useNuxtApp();
+            const orderDoc = doc($db, "orders", id);
+            const orderData = await getDoc(orderDoc);
+
+            return {
+                ...orderData.data(),
+                id,
+            };
         },
         completeOrder() {
+            ////
             const today = new Date();
             const todayFormatted = `${today.getFullYear()}-${(
                 today.getMonth() + 1
@@ -131,21 +207,22 @@ export const productsStore = defineStore("products", {
                 return order;
             });
         },
-        cancelOrder(id) {
-            this.orders = this.orders.map((order) => {
-                if (order.id === id) {
-                    return {
-                        ...order,
-                        status: "Canceled",
-                    };
-                }
-                return order;
+        async cancelOrder(id) {
+            const { $db } = useNuxtApp();
+            const orderDoc = doc($db, "orders", id);
+            const orderData = await getDoc(orderDoc);
+
+            await updateDoc(orderDoc, {
+                ...orderData.data(),
+                status: "Canceled",
             });
         },
         saveCreditCard(data) {
+            ////
             this.creditCard = data;
         },
         removeCreditCard() {
+            ////
             this.creditCard = null;
         },
         saveInstallment(data) {
