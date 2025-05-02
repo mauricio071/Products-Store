@@ -35,6 +35,7 @@ import {
     signOut,
     updateProfile,
 } from "firebase/auth";
+import { createUserInfo } from "~/firebase/createUserAction";
 
 const { $toast, $firebaseConfig } = useNuxtApp();
 
@@ -66,7 +67,7 @@ const createUserWithoutLogin = async () => {
 
         await updateProfile(userCredential.user, { displayName: username.value });
 
-        // await createAllDocuments(secondaryDb, userCredential.user.uid);
+        // await createUserInfo(secondaryDb, userCredential.user.displayName.trim().split(" ")[0]);
 
         await signOut(secondaryAuth);
 

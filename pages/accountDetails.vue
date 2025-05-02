@@ -4,21 +4,7 @@
             <span class="loader-primary"></span>
         </div>
         <div v-else class="max-w-4xl mx-auto space-y-4">
-            <div class="address">
-                <h2>Shipping address</h2>
-                <div class="address-content">
-                    <p><span>Name: </span> {{ userData.name?.firstname + " " + userData.name?.lastname }}</p>
-                    <p><span>Phone: </span> {{ userData?.phone }}</p>
-                </div>
-                <div class="address-content">
-                    <p><span>City: </span> {{ userData.address?.city }}</p>
-                    <p><span>Street: </span> {{ userData.address?.street }}</p>
-                </div>
-                <div class="address-content">
-                    <p><span>Number: </span> {{ userData.address?.number }}</p>
-                    <p><span>Zipcode: </span> {{ userData.address?.zipcode }}</p>
-                </div>
-            </div>
+            <ShippingAddress />
             <div class="payment-methods">
                 <h2>Credit card</h2>
                 <div class="relative w-full  h-52 bg-gray-200 p-4 flex justify-center items-center md:w-1/2">
@@ -61,17 +47,16 @@ useHead({
     title: "Account Details - Products Store"
 });
 
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { productsStore } from '~/store/productsStore';
 
-const { $toast } = useNuxtApp();
+const { $toast, $auth, $db } = useNuxtApp();
 
 const store = productsStore();
 
 const { creditCard } = storeToRefs(store);
 
-const loading = ref(true);
-
-const userData = ref({});
+const loading = ref(false);
 
 const modal = ref(false);
 const modalDelete = ref(false);
@@ -84,47 +69,36 @@ const completed = () => {
     $toast.success("Card added successfully!");
 }
 
-const fetchProducts = async () => {
-    loading.value = true;
-
-    try {
-        const data = await $fetch('https://fakestoreapi.com/users/2');
-        userData.value = data;
-    } catch (e) {
-        console.log("Error: ", e);
-    } finally {
-        loading.value = false;
-    }
-}
-
 const deleteCreditcard = () => {
     store.removeCreditCard();
     modalDelete.value = false;
     $toast.success("Card removed successfully!");
 }
 
-fetchProducts();
+// onMounted(async () => {
+//     loading.value = true;
+//     try {
+//         const addressInfoCollection = collection($db, "addressInfo");
+//         const addressInfoQuery = query(
+//             addressInfoCollection,
+//             where("uid", "==", $auth.currentUser.uid)
+//         );
+//         const querySnapShot = await getDocs(addressInfoQuery);
+//         const addressInfoFire = querySnapShot.docs.map((doc) => ({
+//             ...doc.data(),
+//             id: doc.id,
+//         }))[0];
+
+//         addressInfoFire && addressSaved(addressInfoFire);
+//     } catch (error) {
+//         console.error(error);
+//     } finally {
+//         loading.value = false;
+//     }
+// });
 </script>
 
 <style scoped>
-.address {
-    @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
-
-    h2 {
-        @apply text-2xl font-bold mb-4 text-primary;
-    }
-
-    .address-content {
-        @apply grid grid-cols-2 max-w-[28rem];
-
-        p {
-            span {
-                @apply font-bold text-lg;
-            }
-        }
-    }
-}
-
 .payment-methods {
     @apply shadow-md rounded-lg bg-white flex flex-col gap-1.5 justify-between p-6;
 

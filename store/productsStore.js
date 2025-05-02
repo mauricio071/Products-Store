@@ -5,6 +5,7 @@ import {
     doc,
     getDoc,
     getDocs,
+    orderBy,
     query,
     updateDoc,
     where,
@@ -14,6 +15,7 @@ import { defineStore } from "pinia";
 export const productsStore = defineStore("products", {
     //state
     state: () => ({
+        userInfo: {},
         cart: [],
         costShipping: 50,
         checkAll: true,
@@ -148,7 +150,8 @@ export const productsStore = defineStore("products", {
             const ordersCollection = collection($db, "orders");
             const ordersQuery = query(
                 ordersCollection,
-                where("uid", "==", $auth.currentUser.uid)
+                where("uid", "==", $auth.currentUser.uid),
+                orderBy("date", "desc")
             );
             const querySnapShot = await getDocs(ordersQuery);
             const ordersFire = querySnapShot.docs.map((doc) => ({

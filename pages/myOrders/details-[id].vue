@@ -58,26 +58,23 @@
                     <p>Shop with confidence. We ensure secure transactions and safeguard your purchases.</p>
                 </div>
             </div>
-            <div class="grid gap-6 lg:grid-cols-2">
-                <div class="card address">
+            <div class="card address">
                     <h2>
                         <IconsMappin />
                         Shipping address
                     </h2>
                     <div class="address-content">
-                        <p><span>Name: </span> {{ userData.name?.firstname + " " + userData.name?.lastname }}</p>
-                        <p><span>Phone: </span> {{ userData?.phone }}</p>
-                    </div>
-                    <div class="address-content">
-                        <p><span>City: </span> {{ userData.address?.city }}</p>
-                        <p><span>Street: </span> {{ userData.address?.street }}</p>
-                    </div>
-                    <div class="address-content">
-                        <p><span>Number: </span> {{ userData.address?.number }}</p>
-                        <p><span>Zipcode: </span> {{ userData.address?.zipcode }}</p>
+                        <p><span>Name: </span> {{ order.address.name }}</p>
+                    <p><span>Phone: </span> {{ order.address.phone }}</p>
+                    <p><span>Zipcode: </span> {{ order.address.zipCode }}</p>
+                    <p><span>State: </span> {{ order.address.state }}</p>
+                    <p><span>City: </span> {{ order.address.city }}</p>
+                    <p><span>Neighborhood: </span> {{ order.address.neighborhood }}</p>
+                    <p><span>Street name: </span> {{ order.address.streetName }}</p>
+                    <p><span>Street number: </span> {{ order.address.streetNumber }}</p>
                     </div>
                 </div>
-                <div class="card order-info">
+            <div class="card order-info">
                     <h2>
                         <IconsDocument />
                         Order info
@@ -88,6 +85,9 @@
                     <div class="info-content">
                         <p><span>Order date: </span> {{ order.date }}</p>
                     </div>
+                    <div v-if="order.status === 'To receive'" class="info-content">
+                        <p><span>Estimated date: </span> {{ order.estimatedDate }}</p>
+                    </div>
                     <div v-if="order.status === 'completed'" class="info-content">
                         <p><span>Order completed on: </span> {{ order.estimatedDate }}</p>
                     </div>
@@ -95,7 +95,6 @@
                         <p><span>Payment method: </span> {{ order.paymentMethod }}</p>
                     </div>
                 </div>
-            </div>
             <div class="card product">
                 <div class="product-content">
                     <div class="-ml-6"></div>
@@ -292,7 +291,7 @@ onMounted(async () => {
     }
 
     .address-content {
-        @apply grid grid-cols-2 max-w-[28rem];
+        @apply grid grid-cols-2 gap-1;
 
         p {
             span {

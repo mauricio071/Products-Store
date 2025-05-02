@@ -1,21 +1,7 @@
 <template>
     <div class="container flex flex-col lg:flex-row gap-4">
         <div class="left-side">
-            <div class="address">
-                <h2>Shipping address</h2>
-                <div class="address-content">
-                    <p><span>Name: </span> {{ userData.name?.firstname + " " + userData.name?.lastname }}</p>
-                    <p><span>Phone: </span> {{ userData?.phone }}</p>
-                </div>
-                <div class="address-content">
-                    <p><span>City: </span> {{ userData.address?.city }}</p>
-                    <p><span>Street: </span> {{ userData.address?.street }}</p>
-                </div>
-                <div class="address-content">
-                    <p><span>Number: </span> {{ userData.address?.number }}</p>
-                    <p><span>Zipcode: </span> {{ userData.address?.zipcode }}</p>
-                </div>
-            </div>
+            <ShippingAddress @verifyAddressData="verifyAddressData" />
             <div class="payment-methods">
                 <h2>Payment Methods</h2>
                 <div class="custom-radio">
@@ -83,9 +69,8 @@
                     class="text-end block !-mt-0.5 text-gray-800">
                     {{ installment }}
                 </span>
-                <button @click="completePurchase" :disabled="paymentMethod === ''"
-                    :class="{ 'opacity-40 cursor-not-allowed': paymentMethod === '' }"
-                    class="btn w-full disabled:hover:bg-primary disabled:hover:text-white">
+                <button @click="completePurchase" :disabled="paymentMethod === '' || notExistAddress"
+                    class="btn w-full disabled:hover:bg-primary disabled:hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">
                     <span class="font-semibold text-lg">Place order</span>
                 </button>
             </div>
@@ -131,7 +116,6 @@
 <script setup>
 import { productsStore } from '~/store/productsStore';
 import { storeToRefs } from 'pinia';
-import { nanoid } from 'nanoid';
 import CreditCardModal from '~/components/CreditCardModal.vue';
 
 definePageMeta({
@@ -167,6 +151,17 @@ const addCreditcardInfo = (info) => {
 //     userData.value = data;
 // });
 
+const notExistAddress = ref(true);
+
+const address = ref({});
+
+const verifyAddressData = (data) => {
+    if (data) {
+        notExistAddress.value = false;
+        address.value = data;
+    }
+}
+
 store.resetInstallment();
 
 const { data } = await useFetch('https://fakestoreapi.com/users/2');
@@ -175,6 +170,10 @@ userData.value = data.value;
 const completePurchase = async () => {
     if (!isLoggedIn) {
         router.push("/login").then(() => $toast.warning("Login is required"));
+        return
+    }
+
+    if (notExistAddress.value) {
         return
     }
 
@@ -195,12 +194,14 @@ const completePurchase = async () => {
         products: cart.value.map((product) => ({
             productId: product.id,
             quantity: product.quantity
-        }))
+        })),
+        address: address.value
     }
+
+    const purchaseId = await store.checkout(data);
 
     switch (paymentMethod.value) {
         case "pix":
-            const purchaseId = await store.checkout(data);
             router.push({ path: `/payment/purchase-${purchaseId}` }).then(() => {
                 $toast.success("Purchase completed successfully");
                 store.emptyShoppingCart();
@@ -208,8 +209,7 @@ const completePurchase = async () => {
             break;
         case "Credit card":
             store.resetInstallment();
-            store.checkout(data);
-            router.push({ path: `/payment/purchase-${data.id}` }).then(() => {
+            router.push({ path: `/payment/purchase-${purchaseId}` }).then(() => {
                 $toast.success("Payment confirmed successfully!");
                 store.emptyShoppingCart();
             });

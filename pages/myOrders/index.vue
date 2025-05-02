@@ -122,7 +122,7 @@ const fetchProducts = async () => {
             }
             )
         );
-        ordersHistory.value = orderedProducts.reverse();
+        ordersHistory.value = orderedProducts;
     } catch (e) {
         console.log("Error: ", e);
     } finally {
