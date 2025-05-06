@@ -19,11 +19,13 @@
                             Credit card
                             <div class="flex items-baseline gap-2 text-sm font-normal ml-2 text-gray-800">
                                 <span v-if="cardNumber">{{ formattedCreditcard(cardNumber) }}</span>
-                                <span v-if="creditCard && !cardNumber">
-                                    {{ formattedCreditcard(creditCard.cardNumber) }}</span>
-                                <span v-if="installment && (cardNumber || creditCard)" class="text-end block !-mt-0.5 ">
+                                <!-- <span v-if="creditCard && !cardNumber">
+                                    {{ formattedCreditcard(creditCard.cardNumber) }}</span> -->
+                                <span v-if="installment && cardNumber" class="text-end block !-mt-0.5 ">
                                     {{ installment }}
                                 </span>
+                                <span v-if="installment && cardNumber" @click="modal = true"
+                                    class="!text-blue-500 underline cursor-pointer">edit</span>
                             </div>
                         </span>
                     </label>
@@ -131,7 +133,7 @@ const { $toast, $auth } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, installment, creditCard } = storeToRefs(store);
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, creditCard } = storeToRefs(store);
 
 const { isLoggedIn } = useAuth();
 
@@ -141,8 +143,11 @@ const paymentMethod = ref('');
 
 const cardNumber = ref('');
 
-const addCreditcardInfo = (info) => {
-    cardNumber.value = info;
+const installment = ref('');
+
+const addCreditcardInfo = (data) => {
+    cardNumber.value = data.cardNumber;
+    installment.value = data.installment;
 }
 
 // Caso precise carregar do lado do client
@@ -168,11 +173,6 @@ const { data } = await useFetch('https://fakestoreapi.com/users/2');
 userData.value = data.value;
 
 const completePurchase = async () => {
-    if (!isLoggedIn) {
-        router.push("/login").then(() => $toast.warning("Login is required"));
-        return
-    }
-
     if (notExistAddress.value) {
         return
     }

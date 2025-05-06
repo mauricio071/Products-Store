@@ -1,14 +1,13 @@
 <template>
     <div>
-        <div v-if="loading" class="loading-screen">
-            <span class="loader-primary"></span>
-        </div>
-        <div v-else class="max-w-4xl mx-auto space-y-4">
+        <div class="max-w-4xl mx-auto space-y-4">
             <ShippingAddress />
             <div class="payment-methods">
                 <h2>Credit card</h2>
-                <div class="relative w-full  h-52 bg-gray-200 p-4 flex justify-center items-center md:w-1/2">
-                    <p v-if="!creditCard" @click="modal = true" class="flex gap-2 font-bold cursor-pointer">
+                <span v-if="loading" class="skeleton-loader max-h-52"></span>
+                <div v-else class="relative w-full h-52 bg-gray-200 p-4 flex justify-center items-center md:w-1/2">
+                    <p v-if="!Object.keys(creditCard).length" @click="modal = true"
+                        class="flex gap-2 font-bold cursor-pointer">
                         <i class="material-icons">add_circle_outline</i>
                         Add new card
                     </p>
@@ -21,7 +20,7 @@
             </div>
         </div>
         <CreditCardModal :modal="modal" :disabledInputs="true" @close-modal="closeModal"
-            @addCreditcardInfo="completed" />
+            @addCreditcardInfo="addCreditcardInfo" />
         <Modal :isVisible="modalDelete" @close="modalDelete = false">
             <div class="flex flex-col gap-4 items-center justify-between lg:-mb-4">
                 <h3 class="text-2xl font-bold text-center">Remove</h3>
@@ -50,13 +49,15 @@ useHead({
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { productsStore } from '~/store/productsStore';
 
-const { $toast, $auth, $db } = useNuxtApp();
+const { $toast, $db, $auth } = useNuxtApp();
 
 const store = productsStore();
 
-const { creditCard } = storeToRefs(store);
+// const { creditCard } = storeToRefs(store);
 
-const loading = ref(false);
+const creditCard = ref({});
+
+const loading = ref(true);
 
 const modal = ref(false);
 const modalDelete = ref(false);
@@ -65,37 +66,27 @@ const closeModal = () => {
     modal.value = false;
 }
 
-const completed = () => {
-    $toast.success("Card added successfully!");
+const addCreditcardInfo = (data) => {
+    loading.value = true;
+    if (data) {
+        creditCard.value.cardNumber = data.cardNumber;
+        creditCard.value.id = data.id;
+    }
+
+    loading.value = false;
 }
 
-const deleteCreditcard = () => {
-    store.removeCreditCard();
-    modalDelete.value = false;
-    $toast.success("Card removed successfully!");
+const deleteCreditcard = async () => {
+    try {
+        await store.removeCreditCard(creditCard.value.id);
+        creditCard.value = {};
+        modalDelete.value = false;
+        $toast.success("Card removed successfully!");
+    } catch (error) {
+        console.error(error);
+        $toast.success("Failed to remove the card. Please try again.");
+    }
 }
-
-// onMounted(async () => {
-//     loading.value = true;
-//     try {
-//         const addressInfoCollection = collection($db, "addressInfo");
-//         const addressInfoQuery = query(
-//             addressInfoCollection,
-//             where("uid", "==", $auth.currentUser.uid)
-//         );
-//         const querySnapShot = await getDocs(addressInfoQuery);
-//         const addressInfoFire = querySnapShot.docs.map((doc) => ({
-//             ...doc.data(),
-//             id: doc.id,
-//         }))[0];
-
-//         addressInfoFire && addressSaved(addressInfoFire);
-//     } catch (error) {
-//         console.error(error);
-//     } finally {
-//         loading.value = false;
-//     }
-// });
 </script>
 
 <style scoped>

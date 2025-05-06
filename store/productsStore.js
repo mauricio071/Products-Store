@@ -220,13 +220,20 @@ export const productsStore = defineStore("products", {
                 status: "Canceled",
             });
         },
-        saveCreditCard(data) {
-            ////
-            this.creditCard = data;
+        async saveCreditCard(data) {
+            const { $db } = useNuxtApp();
+
+            const response = await addDoc(collection($db, "creditCard"), data);
+            return {
+                ...data,
+                id: response.id,
+            };
         },
-        removeCreditCard() {
-            ////
-            this.creditCard = null;
+        async removeCreditCard(id) {
+            const { $db } = useNuxtApp();
+
+            const document = doc($db, "creditCard", id);
+            await deleteDoc(document);
         },
         saveInstallment(data) {
             this.installment = data;

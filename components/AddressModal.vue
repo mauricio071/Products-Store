@@ -77,7 +77,8 @@
                             <ErrorMessage name="streetNumber" class="error-message" />
                         </div>
                     </div>
-                    <button class="btn w-full hover:bg-[#11c091] !text-white py-3 max-w-[20rem]">
+                    <button :disabled="loading"
+                        class="btn w-full hover:bg-[#11c091] !text-white py-3 max-w-[20rem] disabled:bg-gray-300">
                         Save
                     </button>
                 </Form>
@@ -95,13 +96,17 @@ import { collection, getDocs, query, where, addDoc, doc, updateDoc, } from 'fire
 const { $toast, $db, $auth } = useNuxtApp();
 
 const { modal, addressProps, disabledInputs } = defineProps(['modal', 'addressProps', 'disabledInputs']);
-const $emit = defineEmits(["closeModal", "addCreditcardInfo"]);
+const $emit = defineEmits(["closeModal", "addAddressInfo", "addCreditcardInfo"]);
 
 const store = productsStore();
-const { totalValue, creditCard } = storeToRefs(store);
+const { creditCard } = storeToRefs(store);
 const addressData = ref({});
 
 const formType = ref("add");
+
+const addressId = ref(null);
+
+const loading = ref(false);
 
 const schema = yup.object({
     name: yup.string().required("Name is required"),
@@ -136,6 +141,7 @@ watch(() => addressData.value.zipCode, async (newValue, oldValue) => {
 }, { deep: true });
 
 const onSubmit = async (values) => {
+    loading.value = true;
     const data = {
         ...values,
         uid: $auth.currentUser.uid
@@ -143,8 +149,7 @@ const onSubmit = async (values) => {
 
     if (formType.value === "edit") {
         try {
-            const addressInfoFire = await fetchUserAddress();
-            const addressDoc = doc($db, "addressInfo", addressInfoFire.id);
+            const addressDoc = doc($db, "addressInfo", addressId.value);
 
             await updateDoc(addressDoc, values);
 
@@ -162,11 +167,13 @@ const onSubmit = async (values) => {
         }
     }
 
+    loading.value = false;
     $emit("addAddressInfo", values);
     closeModal();
 };
 
 const addressSaved = (data) => {
+    addressId.value = data.id;
     addressData.value.name = data.name;
     addressData.value.phone = data.phone;
     addressData.value.zipCode = data.zipCode;
