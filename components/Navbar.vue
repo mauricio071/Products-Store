@@ -8,8 +8,9 @@
             <button @click="visible = !visible" class="md:hidden">
                 <IconsMenu />
             </button>
+
             <template v-if="route.name !== 'payment'">
-                <ul class="space-y-8 md:space-y-0 mt-8 md:my-0 justify-between gap-4 w-full md:w-[unset] md:flex"
+                <ul class="space-y-8 md:space-y-0 mt-8 md:my-0 justify-between items-center gap-4 w-full md:w-[unset] md:flex"
                     :class="{ 'block': visible, 'hidden': !visible }">
                     <li>
                         <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
@@ -19,6 +20,17 @@
                             <IconsUser />
                             <div class="submenu">
                                 <template v-if="isLoggedIn">
+                                    <div class="submenu-username">
+                                        <div>
+                                            Welcome back,
+                                            <span class="font-semibold">{{ user.displayName }}</span>!
+                                        </div>
+                                        <span @click="logout"
+                                            class="flex items-center gap-2 text-blue-500 w-fit cursor-pointer">
+                                            <i class="material-icons ml-0.5 -mr-0.25">logout</i>
+                                            Logout
+                                        </span>
+                                    </div>
                                     <div>
                                         <nuxt-link to="/myOrders" class="menu-item">
                                             <IconsShoppingBag />
@@ -37,24 +49,29 @@
                                             Account
                                         </nuxt-link>
                                     </div>
-                                    <div @click="logout" class="menu-item">
-                                        <i class="material-icons ml-0.5 -mr-0.25">logout</i>
-                                        Logout
-                                    </div>
                                 </template>
-                                <div v-else @click="login" class="menu-item">
-                                    <i class="material-icons">login</i>
-                                    Login
-                                </div>
+                                <template v-else>
+                                    <div @click="login" class="login-btn">
+                                        <i class="material-icons -ml-4">login</i>
+                                        Login
+                                    </div>
+                                    <nuxt-link to="/login?register=true" class="text-gray-500 text-center mt-2">
+                                        Register
+                                    </nuxt-link>
+                                </template>
                             </div>
-                            <span class="font-semibold text-sm ml-1">Account</span>
+                            <div class="flex flex-col max-w-[5rem]">
+                                <span v-if="user?.displayName" class="text-xs truncate">Hi, {{ user.displayName }}
+                                </span>
+                                <span class="font-bold text-sm ">Account</span>
+                            </div>
                         </div>
                     </li>
                     <li class="relative">
                         <nuxt-link to="/cart" class="flex items-end">
                             <div v-if="cart.length > 0" class="product-counter">{{ cart.length }}</div>
                             <i class="material-icons">shopping_cart</i>
-                            <span class="font-semibold text-sm ml-1">Cart</span>
+                            <span class="font-bold text-sm ml-1">Cart</span>
                         </nuxt-link>
                     </li>
                 </ul>
@@ -79,7 +96,7 @@ const store = productsStore();
 
 const { cart } = storeToRefs(store);
 
-const { isAuthResolved, isLoggedIn } = useAuth();
+const { isAuthResolved, isLoggedIn, user } = useAuth();
 
 const login = () => {
     router.push("/login");
@@ -93,7 +110,7 @@ const logout = async () => {
 
 <style scoped>
 .user-account {
-    @apply flex items-end gap-2 relative;
+    @apply flex items-center gap-2 relative;
 
     &:hover {
         .submenu {
@@ -102,10 +119,22 @@ const logout = async () => {
     }
 
     .submenu {
-        @apply hidden absolute top-[1.5rem] left-[-2rem] w-40 flex-col font-semibold bg-white py-2 rounded-lg shadow-lg cursor-pointer z-10;
+        @apply hidden absolute top-[1.5rem] left-[-6rem] w-[19rem] flex-col gap-1 bg-white py-4 px-2 rounded-lg shadow-lg z-10;
+
+        .login-btn {
+            @apply bg-primary text-white flex justify-center items-center gap-3 duration-300 px-4 py-3 w-60 mx-auto cursor-pointer font-semibold text-base rounded-3xl;
+
+            &:hover {
+                @apply bg-[#109471];
+            }
+        }
+
+        .submenu-username {
+            @apply flex flex-col gap-3 border-b border-b-gray-200 pt-2.5 pb-4 mb-2 mx-4;
+        }
 
         .menu-item {
-            @apply flex items-center gap-3 duration-300 p-4 w-full;
+            @apply flex items-center gap-3 duration-300 px-4 py-3 w-full cursor-pointer rounded-lg font-semibold text-base;
 
             &:hover {
                 @apply bg-gray-200 text-primary;

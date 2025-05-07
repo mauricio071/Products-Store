@@ -87,7 +87,6 @@
                 </div>
             </div>
         </div>
-
         <div v-else>
             <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
             <client-only>
@@ -195,14 +194,19 @@ onMounted(async () => {
         const data = await $fetch(`https://fakestoreapi.com/products/${id}`);
         product.value = data;
 
-        useHead({
-            title: `${product.value.title} - Products Store`
-        });
+        if (data) {
+            useHead({
+                title: `${product.value.title} - Products Store`
+            });
 
-        const wishList = await store.fetchWishList();
-        loadSimilar();
+            const wishList = await store.fetchWishList();
+            loadSimilar();
 
-        isFavorite.value = !!wishList.find((product) => product.itemId === id);
+            isFavorite.value = !!wishList.find((product) => product.itemId === id);
+        } else {
+            await navigateTo('/', { replace: true });
+            $toast.error("This product doesn't exist!")
+        }
     } catch (error) {
         console.error(error);
     } finally {

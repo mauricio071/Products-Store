@@ -28,7 +28,15 @@ useHead({
     title: "Login - Products Store"
 });
 
+const $route = useRoute();
+
 const formType = ref("login");
+
+const registerQuery = $route.query;
+
+if (!!registerQuery.register) {
+    formType.value = "register"
+};
 </script>
 
 <style scoped>
