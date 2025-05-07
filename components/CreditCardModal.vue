@@ -179,15 +179,11 @@ const formattedInstallment = (i) => {
 }
 
 const onSubmit = async (values) => {
-    console.log('teste');
-
     const data = {
         uid: $auth.currentUser.uid,
         cardNumber: creditCardData.value.cardNumber ? creditCardData.value.cardNumber : values.cardNumber,
         created_at: new Date()
     };
-    console.log('teste2');
-
     const installment = values.installment;
     const saveCard = values.saveCard;
 

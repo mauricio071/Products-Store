@@ -243,10 +243,11 @@ const addToCart = (product) => {
 
 onMounted(async () => {
     loading.value = true;
-    store.completeOrder();
     await userDataFetch();
     await getOrderDetails();
+    await store.completeOrder(order.value);
     loading.value = false;
+
 })
 </script>
 

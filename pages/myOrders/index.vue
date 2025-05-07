@@ -101,8 +101,9 @@ const fetchProducts = async () => {
     loading.value = true;
 
     try { 
-        // store.completeOrder();
         orders.value = await store.getOrders();
+        const data = await store.completeOrders(orders.value);
+        orders.value = data;
         const orderedProducts = await Promise.all(
             orders.value.map(async (order) => {
                 const products = await Promise.all((

@@ -5,7 +5,6 @@ export default defineNuxtRouteMiddleware(async () => {
     return new Promise((resolve) => {
         $auth.onAuthStateChanged((currentUser) => {
             if (!currentUser) {
-                $toast.warning("Login is required");
                 resolve(navigateTo("/login", { replace: true }));
             } else {
                 resolve();

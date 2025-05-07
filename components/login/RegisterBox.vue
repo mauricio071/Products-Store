@@ -1,17 +1,26 @@
 <template>
-    <form @submit.prevent="handleRegister">
+    <Form :validation-schema="schema" @submit="handleRegister">
         <h2>Register</h2>
-        <div class="input-container">
-            <label>Username: </label>
-            <input v-model="username" type="text" placeholder="Username" required>
+        <div>
+            <div class="input-container">
+                <label>Username: </label>
+                <Field v-model="username" name="userName" type="text" placeholder="Username" required />
+            </div>
+            <ErrorMessage name="userName" class="error-message" />
         </div>
-        <div class="input-container">
-            <label>Email: </label>
-            <input v-model="email" type="email" placeholder="Email" required>
+        <div>
+            <div class="input-container">
+                <label>Email: </label>
+                <Field v-model="email" name="email" type="email" placeholder="Email" required />
+            </div>
+            <ErrorMessage name="email" class="error-message" />
         </div>
-        <div class="input-container">
-            <label>Password: </label>
-            <input v-model="password" type="text" placeholder="Password" required>
+        <div>
+            <div class="input-container">
+                <label>Password: </label>
+                <Field v-model="password" name="password" type="text" placeholder="Password" required />
+            </div>
+            <ErrorMessage name="password" class="error-message" />
         </div>
 
         <button type="submit" :disabled="loading" class="submit-btn">
@@ -23,7 +32,7 @@
             <IconsArrowLeft />
             Back to login screen
         </p>
-    </form>
+    </Form>
 </template>
 
 <script setup>
@@ -35,11 +44,18 @@ import {
     signOut,
     updateProfile,
 } from "firebase/auth";
-import { createUserInfo } from "~/firebase/createUserAction";
+import { ErrorMessage, Field, Form } from "vee-validate";
+import * as yup from "yup";
 
 const { $toast, $firebaseConfig } = useNuxtApp();
 
 const $emit = defineEmits(["changeFormType"]);
+
+const schema = yup.object({
+    userName: yup.string().required("User name is required"),
+    email: yup.string().required("Email is required").email("Must be valid email"),
+    password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+});
 
 const loading = ref(false);
 

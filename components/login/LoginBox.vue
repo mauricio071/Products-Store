@@ -1,13 +1,19 @@
 <template>
-    <form @submit.prevent="handleLogin">
+    <Form :validation-schema="schema" @submit="handleLogin">
         <h2>Login</h2>
-        <div class="input-container">
-            <label>Email: </label>
-            <input v-model="email" type="text" placeholder="Email" required>
+        <div>
+            <div class="input-container">
+                <label>Email: </label>
+                <Field v-model="email" name="email" type="email" placeholder="Email" required />
+            </div>
+            <ErrorMessage name="email" class="error-message" />
         </div>
-        <div class="input-container">
-            <label>Password: </label>
-            <input v-model="password" type="password" placeholder="Password" required>
+        <div>
+            <div class="input-container">
+                <label>Password: </label>
+                <Field v-model="password" name="password" type="password" placeholder="Password" required />
+            </div>
+            <ErrorMessage name="password" class="error-message" />
         </div>
 
         <button type="submit" :disabled="loading" class="submit-btn">
@@ -30,8 +36,10 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
 } from "firebase/auth";
+import { ErrorMessage, Field, Form } from "vee-validate";
+import * as yup from "yup";
 
-const { $toast, $db, $auth, $googleProvider } = useNuxtApp();
+const { $toast, $auth, $googleProvider } = useNuxtApp();
 
 const $emit = defineEmits(["changeFormType"]);
 
@@ -45,6 +53,11 @@ const password = ref("");
 const toggleFormType = () => {
     $emit("changeFormType");
 }
+
+const schema = yup.object({
+    email: yup.string().required("Email is required").email("Must be valid email"),
+    password: yup.string().required("Password is required").min(6, "Password must be at least 6 characters"),
+});
 
 const handleLogin = async () => {
     loading.value = true;

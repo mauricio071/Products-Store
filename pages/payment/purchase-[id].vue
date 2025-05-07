@@ -93,9 +93,10 @@ const pixValue = ref(null);
 
 onMounted(async () => {
     loading.value = true;
-    // store.completeOrder();
     try {
         order.value = await store.getOrder($route.params.id);
+        const data = await store.completeOrder(order.value);
+        order.value = data;
         pixValue.value = order.value.totalValue;
         const pixData = {
             value: pixValue.value * 6,

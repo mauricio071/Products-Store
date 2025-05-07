@@ -158,7 +158,6 @@ export const productsStore = defineStore("products", {
                 ...doc.data(),
                 id: doc.id,
             }));
-
             return ordersFire;
         },
         async getOrder(id) {
@@ -171,8 +170,9 @@ export const productsStore = defineStore("products", {
                 id,
             };
         },
-        completeOrder() {
-            ////
+        async completeOrders(orders) {
+            const { $db } = useNuxtApp();
+
             const today = new Date();
             const todayFormatted = `${today.getFullYear()}-${(
                 today.getMonth() + 1
@@ -189,26 +189,91 @@ export const productsStore = defineStore("products", {
                 .toString()
                 .padStart(2, "0")}`;
 
-            this.orders = this.orders.map((order) => {
-                const verify =
-                    new Date(todayFormatted) > new Date(order.estimatedDate);
+            const data = await Promise.all(
+                orders.map(async (order) => {
+                    const verify =
+                        new Date(todayFormatted) >
+                        new Date(order.estimatedDate);
 
-                if (verify && order.status === "To pay") {
-                    return {
-                        ...order,
-                        status: "Canceled",
-                    };
-                }
+                    if (verify && order.status === "To pay") {
+                        const orderDoc = doc($db, "orders", order.id);
 
-                if (verify && order.status === "To receive") {
-                    return {
-                        ...order,
-                        status: "Completed",
-                    };
-                }
+                        const body = {
+                            ...order,
+                            status: "Canceled",
+                        };
 
-                return order;
-            });
+                        await updateDoc(orderDoc, body);
+
+                        return body;
+                    }
+
+                    if (verify && order.status === "To receive") {
+                        const orderDoc = doc($db, "orders", order.id);
+
+                        const body = {
+                            ...order,
+                            status: "Completed",
+                        };
+
+                        await updateDoc(orderDoc, body);
+
+                        return body;
+                    }
+
+                    return order;
+                })
+            );
+
+            return data;
+        },
+        async completeOrder(order) {
+            const { $db } = useNuxtApp();
+
+            const today = new Date();
+            const todayFormatted = `${today.getFullYear()}-${(
+                today.getMonth() + 1
+            )
+                .toString()
+                .padStart(2, "0")}-${today
+                .getDate()
+                .toString()
+                .padStart(2, "0")} ${today
+                .getHours()
+                .toString()
+                .padStart(2, "0")}:${today
+                .getMinutes()
+                .toString()
+                .padStart(2, "0")}`;
+
+            const verify =
+                new Date(todayFormatted) > new Date(order.estimatedDate);
+
+            if (verify && order.status === "To pay") {
+                const orderDoc = doc($db, "orders", order.id);
+
+                const body = {
+                    ...order,
+                    status: "Canceled",
+                };
+
+                await updateDoc(orderDoc, body);
+
+                return body;
+            }
+
+            if (verify && order.status === "To receive") {
+                const orderDoc = doc($db, "orders", order.id);
+
+                const body = {
+                    ...order,
+                    status: "Completed",
+                };
+
+                await updateDoc(orderDoc, body);
+
+                return body;
+            }
         },
         async cancelOrder(id) {
             const { $db } = useNuxtApp();
