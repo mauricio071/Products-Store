@@ -20,7 +20,7 @@ h1 {
     }
 
     .card {
-        @apply shadow-lg h-full  rounded-lg bg-white flex flex-col justify-between p-8 mb-16 sm:p-4 2xl:p-8;
+        @apply shadow-lg h-full  rounded-lg bg-white flex flex-col justify-between p-8 mb-10 sm:p-4 2xl:p-8;
     }
 
     .rating {

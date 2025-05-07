@@ -23,7 +23,6 @@ export const productsStore = defineStore("products", {
         orders: [],
         creditCard: null,
         installment: null,
-        wishList: [],
     }),
     //action
     actions: {
@@ -59,6 +58,7 @@ export const productsStore = defineStore("products", {
         },
         async fetchWishList() {
             const { $db, $auth } = useNuxtApp();
+
             const wishListCollection = collection($db, "wishList");
             const wishListQuery = query(
                 wishListCollection,
@@ -69,8 +69,6 @@ export const productsStore = defineStore("products", {
                 ...doc.data(),
                 id: doc.id,
             }));
-
-            this.wishList = wishListFire;
 
             return wishListFire;
         },
@@ -91,10 +89,8 @@ export const productsStore = defineStore("products", {
                 };
 
                 if (!verify) {
-                    this.wishList.push(wishItem);
                     await addDoc(collection($db, "wishList"), wishItem);
                 } else {
-                    this.wishList.filter((product) => product.itemId !== id);
                     const document = doc($db, "wishList", verify.id);
                     await deleteDoc(document);
                 }

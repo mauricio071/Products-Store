@@ -1,6 +1,34 @@
 <template>
     <div class="content">
-        <div class="card">
+        <div v-if="loading" class="card w-full">
+            <div class="h-full lg:grid lg:grid-cols-2 items-center">
+                <div class="sm:p-7">
+                    <SkeletonLoader max-height="27rem" />
+                    <!-- <img :src="product.image" :alt="product.description"
+                            class="max-h-[18rem] mx-auto mb-4 2xl:max-w-[30rem] 2xl:max-h-[27rem]"> -->
+                </div>
+                <div class="pt-10 sm:p-7">
+                    <div class="skeleton-container">
+                        <SkeletonLoader max-height="3rem" margin-bottom="2rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                    </div>
+                    <div class="skeleton-container mb-8">
+                        <SkeletonLoader max-height="1.5rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                        <SkeletonLoader max-height="1.5rem" />
+                    </div>
+                    <div class="flex gap-4 mt-4">
+                        <SkeletonLoader max-height="3rem" max-width="8rem" />
+                        <SkeletonLoader max-height="3rem" max-width="8rem" />
+                        <SkeletonLoader max-height="3rem" max-width="4rem" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-else class="card">
             <div class="lg:grid lg:grid-cols-2 items-center">
                 <div class="sm:p-7">
                     <img :src="product.image" :alt="product.description"
@@ -41,7 +69,7 @@
                                 <i class="material-icons">shopping_cart</i>
                                 <span class="font-semibold">Buy now</span>
                             </button>
-                            <button @click="store.addToWish(product.id)" class="favorite-btn">
+                            <button @click="onToggleFavorite" class="favorite-btn">
                                 <i v-if="isFavorite" class="material-icons text-red-500">favorite</i>
                                 <i v-else class="material-icons text-red-500">favorite_border</i>
                             </button>
@@ -50,23 +78,30 @@
                 </div>
             </div>
         </div>
-        <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
-        <div v-if="loading" class="flex gap-8 justify-around overflow-auto">
-            <div v-for="index in 3" :key="index"
-                class="skeleton-loader sm:my-8 sm:mx-8 max-w-[304px] 2xl:max-w-[336px] h-[380px]">
+
+        <div v-if="loadingSimilar">
+            <SkeletonLoader max-height="3rem" max-width="12rem" margin-bottom="1rem" />
+            <div class="flex gap-8 justify-around overflow-auto">
+                <div v-for="index in 3" :key="index"
+                    class="skeleton-loader sm:my-8 sm:mx-8 max-w-[304px] 2xl:max-w-[336px] h-[380px]">
+                </div>
             </div>
         </div>
-        <client-only v-else>
-            <carousel :items-to-show="1" :breakpoints="breakpoints">
-                <slide v-for="product in products" :key="product.id">
-                    <Card :product="product" class="similar" />
-                </slide>
 
-                <template #addons>
-                    <Navigation />
-                </template>
-            </carousel>
-        </client-only>
+        <div v-else>
+            <h2 class="text-3xl font-bold mb-4">Similar itens</h2>
+            <client-only>
+                <carousel :items-to-show="1" :breakpoints="breakpoints">
+                    <slide v-for="product in products" :key="product.id">
+                        <Card :product="product" class="similar" />
+                    </slide>
+
+                    <template #addons>
+                        <Navigation />
+                    </template>
+                </carousel>
+            </client-only>
+        </div>
     </div>
 </template>
 
@@ -92,15 +127,12 @@ const router = useRouter();
 const { id } = useRoute().params;
 const products = ref([]);
 const loading = ref(true);
+const loadingSimilar = ref(true);
 
-const { data: product } = await useFetch(`https://fakestoreapi.com/products/${id}`);
-
-useHead({
-    title: `${product.value.title} - Products Store`
-});
+const product = ref(null);
 
 const loadSimilar = async () => {
-    loading.value = true;
+    loadingSimilar.value = true;
     try {
         const data = await $fetch(`https://fakestoreapi.com/products/category/${product.value.category}`);
         const produtosFiltrados = data.filter((item) => item.id !== Number(id));
@@ -108,17 +140,15 @@ const loadSimilar = async () => {
     } catch (e) {
         console.log("Error: ", e);
     } finally {
-        loading.value = false;
+        loadingSimilar.value = false;
     }
 }
 
-loadSimilar();
-
 const quantity = ref(1);
 
-if (!product.value) {
-    throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true });
-}
+// if (!product.value) {
+//     throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true });
+// }
 
 const removeUnitProduct = () => {
     if (quantity.value > 1) {
@@ -147,20 +177,49 @@ const addToCart = (payment) => {
         $toast.error("There was an error processing your request");
     }
 }
+
 const isFavorite = ref(false);
 
+const onToggleFavorite = async () => {
+    try {
+        isFavorite.value = !isFavorite.value;
+        await store.addToWish(id);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 onMounted(async () => {
-    const wishList = await store.fetchWishList();
-    isFavorite.value = wishList.find((product) => product.itemId === id);
-})
+    loading.value = true
+    try {
+        const data = await $fetch(`https://fakestoreapi.com/products/${id}`);
+        product.value = data;
 
+        useHead({
+            title: `${product.value.title} - Products Store`
+        });
 
-// favorited(id) {
-//     return this.wishList.find((product) => product.itemId === id);
-// }
+        const wishList = await store.fetchWishList();
+        loadSimilar();
+
+        isFavorite.value = !!wishList.find((product) => product.itemId === id);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        loading.value = false;
+    }
+});
 </script>
 
 <style scoped>
+.skeleton-container {
+    @apply flex flex-col gap-2.5;
+
+    &:first-child {
+        @apply border-b-2 pb-6 mb-6;
+    }
+}
+
 .quantity {
     @apply flex items-center gap-2;
 }
