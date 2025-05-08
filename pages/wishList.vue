@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="loading" class="loading-screen">
-            <span v-if="loading" class="loader-primary"></span>
+            <span class="loader-primary"></span>
         </div>
         <div v-else>
             <EmptyScreen v-if="products.length === 0" message="Your wish list is empty!" />

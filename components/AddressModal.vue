@@ -4,24 +4,15 @@
             <div class="flex flex-col gap-2 items-center justify-between sm:gap-4 lg:w-[50rem] lg:-mb-4 xl:w-[60rem]">
                 <h3 class="text-2xl font-bold text-center">Shipping address</h3>
                 <Form :validation-schema="schema" @submit="onSubmit" class="w-full text-center">
-                    <div v-if="creditCard" class="input-container mb-4">
-                        <label>Credit card</label>
-                        <div class="flex items-center gap-4">
-                            <span class="text-gray-800">
-                                {{ formattedCreditcard(creditCard.cardNumber) }}
-                            </span>
-                            <p @click="removeCreditCard" class="underline text-red-500 cursor-pointer">Remove</p>
-                        </div>
-                    </div>
                     <div class="grid gap-2 w-full border-b border-b-gray-300 pb-8 mb-4 sm:gap-8 sm:grid-cols-2">
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>Name*</label>
                                 <Field v-model="addressData.name" name="name" type="text" placeholder="Name" />
                             </div>
                             <ErrorMessage name="name" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>Phone number*</label>
                                 <Field v-model="addressData.phone" name="phone"
@@ -29,7 +20,7 @@
                             </div>
                             <ErrorMessage name="phone" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>ZIP code*</label>
                                 <Field v-model="addressData.zipCode" name="zipCode" v-mask="'#####-###'" type="text"
@@ -37,7 +28,7 @@
                             </div>
                             <ErrorMessage name="zipCode" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>State*</label>
                                 <Field v-model="addressData.state" name="state" type="text" placeholder="State"
@@ -45,14 +36,14 @@
                             </div>
                             <ErrorMessage name="state" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>City*</label>
                                 <Field v-model="addressData.city" name="city" type="text" placeholder="City" disabled />
                             </div>
                             <ErrorMessage name="city" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>Neighborhood*</label>
                                 <Field v-model="addressData.neighborhood" name="neighborhood" type="text"
@@ -60,7 +51,7 @@
                             </div>
                             <ErrorMessage name="neighborhood" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>Street name*</label>
                                 <Field v-model="addressData.streetName" name="streetName" type="text"
@@ -68,7 +59,7 @@
                             </div>
                             <ErrorMessage name="streetName" class="error-message" />
                         </div>
-                        <div v-if="!creditCard">
+                        <div>
                             <div class="input-container">
                                 <label>Street number*</label>
                                 <Field v-model="addressData.streetNumber" name="streetNumber" v-mask="'###'" type="text"
@@ -98,8 +89,6 @@ const { $toast, $db, $auth } = useNuxtApp();
 const { modal, addressProps, disabledInputs } = defineProps(['modal', 'addressProps', 'disabledInputs']);
 const $emit = defineEmits(["closeModal", "addAddressInfo", "addCreditcardInfo"]);
 
-const store = productsStore();
-const { creditCard } = storeToRefs(store);
 const addressData = ref({});
 
 const formType = ref("add");

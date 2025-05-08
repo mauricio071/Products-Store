@@ -84,7 +84,7 @@ h1 {
 
 .loading-screen {
     @apply flex justify-center;
-    height: calc(100vh - 228px);
+    height: calc(100vh - 236px);
 }
 
 .checkbox {
