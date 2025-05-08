@@ -107,8 +107,9 @@ export const productsStore = defineStore("products", {
             const wishListFire = await this.fetchWishList();
 
             const verify = wishListFire.find(
-                (product) => product.itemId === id
+                (product) => Number(product.itemId) === id
             );
+
             const document = doc($db, "wishList", verify.id);
             await deleteDoc(document);
         },

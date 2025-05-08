@@ -1,6 +1,6 @@
 <template>
     <header class="shadow-md">
-        <nav class="flex justify-between flex-wrap md:flex-nowrap container mx-auto p-8">
+        <nav class="flex justify-between flex-wrap md:flex-nowrap container mx-auto px-8 py-7">
             <NuxtLink to="/" class="font-bold text-xl flex gap-2 items-center">
                 <LazyIconsShopping class="rotate-[-20deg]" />
                 Products Store
