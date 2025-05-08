@@ -45,7 +45,7 @@
                             <h2 class="text-lg md:text-2xl font-bold">Price: {{ formattedPrice(product.price) }}
                             </h2>
                             <span class="text-gray-600 block !mt-1">
-                                +{{ formattedPrice(product.price * 0.2) }} estimated tax
+                                +{{ formattedPrice(product.price * taxRate) }} estimated tax
                             </span>
                         </div>
                         <p class="text-lg font-semibold">{{ product.rating.count }} sold</p>
@@ -117,6 +117,8 @@ const breakpoints = {
 }
 
 const store = productsStore();
+const { taxRate } = storeToRefs(store);
+
 const { $toast } = useNuxtApp();
 
 const addProduct = store.addProduct;

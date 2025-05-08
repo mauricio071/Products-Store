@@ -41,7 +41,7 @@
                                 </div>
                             </div>
                             <span class="text-gray-600 block !-mt-3">
-                                +{{ formattedPrice(product.price * 0.2) }} estimated tax
+                                +{{ formattedPrice(product.price * taxRate) }} estimated tax
                             </span>
                             <button @click="addToCart(product)"
                                 class="btn flex justify-center items-center gap-x-2 self-end">
@@ -70,6 +70,7 @@ import { productsStore } from '~/store/productsStore';
 const { $toast } = useNuxtApp();
 
 const store = productsStore();
+const { taxRate } = storeToRefs(store);
 
 const products = ref([]);
 const loading = ref(true);

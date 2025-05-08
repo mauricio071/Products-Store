@@ -142,11 +142,11 @@
                         </p>
                         <p>
                             <span>Tax total: </span>
-                            {{ formattedPrice(product.price * product.quantity * 0.2) }}
+                            {{ formattedPrice(product.price * product.quantity * taxRate) }}
                         </p>
                         <p class="!font-bold !text-lg !text-black">
                             <span>Total: </span>
-                            {{ formattedPrice(product.price * product.quantity * 1.2 + order.shippingFee) }}
+                            {{ formattedPrice(product.price * product.quantity * (1 + taxRate) + order.shippingFee) }}
                         </p>
                     </div>
                 </div>
@@ -189,6 +189,7 @@ const loading = ref(true);
 const product = ref(null);
 
 const store = productsStore();
+const { taxRate } = storeToRefs(store);
 
 const modal = ref(false);
 

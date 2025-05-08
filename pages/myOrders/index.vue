@@ -54,7 +54,7 @@
                                         <span>{{ product.quantity }}</span>
                                     </div>
                                     <div class="total self-end font-bold text-2xl">
-                                        Total: {{ formattedPrice(product.price * product.quantity * 1.2) }}
+                                        Total: {{ formattedPrice(product.price * product.quantity * taxRate) }}
                                     </div>
 
                                     <button v-if="true" @click="addToCart(product)"
@@ -91,6 +91,7 @@ useHead({
 const { $toast } = useNuxtApp();
 
 const store = productsStore();
+const { taxRate } = storeToRefs(store);
 
 const orders = ref([]);
 

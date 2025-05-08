@@ -21,6 +21,8 @@ export const productsStore = defineStore("products", {
         checkAll: true,
         wishList: [],
         orders: [],
+        dollar: 6,
+        taxRate: 0.2,
     }),
     //action
     actions: {

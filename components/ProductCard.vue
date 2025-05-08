@@ -33,7 +33,7 @@
                     Total price: {{ formattedPrice(product.total) }}
                 </p>
                 <span v-if="!disabled" class="text-gray-600 block !mt-1">
-                    +{{ formattedPrice(product.total * 0.2) }} estimated tax
+                    +{{ formattedPrice(product.total * taxRate) }} estimated tax
                 </span>
             </div>
         </div>
@@ -48,6 +48,7 @@ const { $toast } = useNuxtApp();
 const { product, disabled } = defineProps(["product", "disabled"]);
 
 const store = productsStore();
+const { taxRate } = storeToRefs(store);
 
 const remove = (id) => {
     try {

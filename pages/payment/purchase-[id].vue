@@ -84,6 +84,7 @@ useHead({
 const { $toast } = useNuxtApp();
 const $route = useRoute();
 const store = productsStore();
+const { dollar } = storeToRefs(store)
 
 const order = ref(null);
 const qrCode = ref(null);
@@ -101,7 +102,7 @@ onMounted(async () => {
         pixValue.value = order.value.totalValue;
 
         const pixData = {
-            value: pixValue.value * 6,
+            value: pixValue.value * dollar,
         };
         const result = await generatePixQrCode(pixData);
         qrCode.value = result.qrCode;
