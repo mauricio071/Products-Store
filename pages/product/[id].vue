@@ -120,6 +120,7 @@ const store = productsStore();
 const { taxRate } = storeToRefs(store);
 
 const { $toast } = useNuxtApp();
+const { isLoggedIn } = useAuth();
 
 const addProduct = store.addProduct;
 
@@ -178,6 +179,12 @@ const addToCart = (payment) => {
 const isFavorite = ref(false);
 
 const onToggleFavorite = async () => {
+    if (!isLoggedIn.value) {
+        await navigateTo('/login');
+        $toast.warning("Login is required!");
+        return
+    }
+
     try {
         isFavorite.value = !isFavorite.value;
         await store.addToWish(id);
@@ -197,13 +204,14 @@ onMounted(async () => {
                 title: `${product.value.title} - Products Store`
             });
 
-            const wishList = await store.fetchWishList();
+            if (isLoggedIn.value) {
+                const wishList = await store.fetchWishList();
+                isFavorite.value = !!wishList.find((product) => product.itemId === id);
+            }
             loadSimilar();
-
-            isFavorite.value = !!wishList.find((product) => product.itemId === id);
         } else {
             await navigateTo('/', { replace: true });
-            $toast.error("This product doesn't exist!")
+            $toast.error("This product doesn't exist!");
         }
     } catch (error) {
         console.error(error);
