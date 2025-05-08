@@ -25,8 +25,7 @@
                             <span class="font-semibold text-lg">Pay now</span>
                         </button>
                     </nuxt-link>
-                    <button v-else @click="addToCart(productData)"
-                        class="btn rounded-xl hover:bg-primary hover:text-white">
+                    <button v-else @click="addToCart(product)" class="btn rounded-xl hover:bg-primary hover:text-white">
                         <span class="font-semibold text-lg">Add to cart</span>
                     </button>
                     <button v-if="order.status !== 'Completed' && order.status !== 'Canceled'" @click="modal = true"
@@ -59,12 +58,12 @@
                 </div>
             </div>
             <div class="card address">
-                    <h2>
-                        <IconsMappin />
-                        Shipping address
-                    </h2>
-                    <div class="address-content">
-                        <p><span>Name: </span> {{ order.address.name }}</p>
+                <h2>
+                    <IconsMappin />
+                    Shipping address
+                </h2>
+                <div class="address-content">
+                    <p><span>Name: </span> {{ order.address.name }}</p>
                     <p><span>Phone: </span> {{ order.address.phone }}</p>
                     <p><span>Zipcode: </span> {{ order.address.zipCode }}</p>
                     <p><span>State: </span> {{ order.address.state }}</p>
@@ -72,29 +71,29 @@
                     <p><span>Neighborhood: </span> {{ order.address.neighborhood }}</p>
                     <p><span>Street name: </span> {{ order.address.streetName }}</p>
                     <p><span>Street number: </span> {{ order.address.streetNumber }}</p>
-                    </div>
                 </div>
+            </div>
             <div class="card order-info">
-                    <h2>
-                        <IconsDocument />
-                        Order info
-                    </h2>
-                    <div class="info-content">
-                        <p><span>Order ID: </span> {{ order.id }}</p>
-                    </div>
-                    <div class="info-content">
-                        <p><span>Order date: </span> {{ order.date }}</p>
-                    </div>
-                    <div v-if="order.status === 'To receive'" class="info-content">
-                        <p><span>Estimated date: </span> {{ order.estimatedDate }}</p>
-                    </div>
-                    <div v-if="order.status === 'completed'" class="info-content">
-                        <p><span>Order completed on: </span> {{ order.estimatedDate }}</p>
-                    </div>
-                    <div class="info-content">
-                        <p><span>Payment method: </span> {{ order.paymentMethod }}</p>
-                    </div>
+                <h2>
+                    <IconsDocument />
+                    Order info
+                </h2>
+                <div class="info-content">
+                    <p><span>Order ID: </span> {{ order.id }}</p>
                 </div>
+                <div class="info-content">
+                    <p><span>Order date: </span> {{ order.date }}</p>
+                </div>
+                <div v-if="order.status === 'To receive'" class="info-content">
+                    <p><span>Estimated date: </span> {{ order.estimatedDate }}</p>
+                </div>
+                <div v-if="order.status === 'completed'" class="info-content">
+                    <p><span>Order completed on: </span> {{ order.estimatedDate }}</p>
+                </div>
+                <div class="info-content">
+                    <p><span>Payment method: </span> {{ order.paymentMethod }}</p>
+                </div>
+            </div>
             <div class="card product">
                 <div class="product-content">
                     <div class="-ml-6"></div>
@@ -186,10 +185,8 @@ const { $toast } = useNuxtApp();
 
 const order = ref({});
 
-const userData = ref({});
 const loading = ref(true);
 const product = ref(null);
-const productData = ref(null)
 
 const store = productsStore();
 
@@ -199,30 +196,12 @@ const closeModal = () => {
     modal.value = false;
 }
 
-const userDataFetch = async () => {
-    try {
-        const data = await $fetch('https://fakestoreapi.com/users/2');
-        userData.value = data;
-    } catch (e) {
-        console.log(e);
-    }
-}
-
 const getOrderDetails = async () => {
     const orderId = $route.params.id.slice(0, -1);
     const productId = $route.params.id.at(-1);
     order.value = await store.getOrder(orderId);
 
-    const data = await $fetch(`https://fakestoreapi.com/products/${productId}`);
-    const additionalData = order.value.products.find((product) => product.productId === Number(productId));
-    productData.value = data;
-
-    const formattedData = {
-        ...data,
-        ...additionalData
-    }
-
-    product.value = formattedData;
+    product.value = order.value.products.find((product) => product.id === Number(productId));
 }
 
 const cancelOrder = async () => {
@@ -243,11 +222,9 @@ const addToCart = (product) => {
 
 onMounted(async () => {
     loading.value = true;
-    await userDataFetch();
     await getOrderDetails();
     await store.completeOrder(order.value);
     loading.value = false;
-
 })
 </script>
 

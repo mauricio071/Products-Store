@@ -117,9 +117,8 @@ const removeProducts = () => {
     $toast.success("Removed!");
 }
 
-//TODO não está mostrando toast
 const checkout = () => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn.value) {
         router.push("/login").then(() => $toast.warning("Login is required"));
     } else {
         router.push("/payment");

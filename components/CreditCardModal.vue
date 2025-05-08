@@ -207,8 +207,6 @@ const onSaveCreditCard = async (data) => {
 
         creditCardData.value = { ...response }
 
-
-
         if (disabledInputs) {
             $toast.success("Credit card saved!");
         }

@@ -133,11 +133,7 @@ const { $toast, $auth } = useNuxtApp();
 
 const store = productsStore();
 
-const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart, creditCard } = storeToRefs(store);
-
-const { isLoggedIn } = useAuth();
-
-const userData = ref({});
+const { cart, subTotal, shippingFee, tax, totalSaved, totalValue, checkoutCart } = storeToRefs(store);
 
 const paymentMethod = ref('');
 
@@ -153,7 +149,6 @@ const addCreditcardInfo = (data) => {
 // Caso precise carregar do lado do client
 // onMounted(async () => {
 //     const data = await $fetch('https://fakestoreapi.com/users/2');
-//     userData.value = data;
 // });
 
 const notExistAddress = ref(true);
@@ -166,11 +161,6 @@ const verifyAddressData = (data) => {
         address.value = data;
     }
 }
-
-store.resetInstallment();
-
-const { data } = await useFetch('https://fakestoreapi.com/users/2');
-userData.value = data.value;
 
 const completePurchase = async () => {
     if (notExistAddress.value) {
@@ -192,7 +182,7 @@ const completePurchase = async () => {
         status: paymentMethod.value === "pix" ? "To pay" : "To receive",
         paymentMethod: paymentMethod.value,
         products: cart.value.map((product) => ({
-            productId: product.id,
+            ...product,
             quantity: product.quantity
         })),
         address: address.value
@@ -208,7 +198,6 @@ const completePurchase = async () => {
             });
             break;
         case "Credit card":
-            store.resetInstallment();
             router.push({ path: `/payment/purchase-${purchaseId}` }).then(() => {
                 $toast.success("Payment confirmed successfully!");
                 store.emptyShoppingCart();

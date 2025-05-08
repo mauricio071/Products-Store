@@ -21,8 +21,6 @@ export const productsStore = defineStore("products", {
         checkAll: true,
         wishList: [],
         orders: [],
-        creditCard: null,
-        installment: null,
     }),
     //action
     actions: {
@@ -270,6 +268,8 @@ export const productsStore = defineStore("products", {
 
                 return body;
             }
+
+            return order;
         },
         async cancelOrder(id) {
             const { $db } = useNuxtApp();
@@ -295,12 +295,6 @@ export const productsStore = defineStore("products", {
 
             const document = doc($db, "creditCard", id);
             await deleteDoc(document);
-        },
-        saveInstallment(data) {
-            this.installment = data;
-        },
-        resetInstallment() {
-            this.installment = null;
         },
     },
     //getter

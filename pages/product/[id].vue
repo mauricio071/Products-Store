@@ -145,10 +145,6 @@ const loadSimilar = async () => {
 
 const quantity = ref(1);
 
-// if (!product.value) {
-//     throw createError({ statusCode: 404, statusMessage: "Product not found!", fatal: true });
-// }
-
 const removeUnitProduct = () => {
     if (quantity.value > 1) {
         quantity.value -= 1;

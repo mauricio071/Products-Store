@@ -4,7 +4,7 @@
             <ShippingAddress />
             <div class="payment-methods">
                 <h2>Credit card</h2>
-                <span v-if="loading" class="skeleton-loader max-h-52"></span>
+                <span v-if="loading" class="skeleton-loader max-w-[26rem]"></span>
                 <div v-else class="relative w-full h-52 bg-gray-200 p-4 flex justify-center items-center md:w-1/2">
                     <p v-if="!Object.keys(creditCard).length" @click="modal = true"
                         class="flex gap-2 font-bold cursor-pointer">
@@ -46,14 +46,11 @@ useHead({
     title: "Account Details - Products Store"
 });
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { productsStore } from '~/store/productsStore';
 
-const { $toast, $db, $auth } = useNuxtApp();
+const { $toast } = useNuxtApp();
 
 const store = productsStore();
-
-// const { creditCard } = storeToRefs(store);
 
 const creditCard = ref({});
 

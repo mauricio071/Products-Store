@@ -9,7 +9,7 @@
                 <div class="title-container">
                     <h1 class="mb-0">My Orders</h1>
                 </div>
-                <div v-for="order in ordersHistory" :key="order.id" class="order-content">
+                <div v-for="order in orders" :key="order.id" class="order-content">
                     <div class="text-primary font-bold text-2xl mt-8 mb-4">
                         Order date: {{ order.date }}
                     </div>
@@ -95,35 +95,14 @@ const store = productsStore();
 const orders = ref([]);
 
 const loading = ref(true);
-const ordersHistory = ref([]);
 
 const fetchProducts = async () => {
     loading.value = true;
 
-    try { 
+    try {
         orders.value = await store.getOrders();
         const data = await store.completeOrders(orders.value);
         orders.value = data;
-        const orderedProducts = await Promise.all(
-            orders.value.map(async (order) => {
-                const products = await Promise.all((
-                    order.products.map(async (product) => {
-                        const productData = await $fetch(`https://fakestoreapi.com/products/${product.productId}`);
-
-                        return {
-                            ...productData,
-                            quantity: product.quantity
-                        }
-                    })
-                ))
-                return {
-                    ...order,
-                    products
-                }
-            }
-            )
-        );
-        ordersHistory.value = orderedProducts;
     } catch (e) {
         console.log("Error: ", e);
     } finally {
@@ -143,8 +122,6 @@ const addToCart = (product) => {
 onMounted(async () => {
     await fetchProducts();
 })
-
-fetchProducts();
 </script>
 
 <style scoped>

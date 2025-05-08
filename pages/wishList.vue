@@ -65,10 +65,9 @@ useHead({
     title: "Wish List - Products Store"
 });
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { productsStore } from '~/store/productsStore';
 
-const { $toast, $db, $auth } = useNuxtApp();
+const { $toast } = useNuxtApp();
 
 const store = productsStore();
 
@@ -114,7 +113,9 @@ const remove = (id) => {
     }
 }
 
-fetchProducts();
+onMounted(async () => {
+    await fetchProducts();
+})
 </script>
 
 <style scoped>
