@@ -15,7 +15,6 @@ import { defineStore } from "pinia";
 export const productsStore = defineStore("products", {
     //state
     state: () => ({
-        userInfo: {},
         cart: [],
         costShipping: 50,
         checkAll: true,

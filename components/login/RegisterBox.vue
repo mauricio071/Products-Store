@@ -83,8 +83,6 @@ const createUserWithoutLogin = async () => {
 
         await updateProfile(userCredential.user, { displayName: username.value });
 
-        // await createUserInfo(secondaryDb, userCredential.user.displayName.trim().split(" ")[0]);
-
         await signOut(secondaryAuth);
 
         return userCredential;
