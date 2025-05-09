@@ -102,7 +102,7 @@ onMounted(async () => {
         pixValue.value = order.value.totalValue;
 
         const pixData = {
-            value: pixValue.value * dollar,
+            value: pixValue.value * dollar.value,
         };
         const result = await generatePixQrCode(pixData);
         qrCode.value = result.qrCode;

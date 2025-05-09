@@ -65,11 +65,10 @@ const closeModal = () => {
 
 const addCreditcardInfo = (data) => {
     loading.value = true;
-    if (data) {
-        creditCard.value.cardNumber = data.cardNumber;
+    if (data.id) {
         creditCard.value.id = data.id;
+        creditCard.value.cardNumber = data.cardNumber;
     }
-
     loading.value = false;
 }
 
@@ -81,7 +80,7 @@ const deleteCreditcard = async () => {
         $toast.success("Card removed successfully!");
     } catch (error) {
         console.error(error);
-        $toast.success("Failed to remove the card. Please try again.");
+        $toast.error("Failed to remove the card. Please try again.");
     }
 }
 </script>

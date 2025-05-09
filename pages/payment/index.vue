@@ -67,11 +67,12 @@
                     <span>Total price:</span>
                     <span>{{ formattedPrice(totalValue) }}</span>
                 </p>
-                <span v-if="installment && paymentMethod === 'Credit card'"
+                <span v-if="installment && paymentMethod === 'Credit card' && cardNumber"
                     class="text-end block !-mt-0.5 text-gray-800">
                     {{ installment }}
                 </span>
-                <button @click="completePurchase" :disabled="paymentMethod === '' || notExistAddress"
+                <button @click="completePurchase"
+                    :disabled="paymentMethod === '' || notExistAddress || (paymentMethod === 'Credit card' && !cardNumber)"
                     class="btn w-full disabled:hover:bg-primary disabled:hover:text-white disabled:opacity-40 disabled:cursor-not-allowed">
                     <span class="font-semibold text-lg">Place order</span>
                 </button>
@@ -111,7 +112,7 @@
             </div>
         </div>
         <CreditCardModal :modal="modal" :disabledInputs="false" @close-modal="closeModal"
-            @addCreditcardInfo="addCreditcardInfo" />
+            @addCreditcardInfo="addCreditcardInfo" @clearCreditCardInfo="clearCreditCardInfo" />
     </div>
 </template>
 
@@ -210,9 +211,15 @@ const modal = ref(false);
 
 const closeModal = () => {
     modal.value = false;
-    if (!installment.value) {
+
+    if (!installment.value || !cardNumber.value) {
         paymentMethod.value = '';
     }
+}
+
+
+const clearCreditCardInfo = () => {
+    cardNumber.value = null;
 }
 
 watch(paymentMethod, (newValue, oldValue) => {

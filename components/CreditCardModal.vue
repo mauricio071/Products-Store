@@ -112,12 +112,12 @@ import * as yup from "yup";
 import { productsStore } from '~/store/productsStore';
 
 const { modal, disabledInputs } = defineProps(['modal', 'disabledInputs']);
-const $emit = defineEmits(["closeModal", "addCreditcardInfo", "add"]);
+const $emit = defineEmits(["closeModal", "addCreditcardInfo", "add", "clearCreditCardInfo"]);
 
 const { $toast, $db, $auth } = useNuxtApp();
 
 const store = productsStore();
-const { totalValue, creditCard } = storeToRefs(store);
+const { totalValue } = storeToRefs(store);
 
 const creditCardData = ref({});
 const cardNumber = ref(null);
@@ -146,6 +146,9 @@ const schema2 = yup.object({
 });
 
 const closeModal = () => {
+    if (!creditCardId.value) {
+        installmentData.value = null;
+    }
     $emit('closeModal');
 };
 
@@ -191,21 +194,27 @@ const onSubmit = async (values) => {
         await onSaveCreditCard(data);
     }
 
-    const body = {
-        ...data,
-        installment
+    if (!disabledInputs) {
+        const body = {
+            ...data,
+            installment
+        }
+
+        cardNumber.value = data.cardNumber;
+        $emit("addCreditcardInfo", body);
     }
 
-    cardNumber.value = data.cardNumber;
-    $emit("addCreditcardInfo", body);
     closeModal();
 };
+
+const creditCardId = ref(null)
 
 const onSaveCreditCard = async (data) => {
     try {
         const response = await store.saveCreditCard(data);
 
-        creditCardData.value = { ...response }
+        creditCardId.value = response.id;
+        creditCardData.value = {};
 
         if (disabledInputs) {
             $toast.success("Credit card saved!");
@@ -218,10 +227,13 @@ const onSaveCreditCard = async (data) => {
 };
 
 const removeCreditCard = async () => {
-    if (creditCardData.value.id) {
-        await store.removeCreditCard(creditCardData.value.id);
+    if (creditCardId.value) {
+        await store.removeCreditCard(creditCardId.value);
+        creditCardId.value = null;
         $toast.success("Card removed successfully!");
     }
+
+    $emit("clearCreditCardInfo");
     creditCardData.value = {};
     cardNumber.value = null;
 }
@@ -233,6 +245,7 @@ onMounted(async () => {
             creditCardCollection,
             where("uid", "==", $auth.currentUser.uid)
         );
+
         const querySnapShot = await getDocs(creditCardQuery);
         const creditCardFire = querySnapShot.docs.map((doc) => ({
             ...doc.data(),
@@ -241,9 +254,10 @@ onMounted(async () => {
 
         if (creditCardFire) {
             creditCardData.value = { ...creditCardFire };
+            creditCardId.value = creditCardFire.id;
             cardNumber.value = creditCardFire.cardNumber;
         }
-        $emit("addCreditcardInfo", creditCardFire);
+        $emit("addCreditcardInfo", creditCardData.value);
     } catch (error) {
         console.error(error);
     }
