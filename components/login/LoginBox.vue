@@ -121,7 +121,7 @@ form {
 }
 
 .google-login-btn {
-    @apply text-gray-500 flex items-center justify-center gap-4 py-3 border border-gray-300 rounded-md duration-300;
+    @apply text-gray-500 flex items-center justify-center gap-4 p-3 border border-gray-300 rounded-md duration-300;
 
     &:hover {
         @apply bg-gray-50;

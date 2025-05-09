@@ -1,9 +1,11 @@
 <template>
     <div>
         <Modal :isVisible="modal" @close="closeModal">
-            <div class="flex flex-col gap-2 items-center justify-between sm:gap-4 lg:w-[50rem] lg:-mb-4 xl:w-[60rem]">
-                <h3 class="text-2xl font-bold text-center">Shipping address</h3>
-                <Form :validation-schema="schema" @submit="onSubmit" class="w-full text-center">
+            <div
+                class="flex flex-col gap-2 items-center justify-between w-[70vw] sm:gap-4 md:w-[35rem] lg:w-[50rem] lg:-mb-4 xl:w-[60rem]">
+                <h3 class="text-2xl font-bold text-center mt-1">Shipping address</h3>
+                <Form :validation-schema="schema" @submit="onSubmit"
+                    class="w-full max-h-[40rem] overflow-scroll text-center">
                     <div class="grid gap-2 w-full border-b border-b-gray-300 pb-8 mb-4 sm:gap-8 sm:grid-cols-2">
                         <div>
                             <div class="input-container">

@@ -3,7 +3,7 @@
         <Modal :isVisible="modal" @close="closeModal">
             <div class="flex flex-col gap-2 items-center justify-between sm:gap-4 lg:w-[50rem] lg:-mb-4 xl:w-[60rem]">
                 <h3 class="text-2xl font-bold text-center">Credit card information</h3>
-                <p class="flex items-center text-primary gap-2 -mt-2">
+                <p class="flex items-center my-2 text-primary gap-2 sm:-mt-2">
                     <IconsSecurity />
                     Your payment information is safe with us
                 </p>
@@ -78,7 +78,7 @@
                             </div>
                         </template>
                         <div v-if="!disabledInputs">
-                            <label v-if="!cardNumber" class="checkbox -mt-4 mb-4">
+                            <label v-if="!cardNumber" class="checkbox sm:-mt-4 mb-4">
                                 <Field type="checkbox" :value="true" :unchecked-value="false" name="saveCard" />
                                 <span class="check"></span>
                                 Save card details

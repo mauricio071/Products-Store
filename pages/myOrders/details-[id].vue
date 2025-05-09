@@ -82,13 +82,13 @@
                     <p><span>Order ID: </span> {{ order.id }}</p>
                 </div>
                 <div class="info-content">
-                    <p><span>Order date: </span> {{ order.date }}</p>
+                    <p><span>Order date: </span> {{ format(order.date, "dd/MM/yyyy HH:mm") }}</p>
                 </div>
                 <div v-if="order.status === 'To receive'" class="info-content">
-                    <p><span>Estimated date: </span> {{ order.estimatedDate }}</p>
+                    <p><span>Estimated date: </span> {{ format(order.estimatedDate, "dd/MM/yyyy") }}</p>
                 </div>
                 <div v-if="order.status === 'completed'" class="info-content">
-                    <p><span>Order completed on: </span> {{ order.estimatedDate }}</p>
+                    <p><span>Order completed on: </span> {{ format(order.estimatedDate, "dd/MM/yyyy HH:mm") }}</p>
                 </div>
                 <div class="info-content">
                     <p><span>Payment method: </span> {{ order.paymentMethod }}</p>
@@ -171,6 +171,7 @@
 
 <script setup>
 import { productsStore } from '~/store/productsStore';
+import { format } from 'date-fns';
 
 definePageMeta({
     middleware: 'auth'

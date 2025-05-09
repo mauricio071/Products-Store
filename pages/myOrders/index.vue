@@ -11,7 +11,7 @@
                 </div>
                 <div v-for="order in orders" :key="order.id" class="order-content">
                     <div class="text-primary font-bold text-2xl mt-8 mb-4">
-                        Order date: {{ order.date }}
+                        Order date: {{ format(order.date, "dd/MM/yyyy HH:mm") }}
                     </div>
                     <div class="products">
                         <div v-for="product in order.products" :key="product.id" class="product">
@@ -79,6 +79,7 @@
 
 <script setup>
 import { productsStore } from '~/store/productsStore';
+import { format } from 'date-fns';
 
 definePageMeta({
     middleware: 'auth'

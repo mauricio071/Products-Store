@@ -1,17 +1,17 @@
 <template>
     <header class="shadow-md">
-        <nav class="flex justify-between flex-wrap md:flex-nowrap container mx-auto px-8 py-7">
+        <nav class="flex justify-between flex-wrap sm:flex-nowrap container mx-auto px-8 py-7">
             <NuxtLink to="/" class="font-bold text-xl flex gap-2 items-center">
                 <LazyIconsShopping class="rotate-[-20deg]" />
                 Products Store
             </NuxtLink>
-            <button @click="visible = !visible" class="md:hidden">
+            <button @click="visible = !visible" class="sm:hidden">
                 <IconsMenu />
             </button>
 
             <template v-if="route.name !== 'payment'">
-                <ul class="space-y-8 md:space-y-0 mt-8 md:my-0 justify-between items-center gap-4 w-full md:w-[unset] md:flex"
-                    :class="{ 'block': visible, 'hidden': !visible }">
+                <ul class="space-y-4 sm:space-y-0 mt-8 sm:my-0 justify-between items-center gap-4 w-full sm:w-[unset] sm:flex sm:flex-row"
+                    :class="{ 'flex flex-col': visible, 'hidden': !visible }">
                     <li>
                         <NuxtLink to="/" class="text-xl btn">Products</NuxtLink>
                     </li>
@@ -106,6 +106,10 @@ const logout = async () => {
     await signOut($auth);
     router.push("/login");
 }
+
+watch(() => route.path, (newValue) => {
+    visible.value = false;
+}, { deep: true });
 </script>
 
 <style scoped>
