@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center flex flex-col items-center justify-center gap-4" style="height: calc(100vh - 228px);">
+    <div class="text-center flex flex-col items-center justify-center gap-4" style="height: calc(100vh - 236px);">
         <div class="font-bold text-4xl mb-4">
             {{ message }}
         </div>

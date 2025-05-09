@@ -135,21 +135,19 @@ const onSubmit = async (values) => {
         ...values,
         uid: $auth.currentUser.uid
     }
-
     if (formType.value === "edit") {
         try {
             const addressDoc = doc($db, "addressInfo", addressId.value);
-
             await updateDoc(addressDoc, values);
-
             $toast.success("Address updated!");
-
         } catch (error) {
             console.error(error);
         }
     } else {
         try {
-            await addDoc(collection($db, "addressInfo"), data);
+            const document = await addDoc(collection($db, "addressInfo"), data);
+            addressId.value = document.id;
+            formType.value = "edit";
             $toast.success("Address saved!");
         } catch (error) {
             console.error(error);
