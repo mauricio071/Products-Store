@@ -12,7 +12,7 @@
 
 ## 📝 Sobre o projeto
 
-A aplicação foi desenvolvida com Nuxt.js, baseada na experiência do AliExpress. Ela integra uma API fictícia para listar e exibir produtos, enquanto o Pinia gerencia o estado do carrinho e dos itens favoritados, garantindo que permaneçam salvos no navegador, mesmo após atualizações ou fechamento da página. Além disso, a aplicação conta com um backend utilizando Nitro para gerar QR Code para Pix.
+A aplicação foi desenvolvida com Nuxt.js, inspirada na experiência do AliExpress. Ela integra uma API fictícia para listar e exibir produtos, com o estado do carrinho gerenciado pelo Pinia e salvo no navegador. O backend foi construído com Nitro e é responsável por gerar QR Codes para pagamentos via Pix.
 
 ## 🛠 Tecnologias utilizadas
 
@@ -20,10 +20,15 @@ A aplicação foi desenvolvida com Nuxt.js, baseada na experiência do AliExpres
 -   **Nuxt.js** - Framework baseado em Vue.js para SSR
 -   **Nitro** - Camada de servidor do Nuxt para backends e APIs
 -   **Pinia** - Biblioteca de gerenciamento de estado
+-   **Firebase** - Plataforma do Google com serviços para autenticação, banco de dados e hosting
 -   **JavaScript** - Linguagem de programação para desenvolvimento web
 -   **HTML** - Linguagem de marcação que estrutura o conteúdo na web
 -   **CSS** - Linguagem de estilos usada para definir o visual das interfaces web
 -   **Tailwind CSS** - Framework de estilos
+
+## 🔥 Firebase
+
+O Firebase foi utilizado para autenticação de usuários, controle de sessões e armazenamento de dados, como histórico de pedidos e itens favoritados pelos usuários.
 
 ## 📸 Screenshots
 
@@ -73,7 +78,23 @@ ou
 $ yarn install
 ```
 
-### 4. Inicialize o projeto:
+### 4. Configure as variáveis de ambiente:
+
+Crie um projeto no Firebase ([Vídeo tutorial](https://www.youtube.com/watch?v=C2upiyk85dE&ab_channel=CharlesNicollas)) para gerar as chaves e insira no .env do front-end:
+
+```env
+NUXT_PUBLIC_FIREBASE_API_KEY=
+NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NUXT_PUBLIC_FIREBASE_PROJECT_ID=
+NUXT_PUBLIC_FIREBASE_APP_ID=
+```
+Também será necessário configurar os métodos de autenticação. Para isso, ative as opções de login com Google e e-mail/senha na aba **Authentication** do Firebase:
+
+<img src="./assets/readme-img/firebase-exemple.png" alt="Firebase Exemple" width="500" >
+
+
+
+### 5. Inicialize o projeto:
 
 ```bash 
 $ npm run dev
