@@ -114,6 +114,8 @@ import { productsStore } from '~/store/productsStore';
 const { modal, disabledInputs } = defineProps(['modal', 'disabledInputs']);
 const $emit = defineEmits(["closeModal", "addCreditcardInfo", "add", "clearCreditCardInfo"]);
 
+const $route = useRoute();
+
 const { $toast, $db, $auth } = useNuxtApp();
 
 const store = productsStore();
@@ -187,6 +189,7 @@ const onSubmit = async (values) => {
         cardNumber: creditCardData.value.cardNumber ? creditCardData.value.cardNumber : values.cardNumber,
         created_at: new Date()
     };
+
     const installment = values.installment;
     const saveCard = values.saveCard;
 
@@ -207,14 +210,13 @@ const onSubmit = async (values) => {
     closeModal();
 };
 
-const creditCardId = ref(null)
+const creditCardId = ref(null);
 
 const onSaveCreditCard = async (data) => {
     try {
         const response = await store.saveCreditCard(data);
 
         creditCardId.value = response.id;
-        creditCardData.value = {};
 
         if (disabledInputs) {
             $toast.success("Credit card saved!");
@@ -228,6 +230,7 @@ const onSaveCreditCard = async (data) => {
 
 const removeCreditCard = async () => {
     if (creditCardId.value) {
+        creditCardData.value = {};
         await store.removeCreditCard(creditCardId.value);
         creditCardId.value = null;
         $toast.success("Card removed successfully!");
@@ -257,7 +260,12 @@ onMounted(async () => {
             creditCardId.value = creditCardFire.id;
             cardNumber.value = creditCardFire.cardNumber;
         }
+
         $emit("addCreditcardInfo", creditCardData.value);
+        if ($route.fullPath === "/accountDetails") {
+            creditCardData.value = {};
+            cardNumber.value = null;
+        }
     } catch (error) {
         console.error(error);
     }
